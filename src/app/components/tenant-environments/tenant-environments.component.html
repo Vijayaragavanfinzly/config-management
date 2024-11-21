@@ -1,0 +1,36 @@
+<div class="container mt-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/tenants']" class="breadcrumb-link">
+            <i class="fas fa-link mr-2"></i> Tenants
+          </a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a [routerLink]="['/tenants',tenant]" [routerLinkActive]="['active']" class="breadcrumb-link">
+              {{tenant}}
+            </a>
+          </li>
+      </ol>
+    </nav>
+  </div>
+  
+
+  <div class="container mt-5 tiles">
+    <div *ngIf="loading" class="text-center my-5">
+      <app-spinner></app-spinner>
+    </div>
+    <div class="tile-container">
+      <div *ngFor="let environment of environments" class="tile-card">
+        <div class="tile-header"></div>
+        <div class="tile-body">
+          <h4 class="tile-title">{{ environment.environmentName }}</h4>
+          <p class="tile-description">Discover and manage the configurations and details for the {{environment.environmentName}}</p>
+          <div class="tile-footer">
+            <button class="btn btn-primary" [routerLink]="['/tenants',tenant,environment.id]">Explore</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,121 @@
+/* Breadcrumb Styling */
+.custom-breadcrumb {
+    background: linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(235, 241, 255) 100%);
+    border-left: 5px solid var(--primary-color);
+    font-weight: 500;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  .breadcrumb-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+  
+  .breadcrumb-link:hover {
+    color: #212529;
+  }
+  
+  
+  .breadcrumb i {
+    margin-right: 6px;
+    font-size: 1.25rem;
+  }
+  .breadcrumb-item.active .breadcrumb-link {
+    /* color: #495057;  */
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+  
+  
+  .breadcrumb.custom-breadcrumb {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Tile Container Grid */
+  .tile-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 15px;
+    margin-top: 30px;
+  }
+  
+  /* Card Design */
+  .tile-card {
+    position: relative;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+    overflow: hidden;
+    border: 1px solid #f1f1f1;
+  }
+  
+  .tile-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Accent Bar */
+  .tile-header {
+    height: 4px;
+    background: linear-gradient(90deg, #007bff, #20c997);
+    width: 100%;
+  }
+  
+  /* Tile Content */
+  .tile-body {
+    padding: 25px 20px;
+    text-align: center;
+  }
+  
+  .tile-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #343a40;
+    margin: 20px 0;
+  }
+  
+  .tile-description {
+    font-size: 1rem;
+    color: #6c757d;
+    margin-bottom: 25px;
+  }
+  
+  .tile-footer {
+    margin-top: 20px;
+  }
+  
+  .tile-footer .btn {
+    padding: 8px 20px;
+    font-size: 1rem;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+  }
+  
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .tile-body {
+      padding: 20px;
+    }
+  }
+  
+
+
+
+  .btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+  }
+  .btn-primary:hover{
+    background-color: var(--spinner-color-4);
+  }
+  .btn-primary:focus {
+    border: none;
+    background-color: var(--primary-color);
+    outline: none; /* Remove the default browser outline */
+  }

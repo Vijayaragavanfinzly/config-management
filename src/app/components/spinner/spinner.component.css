@@ -1,0 +1,105 @@
+.loader-container{
+    position: absolute;
+    top: 50%;
+    left: 57%;
+    transform: translate(-50%,-50%);
+}
+.loader {
+    height: 200px;
+    width: 200px;
+    position: relative;
+    animation: spin 1.5s infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loader > div:nth-child(1) {
+    height: 50px; /* Reduced size */
+    width: 50px;  /* Reduced size */
+    background-image: linear-gradient(
+        45deg,
+        rgb(6, 171, 213),
+        rgb(3, 190, 211)
+    );
+    position: absolute;
+    top: 50px; /* Adjusted for smaller spinner */
+    left: 50px; /* Adjusted for smaller spinner */
+    box-shadow: 0 0 3px rgb(6, 171, 213);
+    border-radius: 50%;
+    animation: move1 1.5s infinite;
+}
+
+@keyframes move1 {
+    50% {
+        transform: translate(-15px, -15px) scale(0.3); /* Adjusted for smaller size */
+    }
+}
+
+.loader > div:nth-child(2) {
+    height: 30px; /* Reduced size */
+    width: 30px;  /* Reduced size */
+    background-image: linear-gradient(
+        45deg,
+        rgb(3, 190, 211),
+        rgb(3, 189, 211)
+    );
+    position: absolute;
+    top: 55px; /* Adjusted for smaller spinner */
+    right: 55px; /* Adjusted for smaller spinner */
+    box-shadow: 0 0 2px rgb(3, 190, 211);
+    border-radius: 50%;
+    animation: move2 1.5s infinite;
+}
+
+@keyframes move2 {
+    50% {
+        transform: translate(7px, -10px) scale(0.55); /* Adjusted for smaller size */
+    }
+}
+
+.loader > div:nth-child(3) {
+    height: 50px; /* Reduced size */
+    width: 50px;  /* Reduced size */
+    background-image: linear-gradient(
+        45deg,
+        rgb(6, 171, 213),
+        rgb(3, 189, 211)
+    );
+    position: absolute;
+    bottom: 50px; /* Adjusted for smaller spinner */
+    right: 50px;  /* Adjusted for smaller spinner */
+    box-shadow: 0 0 3px rgb(6, 171, 213);
+    border-radius: 50%;
+    animation: move3 1.5s infinite;
+}
+
+@keyframes move3 {
+    50% {
+        transform: translate(15px, 15px) scale(0.3); /* Adjusted for smaller size */
+    }
+}
+
+.loader > div:nth-child(4) {
+    height: 30px; /* Reduced size */
+    width: 30px;  /* Reduced size */
+    background-image: linear-gradient(
+        45deg,
+        rgb(3, 189, 211),
+        rgb(6, 171, 213)
+    );
+    position: absolute;
+    bottom: 55px; /* Adjusted for smaller spinner */
+    left: 55px;  /* Adjusted for smaller spinner */
+    border-radius: 50%;
+    animation: move4 1.5s infinite;
+}
+
+@keyframes move4 {
+    50% {
+        transform: translate(-7px, 10px) scale(0.55); /* Adjusted for smaller size */
+    }
+}

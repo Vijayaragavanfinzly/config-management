@@ -1,0 +1,31 @@
+<div class="container mt-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
+        <li class="breadcrumb-item" [routerLinkActive]="['active']">
+          <a [routerLink]="['/environments']" class="breadcrumb-link">
+            <i class="fas fa-link mr-2"></i> Environments
+          </a>
+        </li>
+      </ol>
+    </nav>
+  </div>
+  
+  <div class="container mt-5 tiles">
+    <!-- Spinner -->
+  <div *ngIf="loading" class="text-center my-5">
+    <app-spinner></app-spinner>
+  </div>
+    <div class="tile-container">
+      <div *ngFor="let environment of environments" class="tile-card">
+        <div class="tile-header"></div>
+        <div class="tile-body">
+          <h4 class="tile-title">{{ environment.environmentName }}</h4>
+          <p class="tile-description">Discover and manage the configurations and details for the {{environment.environmentName}} environment</p>
+          <div class="tile-footer">
+            <button class="btn btn-primary" [routerLink]="['/environments/environment']" [queryParams]="{env:environment.environmentName}">Explore</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

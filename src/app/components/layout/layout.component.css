@@ -1,0 +1,244 @@
+  .container1 {
+    display: flex;
+    height: 100vh;
+  }
+
+  .sidebar {
+    width: 250px !important;
+    background-color: #f8f9fa;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .main-content {
+    margin-left: 250px !important;
+    width: 100vw;
+    padding: 20px;
+  }
+
+  .nav-link {
+    font-size: 15px;
+    color: #333;
+    padding: 12px 22px;
+    margin-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.4s ease-in-out;
+    font-family: "Faculty Glyphic", sans-serif;
+  }
+
+  .nav-link-theme {
+    font-size: 15px;
+    color: #333;
+    padding: 7px 16px;
+    margin-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.4s ease-in-out;
+    font-family: "Faculty Glyphic", sans-serif;
+  }
+  .nav-link-theme span{
+    padding: 0px 0px 0px 5px;
+  }
+
+  .nav-link:hover {
+    color: #818080;
+  }
+
+  .nav-link-theme:hover {
+    color: #818080;
+  }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    font-weight: bolder;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+  }
+
+  
+
+  .nav-link:hover::after {
+    background-color: var(--primary-color);
+  }
+
+  .nav-link.active::after {
+    background-color: var(--primary-color); /* Replace with your desired color */
+  }
+
+  .nav-link i {
+    font-size: 20px;
+    margin-right: 15px;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .nav-link-theme i {
+    font-size: 20px;
+    margin-right: 15px;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .nav {
+    padding-left: 0;
+    margin: 0 auto;
+    width: 90%;
+  }
+
+
+  .nav-item {
+    margin-top: 10px;
+  }
+
+
+  .nav-link {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+
+
+  .nav-link i {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+
+  .logout {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    flex: 10;
+    padding: 10px;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .d-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #33c1d5;
+    font-size: 2rem;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .logo-icon {
+    height: 30px;
+    width: 250px;
+    background-image: url('../../../../public/assets/finzly_logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-right: 8px;
+  }
+
+  .color-grid {
+    display: flex;
+    /* Enables flexbox layout */
+    flex-wrap: wrap;
+    /* Allows wrapping of items */
+    justify-content: space-between;
+    /* Distributes space between items */
+  }
+
+  .color-swatch {
+    width: 23%;
+    /* Set width to allow 4 items in a row (100% / 4 = 25% minus margin) */
+    height: 30px;
+    /* Fixed height */
+    border-radius: 50%;
+    /* Make them circular */
+    cursor: pointer;
+    /* Pointer cursor for interactivity */
+    border: 2px solid #fff;
+  }
+
+  .color-swatch:not(:nth-child(4n)) {
+    margin-right: 2%;
+    /* Space between swatches, but not after every fourth one */
+  }
+
+  .btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+  }
+  .btn-primary:hover{
+    background-color: var(--spinner-color-4);
+  }
+
+  .btn-primary:focus {
+    border: none;
+    background-color: var(--primary-color);
+    outline: none;
+    /* Remove the default browser outline */
+  }
+
+
+
+  .nav-item.dropdown .dropdown-menu {
+    background-color: #f8f9fa;
+    border: none;
+    width: 160px;
+
+  }
+
+  .theme-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+
+  .color-swatch {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+  }
+
+  .accordion-button {
+    background-color: #f8f9fa;
+    border: none;
+  }
+
+  .accordion-button:not(.collapsed) {
+    /* color: #007bff; */
+    color: #333;
+  }
+
+  .accordion-item {
+    border: none;
+  }
+  .accordion-button:focus {
+    box-shadow: none; 
+    outline: none;    /* Removes any default focus outlines */
+  }
+  

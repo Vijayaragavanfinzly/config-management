@@ -1,0 +1,23 @@
+<div class="container mt-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/environments']" class="breadcrumb-link">
+            <i class="fas fa-link mr-2"></i> Environments
+          </a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a [routerLink]="['/environments/environment']" [routerLinkActive]="['active']" [queryParams]="{env:environment}" class="breadcrumb-link">
+              {{environment}}
+            </a>
+          </li>
+      </ol>
+    </nav>
+  </div>
+  
+
+<div class="container mt-5">
+    <h3>Environment Details</h3>
+    <p>You are viewing the details for: <strong>{{ environment }}</strong></p>
+  </div>
+  

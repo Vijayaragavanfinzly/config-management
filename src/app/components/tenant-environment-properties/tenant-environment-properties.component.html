@@ -1,0 +1,75 @@
+<div class="container mt-3">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
+      <li class="breadcrumb-item">
+        <a [routerLink]="['/tenants']" class="breadcrumb-link">
+          <i class="fas fa-link mr-2"></i> Tenants
+        </a>
+      </li>
+      <li class="breadcrumb-item">
+        <a [routerLink]="['/tenants', tenant]" [routerLinkActive]="['active']" class="breadcrumb-link">
+          {{ tenant }}
+        </a>
+      </li>
+      <li class="breadcrumb-item active">
+        <a
+          [routerLink]="['/tenants', tenant, environment]"
+          [routerLinkActive]="['active']"
+          class="breadcrumb-link"
+        >
+          {{ environment }}
+        </a>
+      </li>
+    </ol>
+  </nav>
+</div>
+
+<div class="container mt-5">
+  <div *ngIf="loading" class="text-center my-5">
+    <app-spinner></app-spinner>
+  </div>
+
+  <div *ngIf="!loading && properties.length > 0" class="table-responsive">
+    <table class="table custom-table mt-4 shadow-sm">
+      <thead>
+        <tr>
+          <th>Property Key</th>
+          <th>Property Value</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let property of properties; let i = index">
+          <td>{{ property.propertyKey }}</td>
+          <td>{{ property.propertyValue }}</td>
+          <td class="text-center">
+            <button class="btn btn-sm btn-primary" (click)="editProperty(property)">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-danger ms-2" (click)="deleteProperty(property.id)">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!loading && properties.length === 0" class="text-center my-5">
+  <div class="no-properties-container">
+    <i class="fas fa-folder-open" style="font-size: 60px; color: #ffc107;"></i>
+    <h4 class="text-muted mt-3">No Properties Found</h4>
+    <p class="text-secondary mb-4">
+      It seems like there are no properties available for this tenant and environment. Start managing your properties today!
+    </p>
+    <button
+      class="btn btn-primary"
+      style="border-radius: 25px; font-weight: 600; padding: 10px 20px;"
+      (click)="navigateToProperties()"
+    >
+      Add Properties
+    </button>
+  </div>
+</div>
+
+</div>

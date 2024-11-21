@@ -1,0 +1,78 @@
+<div class="container1">
+  <nav id="sidebar" class="bg-light vh-100 position-fixed d-md-block sidebar">
+    <div class="d-flex flex-column p-3">
+      <a routerLink="/" class="logo-container text-center mb-5 fs-4 text-decoration-none">
+        <div class="logo-icon"></div>
+      </a>
+      <ul class="nav flex-column mb-auto">
+        <li class="nav-item">
+          <a routerLink="/environments" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-cogs"></i>Environments
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/tenants" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-user-friends me-2"></i> Tenants
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/accounts" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-user-circle me-2"></i>&nbsp; Account
+          </a>
+        </li>
+        <li class="nav-item">
+          <div class="accordion" id="themeAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="themeHeading">
+                <button
+                  class="accordion-button nav-link-theme collapsed d-flex align-items-center"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#themeCollapse"
+                  aria-expanded="false"
+                  aria-controls="themeCollapse"
+                >
+                  <i class="fas fa-palette me-2"></i> 
+                  <span>Theme</span>
+                </button>
+              </h2>
+              <div
+                id="themeCollapse"
+                class="accordion-collapse collapse"
+                aria-labelledby="themeHeading"
+                data-bs-parent="#themeAccordion"
+              >
+                <div class="accordion-body">
+                  <div class="theme-selection color-grid">
+                    <div class="color-swatch" (click)="changeTheme('red')" style="background-color: red"></div>
+                    <div class="color-swatch" (click)="changeTheme('green')" style="background-color: green"></div>
+                    <div class="color-swatch" (click)="changeTheme('blue')" style="background-color: blue"></div>
+                    <div class="color-swatch" (click)="changeTheme('gray')" style="background-color: gray"></div>
+                    <div class="color-swatch" (click)="changeTheme('black')" style="background-color: black"></div>
+                    <div class="color-swatch" (click)="changeTheme('cyan')" style="background-color: #17a2b8"></div>
+                    <div class="color-swatch" (click)="changeTheme('yellow')" style="background-color: #ffc107"></div>
+                    <div class="color-swatch" (click)="changeTheme('white')" style="background-color: #a903f6"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        
+
+
+      </ul>
+
+      <div
+        class="mt-auto logout position-absolute bottom-0 start-0 w-100 p-3 d-flex justify-content-center align-items-center">
+        <button class="btn btn-primary full-width">
+          Logout
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
