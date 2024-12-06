@@ -1,0 +1,37 @@
+<mat-dialog-content class="dialog-body">
+  <div class="dialog-info">
+    <p class="dialog-message">Please confirm the action for the following values:</p>
+    <div class="value-display-container">
+      <div class="data-item">
+        <div class="data-label">Source:</div>
+        <div class="data-value">{{ data.tenant1}} - {{data.environment1}}</div>
+      </div>
+      <div class="data-item">
+        <div class="data-label">Destination:</div>
+        <div class="data-value">{{ data.tenant2}} - {{data.environment2}}</div>
+      </div>
+      <div class="data-item">
+        <div class="data-label">Source Value:</div>
+        <div class="data-value">{{data.source || 'N/A'}}</div>
+      </div>
+      <div class="data-item">
+        <div class="data-label">Destination Value:</div>
+        <div class="data-value">{{ data.destination || 'N/A'}}</div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-footer">
+  <div class="button-container">
+    <button mat-flat-button (click)="close('sourceToDest')" class="action-button confirm-button">
+      <mat-icon>arrow_forward</mat-icon> Source to Destination
+    </button>
+    <button mat-flat-button (click)="close('destToSource')" class="action-button confirm-button">
+      <mat-icon>arrow_back</mat-icon> Destination to Source
+    </button>
+    <button mat-flat-button color="warn" (click)="close('cancel')" class="action-button cancel-button">
+      <mat-icon>close</mat-icon> Cancel
+    </button>
+  </div>
+</mat-dialog-actions>

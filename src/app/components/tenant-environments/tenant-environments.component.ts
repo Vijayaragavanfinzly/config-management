@@ -3,25 +3,33 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { TenantService } from '../../services/tenant-service/tenant.service';
 import { Environment } from '../../model/environment.interface';
-import { SpinnerComponent } from "../spinner/spinner.component";
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { AddTenantDialogComponent } from '../miscellaneous/dialogs/add-tenant-dialog/add-tenant-dialog.component';
+import { SpinnerComponent } from '../miscellaneous/spinner/spinner.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-tenant-environments',
   standalone: true,
-  imports: [RouterModule, CommonModule, SpinnerComponent],
+  imports: [RouterModule, CommonModule, SpinnerComponent, MatDialogModule, MatButtonModule, FormsModule],
   templateUrl: './tenant-environments.component.html',
   styleUrl: './tenant-environments.component.css'
 })
-export class TenantEnvironmentsComponent implements OnInit{
+export class TenantEnvironmentsComponent implements OnInit {
 
-  tenant : string = "";
-  environments: Environment[] = [];
+  tenant: string = "";
+  tenantName: string = '';
+  environments: any[] = [];
+  filteredEnvironments: any[] = [];
+  searchKeyword: string = ""
   loading: Boolean = false;
 
-  constructor(private route:ActivatedRoute,private tenantService:TenantService){}
+  constructor(private route: ActivatedRoute, private tenantService: TenantService, private dialog: MatDialog, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-    this.route.params.subscribe((param)=>{
+    this.route.params.subscribe((param) => {
       this.tenant = param['tenant'];
       if (this.tenant) {
         this.loadEnvironmentsForTenant();
@@ -34,15 +42,89 @@ export class TenantEnvironmentsComponent implements OnInit{
   loadEnvironmentsForTenant(): void {
     this.loading = true;
     this.tenantService.getTenantEnvironments(this.tenant).subscribe({
-      next: (data: Environment[]) => {
-        this.environments = data;
+      next: (data: any) => {
+        this.environments = data.data.environments;
+        this.tenantName = data.data.tenantName;
+        this.filteredEnvironments = [...this.environments]
+        console.log("Tenant Name : " + this.tenantName);
         console.log("Loaded environments for tenant:", this.environments);
       },
       error: (err) => {
+        this.loading = false;
+        this.snackBar.open('Error fetching environments. Please try again.', 'Close', {
+          duration: 3000,
+          panelClass: ['custom-toast', 'toast-error'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
         console.error("Error fetching environments for tenant:", err);
       },
-      complete:()=>{
+      complete: () => {
         this.loading = false;
+      }
+    });
+  }
+
+  filterEnvironment() {
+    if (this.searchKeyword.trim()) {
+      console.log(this.searchKeyword);
+
+      this.filteredEnvironments = this.environments.filter((environment) => {
+        return environment.toLowerCase().includes(this.searchKeyword.toLowerCase())
+      });
+    }
+    else {
+      this.filteredEnvironments = [...this.environments]
+    }
+  }
+  clearSearch(){
+    this.searchKeyword = '';
+    this.filterEnvironment();
+  }
+
+  addNewEnvironmentForTenant(): void {
+    const dialogRef = this.dialog.open(AddTenantDialogComponent, {
+      width: '400px',
+      data: {
+        tenant: this.tenant,
+        environment: '',
+        tenant_name: this.tenantName
+      }
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const payload = {
+          environment: result.environment.toUpperCase(),
+          tenantName: result.tenant_name,
+          tenant: result.tenant
+        };
+        console.log(result);
+        console.log(payload);
+        this.tenantService.addNewTenantWithEnvironment(payload).subscribe({
+          next: (data) => {
+            if (data && data.statusCode === 500) {
+              this.snackBar.open('Tenant & Environment Already Exists !', 'Close', {
+                duration: 3000,
+                panelClass: ['custom-toast', 'toast-error'],
+                horizontalPosition: 'center',
+                verticalPosition: 'top',
+              });
+              console.error("Error Adding Tenant Environment:", data);
+            } else {
+              console.log("Tenant Environment Added Successfully!", data);
+              this.snackBar.open('Environment Added Successfully!', 'Close', {
+                duration: 3000,
+                panelClass: ['custom-toast', 'toast-success'],
+                horizontalPosition: 'center',
+                verticalPosition: 'top',
+              });
+              this.loadEnvironmentsForTenant();
+            }
+          },
+          error: (error) => {
+            console.log("Error Adding Tenant Environment", error);
+          }
+        })
       }
     });
   }

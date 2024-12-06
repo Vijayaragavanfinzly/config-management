@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SpinnerComponent } from "../spinner/spinner.component";
+import { SpinnerComponent } from "../miscellaneous/spinner/spinner.component";
 
 @Component({
   selector: 'app-account',

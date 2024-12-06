@@ -1,0 +1,24 @@
+.dialog-container {
+    width: 100%;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .form-group {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  
+  ::ng-deep .mat-dialog-container {
+    border-radius: 0 !important; /* Remove rounded edges */
+    border: 1px solid #ccc; /* Optional: Add a defined border */
+    box-shadow: none; /* Optional: Remove Material shadow */
+  }
+  

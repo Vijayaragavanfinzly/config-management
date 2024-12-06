@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Tenant } from '../../model/tenant.interface';
-import { Environment } from '../../model/environment.interface';
 import { Property } from '../../model/property.interface';
 
 @Injectable({
@@ -10,18 +8,22 @@ import { Property } from '../../model/property.interface';
 })
 export class TenantService {
 
-  private baseUrl = 'http://localhost:8080'
+  private baseUrl = 'http://localhost:8080/api'
 
   constructor(private http:HttpClient) { }
 
-  getAllTenants():Observable<Tenant[]>{
-    return this.http.get<Tenant[]>(`${this.baseUrl}/tenants`);
+
+  
+
+  getAllTenants():Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/tenants`);
   }
 
-  getTenantEnvironments(tenant:string):Observable<Environment[]>{
-    return this.http.get<Environment[]>(`${this.baseUrl}/tenant/${tenant}`);
+  getTenantEnvironments(tenant:string):Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/${tenant}`);
   }
-  getTenantProperties(tenant:string,environment:string):Observable<Property[]>{
-    return this.http.get<Property[]>(`${this.baseUrl}/tenant-env-properties/${tenant}/${environment}`);
+
+  addNewTenantWithEnvironment(payload:any):Observable<any>{
+    return this.http.post<any>(`${this.baseUrl}`,payload);
   }
 }

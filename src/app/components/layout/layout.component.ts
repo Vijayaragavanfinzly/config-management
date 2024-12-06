@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -20,6 +20,12 @@ interface Theme {
 export class LayoutComponent implements OnInit {
 
   isDropdownClicked = false;
+
+  isSidebarCollapsed :Boolean = false;
+
+  
+  
+
   themes: Record<string, Theme> = {
     red: {
       buttonColor: 'btn-danger',
@@ -59,9 +65,25 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit(): void {
     const savedTheme = localStorage.getItem('selectedTheme');
+    const collapsedState = localStorage.getItem("isSideBarCollapsed");
+    this.isSidebarCollapsed = collapsedState === "true";
     if (savedTheme && this.themes[savedTheme]) {
       this.applyTheme(savedTheme);
     }
+  }
+
+  @HostListener('window:keydown',['$event'])
+  handleKeyoardToggle(event: KeyboardEvent){
+    if(event.altKey && event.key === '1'){
+      event.preventDefault();
+      this.toggleSidebar();
+    }
+  }
+
+
+  toggleSidebar() {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+    localStorage.setItem("isSideBarCollapsed", this.isSidebarCollapsed.toString());
   }
 
   changeTheme(theme: string): void {
@@ -84,8 +106,6 @@ export class LayoutComponent implements OnInit {
   }
 
   toggleChevron(event: Event): void {
-    // const target = event.currentTarget as HTMLElement;
-    // target.classList.toggle('clicked');
     event.preventDefault();
     this.isDropdownClicked = !this.isDropdownClicked;
   }

@@ -62,6 +62,7 @@
   .tile-header {
     height: 4px;
     background: linear-gradient(90deg, #007bff, #20c997);
+    /* background-color: var(--primary-color); */
     width: 100%;
   }
   
@@ -119,3 +120,194 @@
     background-color: var(--primary-color);
     outline: none; /* Remove the default browser outline */
   }
+
+
+
+  /* Search Input and Add Button */
+.search-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  width: 68%;
+  padding: 1px;
+  border: none;
+  border-radius: 7px;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: none; 
+}
+/* Parent container for the search input */
+.search-input-container {
+  width: 70%;
+  height: 45px;
+  display: flex;
+  border: 1px solid #ddd;
+  align-items: center;
+  /* margin-bottom: 20px; */
+  border-radius: 7px; /* Ensures consistent border radius */
+  transition: border-color 0.3s ease; /* Smooth transition for focus effect */
+}
+
+/* Input inside the container */
+.search-input-container input {
+  width: 100%;
+  padding-left: 15px;
+  border: none; /* Removes default border of input */
+  outline: none; /* Ensures no outline when focused */
+}
+
+/* Add focus effect to the container when the input is focused */
+.search-input-container input:focus {
+  outline: none; /* Ensures no outline on input */
+}
+
+/* Apply focus styling to the parent when the input is focused */
+.search-input-container:focus-within {
+  border-color: var(--primary-color); /* Change border color on focus */
+}
+
+.add-btn {
+  background-color: var(--primary-color);
+  color: #fff;
+  width: 250px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.add-btn:focus{
+  color: #fff;
+}
+
+.add-btn:hover {
+  background-color: var(--spinner-color-4);
+}
+
+
+
+.no-results {
+  text-align: center;
+  margin-top: 50px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.no-results-content {
+  display: inline-block;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.no-results i {
+  color: #ff6b6b;
+  animation: pulse 1.5s infinite;
+}
+
+.no-results h4 {
+  font-weight: bold;
+  color: #333;
+}
+
+.no-results p {
+  color: #666;
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+.no-results .highlight {
+  color: #007bff;
+  font-weight: bold;
+}
+
+.no-results .btn-try-again {
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-weight: 600;
+  background: #007bff;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.no-results .btn-try-again:hover {
+  background: #0056b3;
+  transform: scale(1.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  text-align: center;
+}
+
+.empty-state-content {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.empty-state-content i {
+  color: #6c757d;
+}
+
+.empty-state-content h4 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.empty-state-content p {
+  color: #6c757d;
+  font-size: 1rem;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.btn-add-tenant {
+  background-color: var(--primary-color);
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+.btn-add-tenant  i{
+  color: #fff;
+}
+
+.btn-add-tenant:hover {
+  background-color: var(--spinner-color-4);
+  color: #fff;
+}

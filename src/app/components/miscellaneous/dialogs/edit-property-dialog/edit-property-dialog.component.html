@@ -1,0 +1,49 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title>Edit Property</h2>
+  <mat-dialog-content>
+    <form [formGroup]="propertyForm">
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Environment Name</mat-label>
+          <input matInput formControlName="environment" readonly />
+          <mat-error *ngIf="propertyForm.get('environment')?.invalid">Environment is required</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tenant Name</mat-label>
+          <input matInput formControlName="tenant" readonly/>
+          <mat-error *ngIf="propertyForm.get('tenant')?.invalid">Tenant ID is required</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Property Key</mat-label>
+          <input matInput formControlName="propertyKey" />
+          <mat-error *ngIf="propertyForm.get('propertyKey')?.invalid">Property Key is required</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Property Value</mat-label>
+          <input matInput formControlName="propertyValue" />
+          <mat-error *ngIf="propertyForm.get('propertyValue')?.invalid">Property Value is required</mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions class="dialog-actions">
+    <button
+      mat-button
+      color="primary"
+      (click)="save()"
+      [disabled]="propertyForm.invalid"
+    >
+      Save
+    </button>
+    <button mat-button color="warn" (click)="close()">Cancel</button>
+  </mat-dialog-actions>
+</div>

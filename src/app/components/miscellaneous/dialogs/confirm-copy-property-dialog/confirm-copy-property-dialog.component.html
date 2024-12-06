@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Confirm Copy</h2>
+<mat-dialog-content>
+  <p>{{data.message}}</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  
+  <button mat-flat-button color="primary" (click)="onConfirm()">Transfer</button>
+  <button mat-flat-button color="warn" (click)="onCancel()">Cancel</button>
+
+</mat-dialog-actions>

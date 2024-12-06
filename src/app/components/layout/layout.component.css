@@ -1,244 +1,232 @@
-  .container1 {
-    display: flex;
-    height: 100vh;
-  }
+.container1 {
+  display: flex;
+  height: 100vh;
+}
 
-  .sidebar {
-    width: 250px !important;
-    background-color: #f8f9fa;
-    padding: 20px;
-    height: 100vh;
-    position: fixed;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
+.sidebar {
+  width: 250px;
+  background-color: #f8f9fa;
+  padding: 20px;
+  height: 100vh;
+  position: fixed;
+  z-index: 50;
+  transition: all 0.3s ease;
+  transition: width 0.3s ease, padding 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
-  .main-content {
-    margin-left: 250px !important;
-    width: 100vw;
-    padding: 20px;
-  }
+.sidebar.collapsed {
+  width: 90px;
+  padding: 10px;
+}
 
-  .nav-link {
-    font-size: 15px;
-    color: #333;
-    padding: 12px 22px;
-    margin-bottom: 10px;
-    display: inline-flex;
-    align-items: center;
-    width: 100%;
-    text-decoration: none;
-    font-weight: 500;
-    position: relative;
-    transition: all 0.4s ease-in-out;
-    font-family: "Faculty Glyphic", sans-serif;
-  }
+.toggle-icon {
+  display: none; 
+  transition: display 0.3s ease;
+}
 
-  .nav-link-theme {
-    font-size: 15px;
-    color: #333;
-    padding: 7px 16px;
-    margin-bottom: 10px;
-    display: inline-flex;
-    align-items: center;
-    width: 100%;
-    text-decoration: none;
-    font-weight: 500;
-    position: relative;
-    transition: all 0.4s ease-in-out;
-    font-family: "Faculty Glyphic", sans-serif;
-  }
-  .nav-link-theme span{
-    padding: 0px 0px 0px 5px;
-  }
+.sidebar:hover .toggle-icon {
+  display: block;
+}
 
-  .nav-link:hover {
-    color: #818080;
-  }
+.main-content {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  padding: 20px;
+  overflow: auto;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
 
-  .nav-link-theme:hover {
-    color: #818080;
-  }
+.nav-link {
+  font-size: 15px;
+  color: #333;
+  padding: 12px 22px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: all 0.4s ease-in-out;
+  font-family: "Faculty Glyphic", sans-serif;
+}
 
-  .nav-link::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    font-weight: bolder;
-    background-color: transparent;
-    transition: background-color 0.3s ease;
-  }
-
-  
-
-  .nav-link:hover::after {
-    background-color: var(--primary-color);
-  }
-
-  .nav-link.active::after {
-    background-color: var(--primary-color); /* Replace with your desired color */
-  }
-
-  .nav-link i {
-    font-size: 20px;
-    margin-right: 15px;
-    transition: transform 0.3s ease-in-out;
-  }
-
-  .nav-link-theme i {
-    font-size: 20px;
-    margin-right: 15px;
-    transition: transform 0.3s ease-in-out;
-  }
-
-  .nav {
-    padding-left: 0;
-    margin: 0 auto;
-    width: 90%;
-  }
+.nav-toggle{
+  font-size: 15px;
+  color: #333;
+  padding: 12px 22px;
+  margin-bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: all 0.4s ease-in-out;
+  font-family: "Faculty Glyphic", sans-serif;
+  outline: none;
+  border: none;
+}
 
 
-  .nav-item {
-    margin-top: 10px;
-  }
+.nav-toggle .close-icon {
+  display: none;
+  position: absolute;
+  top: -100px;
+  right: -25px;
+  transition: display 0.3s ease;
+}
+
+ul{
+  position: absolute;
+  top: 20%;
+}
+
+.sidebar.collapsed ul{
+  position: relative;
+}
 
 
-  .nav-link {
-    font-size: 14px;
-    padding: 8px 15px;
-  }
+.sidebar:hover .nav-toggle .close-icon {
+  display: block;
+}
+
+.nav-toggle .fa-bars {
+  display: block;
+}
+.nav-link span {
+  padding-left: 5px;
+  font-size: 15px; 
+}
+
+.nav-link small.collapsed-text {
+  font-size: 10px;
+  padding-left: 5px;
+  color: #888;
+  display: block;
+  text-align: center;
+}
+
+.nav-link i {
+  font-size: 20px;
+  margin-right: 15px;
+  transition: transform 0.3s ease-in-out;
+  margin-right: 8px;
+}
+
+.nav-toggle i{
+  font-size: 20px;
+  margin: auto;
+  transition: transform 0.3s ease-in-out;
+}
+
+.sidebar.collapsed .nav-toggle{
+  padding: 12px 0;
+}
+
+.sidebar.collapsed .nav-link {
+  padding: 12px 0;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebar.collapsed .nav-toggle i{
+  margin-right: 0;
+  text-align: center;
+}
+
+.sidebar.collapsed .nav-link i {
+  margin-right: 0;
+  text-align: center;
+}
+
+.sidebar.collapsed .nav-link span {
+  display: none;
+}
+
+.nav-link:hover {
+  color: #818080;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  font-weight: bolder;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.nav-link:hover::after {
+  background-color: var(--primary-color);
+}
+
+.nav-link.active::after {
+  background-color: var(--primary-color);
+}
+
+li a{
+  position: relative;
+}
+
+.sidebar.collapsed li a{
+  right: 15px;
+}
+.sidebar.collapsed .nav-toggle{
+  right: 10px;
+}
 
 
-  .nav-link i {
-    font-size: 20px;
-    margin-right: 10px;
-  }
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #33c1d5;
+  font-size: 2rem;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s;
+}
 
-  .logout {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    flex: 10;
-    padding: 10px;
-  }
+.logo-icon {
+  height: 35px;
+  width: 250px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-right: 8px;
+}
 
-  .full-width {
-    width: 100%;
-  }
+.logo-icon.expanded-logo {
+  background-image: url('../../../../public/assets/finzly_logo.png');
+}
 
-  .d-flex {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.logo-icon.collapsed-logo {
+  background-image: url('../../../../public/assets/favicon.ico');
+  margin: auto;
+}
+.logout{
+}
+.logout a {
+  color: #333;
+  transition: color 0.3s ease;
+}
+.logout a i{
+  margin-left: 40px;
+}
 
-  .logo-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #33c1d5;
-    font-size: 2rem;
-    font-weight: bold;
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-
-  .logo-icon {
-    height: 30px;
-    width: 250px;
-    background-image: url('../../../../public/assets/finzly_logo.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    margin-right: 8px;
-  }
-
-  .color-grid {
-    display: flex;
-    /* Enables flexbox layout */
-    flex-wrap: wrap;
-    /* Allows wrapping of items */
-    justify-content: space-between;
-    /* Distributes space between items */
-  }
-
-  .color-swatch {
-    width: 23%;
-    /* Set width to allow 4 items in a row (100% / 4 = 25% minus margin) */
-    height: 30px;
-    /* Fixed height */
-    border-radius: 50%;
-    /* Make them circular */
-    cursor: pointer;
-    /* Pointer cursor for interactivity */
-    border: 2px solid #fff;
-  }
-
-  .color-swatch:not(:nth-child(4n)) {
-    margin-right: 2%;
-    /* Space between swatches, but not after every fourth one */
-  }
-
-  .btn-primary {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-  }
-  .btn-primary:hover{
-    background-color: var(--spinner-color-4);
-  }
-
-  .btn-primary:focus {
-    border: none;
-    background-color: var(--primary-color);
-    outline: none;
-    /* Remove the default browser outline */
-  }
-
-
-
-  .nav-item.dropdown .dropdown-menu {
-    background-color: #f8f9fa;
-    border: none;
-    width: 160px;
-
-  }
-
-  .theme-selection {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 3px;
-  }
-
-  .color-swatch {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: none;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s;
-  }
-
-  .accordion-button {
-    background-color: #f8f9fa;
-    border: none;
-  }
-
-  .accordion-button:not(.collapsed) {
-    /* color: #007bff; */
-    color: #333;
-  }
-
-  .accordion-item {
-    border: none;
-  }
-  .accordion-button:focus {
-    box-shadow: none; 
-    outline: none;    /* Removes any default focus outlines */
-  }
-  
+.sidebar.collapsed .logout a i {
+  margin-left: 5px;
+}
+.logout a:hover {
+  cursor: pointer;
+  color: #818080;
+}
+.collapsed-text {
+  font-size: 10px;
+  color: #777;
+}

@@ -1,5 +1,5 @@
 export interface Property{
-    id:number,
+    id:string,
     propertyKey:string,
-    propertyValue:string
+    propertyValue:string,
 }

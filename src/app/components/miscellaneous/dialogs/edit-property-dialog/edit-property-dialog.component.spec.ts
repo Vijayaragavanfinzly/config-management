@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PropertyDialogComponent } from './property-dialog.component';
+import { PropertyDialogComponent } from './edit-property-dialog.component';
 
 describe('PropertyDialogComponent', () => {
   let component: PropertyDialogComponent;

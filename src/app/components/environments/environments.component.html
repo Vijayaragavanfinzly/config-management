@@ -9,7 +9,7 @@
       </ol>
     </nav>
   </div>
-  
+
   <div class="container mt-5 tiles">
     <!-- Spinner -->
   <div *ngIf="loading" class="text-center my-5">
@@ -19,10 +19,10 @@
       <div *ngFor="let environment of environments" class="tile-card">
         <div class="tile-header"></div>
         <div class="tile-body">
-          <h4 class="tile-title">{{ environment.environmentName }}</h4>
-          <p class="tile-description">Discover and manage the configurations and details for the {{environment.environmentName}} environment</p>
+          <h4 class="tile-title">{{ environment }}</h4>
+          <p class="tile-description">Discover and manage the configurations and details for the {{environment}} environment</p>
           <div class="tile-footer">
-            <button class="btn btn-primary" [routerLink]="['/environments/environment']" [queryParams]="{env:environment.environmentName}">Explore</button>
+            <button class="btn btn-primary" [routerLink]="['/environments/environment']" [queryParams]="{env:environment}">Explore</button>
           </div>
         </div>
       </div>

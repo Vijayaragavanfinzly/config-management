@@ -11,8 +11,8 @@ import { MatInputModule } from '@angular/material/input';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatInputModule, MatDialogModule,
     MatFormFieldModule,],
-  templateUrl: './property-dialog.component.html',
-  styleUrl: './property-dialog.component.css'
+  templateUrl: './edit-property-dialog.component.html',
+  styleUrl: './edit-property-dialog.component.css'
 })
 export class PropertyDialogComponent {
   propertyForm: FormGroup;
@@ -20,9 +20,11 @@ export class PropertyDialogComponent {
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<PropertyDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { propertyKey: string; propertyValue: string; id:number }
+    @Inject(MAT_DIALOG_DATA) public data: { propertyKey: string; propertyValue: string; id:number; tenant:string; environment:string; }
   ) {
     this.propertyForm = this.fb.group({
+      environment: [{ value: data.environment, disabled: true }, Validators.required],
+      tenant: [{ value: data.tenant, disabled: true }, Validators.required],
       propertyKey: [data.propertyKey, Validators.required],
       propertyValue: [data.propertyValue, Validators.required],
       id: [data.id,Validators.required]
