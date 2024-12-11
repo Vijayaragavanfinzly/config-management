@@ -21,6 +21,8 @@ export class TenantEnvironmentsComponent implements OnInit {
 
   tenant: string = "";
   tenantName: string = '';
+  application: string = '';
+  fieldGroup: string = '';
   environments: any[] = [];
   filteredEnvironments: any[] = [];
   searchKeyword: string = ""
@@ -43,8 +45,12 @@ export class TenantEnvironmentsComponent implements OnInit {
     this.loading = true;
     this.tenantService.getTenantEnvironments(this.tenant).subscribe({
       next: (data: any) => {
+        console.log(data);
+
         this.environments = data.data.environments;
         this.tenantName = data.data.tenantName;
+        this.application = data.data.application;
+        this.fieldGroup = data.data.fieldGroup;
         this.filteredEnvironments = [...this.environments]
         console.log("Tenant Name : " + this.tenantName);
         console.log("Loaded environments for tenant:", this.environments);
@@ -77,18 +83,20 @@ export class TenantEnvironmentsComponent implements OnInit {
       this.filteredEnvironments = [...this.environments]
     }
   }
-  clearSearch(){
+  clearSearch() {
     this.searchKeyword = '';
     this.filterEnvironment();
   }
 
   addNewEnvironmentForTenant(): void {
     const dialogRef = this.dialog.open(AddTenantDialogComponent, {
-      width: '400px',
+      width: '600px',
       data: {
         tenant: this.tenant,
         environment: '',
-        tenant_name: this.tenantName
+        tenant_name: this.tenantName,
+        application: this.application,
+        fieldGroup: this.fieldGroup,
       }
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -96,7 +104,9 @@ export class TenantEnvironmentsComponent implements OnInit {
         const payload = {
           environment: result.environment.toUpperCase(),
           tenantName: result.tenant_name,
-          tenant: result.tenant
+          tenant: result.tenant,
+          application: result.application,
+          fieldGroup: result.field_group
         };
         console.log(result);
         console.log(payload);

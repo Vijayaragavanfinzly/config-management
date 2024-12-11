@@ -1,4 +1,4 @@
-.dialog-container {
+/* .dialog-container {
     width: 100%;
   }
   
@@ -15,4 +15,45 @@
     margin-top: 15px;
     margin-bottom: 15px;
   }
+   */
+
+
+   .dialog-container {
+    width: 100%;
+    margin: auto;
+  }
   
+  .full-width {
+    width: 100%;
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .form-group {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  
+  /* .stylish-dropdown mat-form-field {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .stylish-dropdown mat-select {
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .stylish-dropdown mat-form-field.mat-form-field-appearance-fill .mat-form-field-flex {
+    padding: 12px;
+  }
+  
+  .mat-dialog-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  } */

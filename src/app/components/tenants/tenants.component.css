@@ -1,6 +1,6 @@
 /* Breadcrumb Styling */
 .custom-breadcrumb {
-    background: linear-gradient(90deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+  background: var(--gray-color);
     border-left: 5px solid var(--primary-color);
     font-weight: 500;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
@@ -113,7 +113,7 @@
     border: none;
   }
   .btn-primary:hover{
-    background-color: var(--spinner-color-4);
+    background-color: var(--secondary-color);
   }
   .btn-primary:focus {
     border: none;
@@ -143,35 +143,42 @@
   border-color: var(--primary-color);
   box-shadow: none; 
 }
-/* Parent container for the search input */
+
 .search-input-container {
-  width: 70%;
-  height: 45px;
+  width: 76%;
+  height: 50px;
   display: flex;
   border: 1px solid #ddd;
   align-items: center;
-  /* margin-bottom: 20px; */
-  border-radius: 7px; /* Ensures consistent border radius */
-  transition: border-color 0.3s ease; /* Smooth transition for focus effect */
+  background: var(--gray-color);
+  border-radius: 10px; 
+  transition: border-color 0.3s ease;
 }
 
-/* Input inside the container */
 .search-input-container input {
   width: 100%;
   padding-left: 15px;
-  border: none; /* Removes default border of input */
-  outline: none; /* Ensures no outline when focused */
+  border: none; 
+  outline: none; 
+  background: var(--gray-color);
 }
 
-/* Add focus effect to the container when the input is focused */
 .search-input-container input:focus {
-  outline: none; /* Ensures no outline on input */
+  outline: none;
 }
 
-/* Apply focus styling to the parent when the input is focused */
 .search-input-container:focus-within {
-  border-color: var(--primary-color); /* Change border color on focus */
+  border-color: var(--primary-color); 
 }
+
+.form-control::placeholder {
+  color: #6c757d; 
+  font-style: italic; 
+}
+input{
+  font-style: italic;
+}
+
 
 .add-btn {
   background-color: var(--primary-color);
@@ -190,7 +197,7 @@
 }
 
 .add-btn:hover {
-  background-color: var(--spinner-color-4);
+  background-color: var(--secondary-color);
 }
 
 
@@ -308,6 +315,6 @@
 }
 
 .btn-add-tenant:hover {
-  background-color: var(--spinner-color-4);
+  background-color: var(--secondary-color);
   color: #fff;
 }

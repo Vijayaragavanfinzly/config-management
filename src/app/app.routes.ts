@@ -7,6 +7,7 @@ import { AccountComponent } from './components/account/account.component';
 import { TenantEnvironmentsComponent } from './components/tenant-environments/tenant-environments.component';
 import { TenantEnvironmentPropertiesComponent } from './components/tenant-environment-properties/tenant-environment-properties.component';
 import { CompareComponent } from './components/compare/compare.component';
+import { CloneComponent } from './components/clone/clone.component';
 
 export const routes: Routes = [
     {
@@ -41,8 +42,10 @@ export const routes: Routes = [
                 path: 'tenants/:tenant/:environment',
                 component:TenantEnvironmentPropertiesComponent
             },
-            
-            
+            {
+                path:'clone',
+                component:CloneComponent
+            }
         ]
     }
 ];

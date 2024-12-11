@@ -1,15 +1,11 @@
 :root {
-  --primary-color: #007bff;
-  --secondary-color: #6c757d;
-  --success-color: #28a745;
-  --danger-color: #dc3545;
-  --warning-color: #ffc107;
-  --info-color: #17a2b8;
-  --light-color: #a903f6;
-  --dark-color: #343a40;
-  --gradient-start: #ffffff;
-  --gradient-end: #f2f2f2;
+  --primary-color: #17a2b8;
+  --secondary-color: #92C7CF;
+  --background-light: #FBF9F1;
+  --accent-beige: #E5E1DA;
+  --gray-color:#f9f9f9;
 }
+/* =================================================================================== */
 
 .custom-snackbar {
   background-color: #ffffff;
@@ -19,151 +15,12 @@
   padding: 8px 6px;
 }
 
-.red-theme {
-  --primary-color: #dc3545;
-  --spinner-color-1: #ff6f72;
-  --spinner-color-2: #f54346;
-  --spinner-color-3: #d62829;
-  --spinner-color-4: #b31e20;
-  --spinner-color-5: #8f1416;
-}
-.green-theme {
-  --primary-color: #28a745;
-  --spinner-color-1: #6bd97a;
-  --spinner-color-2: #4fc35c;
-  --spinner-color-3: #32a845;
-  --spinner-color-4: #288036;
-  --spinner-color-5: #1f6029;
-}
-
-.blue-theme {
-  --primary-color: #0f60b7;
-  --spinner-color-1: #38e2f1;
-  --spinner-color-2: #3dc2f5;
-  --spinner-color-3: #4395f8;
-  --spinner-color-4: #1458a1;
-  --spinner-color-5: #4581fa;
-}
-
-.gray-theme {
-  --primary-color: #6c757d;
-  --spinner-color-1: #adb5bd;
-  --spinner-color-2: #868e96;
-  --spinner-color-3: #6c757d;
-  --spinner-color-4: #5a6268;
-  --spinner-color-5: #343a40;
-}
-
-.black-theme {
-  --primary-color: #343a40;
-  --spinner-color-1: #868e96;
-  --spinner-color-2: #6c757d;
-  --spinner-color-3: #495057;
-  --spinner-color-4: #343a40;
-  --spinner-color-5: #212529;
-}
-
-.cyan-theme {
-  --primary-color: #17a2b8;
-  --spinner-color-1: #65cce2;
-  --spinner-color-2: #42b8d8;
-  --spinner-color-3: #2ea6c8;
-  --spinner-color-4: #2389a4;
-  --spinner-color-5: #1a6c80;
-}
-
-.yellow-theme {
-  --primary-color: #b38e00;
-  --spinner-color-1: #ffe280;
-  --spinner-color-2: #ffd54d;
-  --spinner-color-3: #ffcc29;
-  --spinner-color-4: #e6b800;
-  --spinner-color-5: #b38e00;
-}
-
-.white-theme {
-  --primary-color: #9109d1;
-  --spinner-color-1: #d48dfb;
-  --spinner-color-2: #bf61f9;
-  --spinner-color-3: #a903f6;
-  --spinner-color-4: #9109d1;
-  --spinner-color-5: #770aaa;
-}
-.btn-primary {
-  background-color: var(--primary-color);
-  color: white;
-}
-.alert-primary {
-  background-color: var(--primary-color, #007bff);
-  color: white;
-}
-
-.alert-secondary {
-  background-color: var(--secondary-color, #6c757d);
-  color: white;
-}
-.red-theme .alert-secondary {
-  background-color: #dc3545;
-  color: white;
-}
-
-.green-theme .alert-secondary {
-  background-color: #28a745;
-  color: white;
-}
-
-.blue-theme .alert-secondary {
-  background-color: #007bff;
-  color: white;
-}
-
-.gray-theme .alert-secondary {
-  background-color: #6c757d;
-  color: white;
-}
-
-.black-theme .alert-secondary {
-  background-color: #343a40;
-  color: white;
-}
-.btn-outline-secondary {
-  background-color: transparent;
-  color: var(--secondary-color);
-  border: 1px solid var(--secondary-color);
-}
-.btn-outline-secondary:hover {
-  background-color: var(--secondary-color);
-  color: white;
-}
-.red-theme .btn-outline-secondary {
-  color: #dc3545;
-  border-color: #dc3545;
-}
-.red-theme .btn-outline-secondary:hover {
-  background-color: #dc3545;
-  color: white;
-}
-.green-theme .btn-outline-secondary {
-  color: #28a745;
-  border-color: #28a745;
-}
-.green-theme .btn-outline-secondary:hover {
-  background-color: #28a745;
-  color: white;
-}
-.blue-theme .btn-outline-secondary {
-  color: #007bff;
-  border-color: #007bff;
-}
-.blue-theme .btn-outline-secondary:hover {
-  background-color: #007bff;
-  color: white;
-}
 .mat-dialog-container {
   border-radius: 0 !important;
   box-shadow: none;
   border: 1px solid #ccc;
 }
+
 .toast-success {
   --mdc-snackbar-container-color: #28a745;
   color: #ffffff; 
@@ -191,8 +48,9 @@
     opacity: 1;
   }
 }
+
 .custom-dialog-container {
-  background-color: #f8f9fa; 
+  background-color: #f8f9fa;
   color: #212529; 
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

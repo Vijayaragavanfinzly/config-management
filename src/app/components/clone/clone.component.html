@@ -1,0 +1,59 @@
+<div class="container mt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
+            <li class="breadcrumb-item active">
+                <a [routerLink]="['/clone']" class="breadcrumb-link active" [routerLinkActive]="['active']">
+                    <i class="fas fa-link mr-2"></i> Clone
+                </a>
+            </li>
+        </ol>
+    </nav>
+</div>
+
+<div class="container">
+
+    <div class="compare-container">
+      <div class="compare-cards">
+        <div class="tenant-card">
+          <label for="tenant1">Tenant 1</label>
+          <select id="tenant1" [(ngModel)]="selectedTenant1" (change)="loadEnvironmentsForTenant('tenant1')" required>
+            <option value="" disabled selected>Select Tenant 1</option>
+            <option *ngFor="let tenant of tenants" [value]="tenant.tenant">
+              {{ tenant.tenant }}
+            </option>
+          </select>
+          <select id="env1" [(ngModel)]="selectedEnv1" [disabled]="!selectedTenant1" required>
+            <option value="" disabled selected>Select Environment</option>
+            <option *ngFor="let env of tenant1Environments" [value]="env">
+              {{ env }}
+            </option>
+          </select>
+        </div>
+  
+        <div class="tenant-card">
+          <label for="tenant2">Tenant 2</label>
+          <select id="tenant2" [(ngModel)]="selectedTenant2" (change)="loadEnvironmentsForTenant('tenant2')" required>
+            <option value="" disabled selected>Select Tenant 2</option>
+            <option *ngFor="let tenant of tenants" [value]="tenant.tenant">
+              {{ tenant.tenant }}
+            </option>
+          </select>
+          <select id="env2" [(ngModel)]="selectedEnv2" [disabled]="!selectedTenant2" required>
+            <option value="" disabled selected>Select Environment</option>
+            <option *ngFor="let env of tenant2Environments" [value]="env">
+              {{ env }}
+            </option>
+          </select>
+        </div>
+        <div class="action-buttons">
+          <button class="btn-primary" id="compareButton" (click)="cloneProperties()" >
+            <i class="fas fa-bolt"></i> Clone
+          </button>
+          <button class="btn-secondary" id="clearButton" (click)="clearSelections()">
+            <i class="fas fa-eraser"></i> Clear
+          </button>
+        </div>
+      </div>
+    </div>
+  
+  </div>

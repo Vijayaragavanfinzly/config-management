@@ -23,10 +23,11 @@
 <div *ngIf="!loading && properties.length > 0" class="container mt-5 search-bar">
   <div class="form-control search-input-container">
     <i class="fas fa-search search-icon"></i>
-    <input type="text" class=" search-input" [(ngModel)]="searchKeyword" (input)="filterProperties()"
+    <input type="text" class="form-control search-input" [(ngModel)]="searchKeyword" (input)="filterProperties()"
       placeholder=" Search by Property key or value ..." />
   </div>
-  <button class="btn add-btn me-4 d-flex align-items-center" (click)="addProperty()">
+  <button class="btn add-btn me-4 d-flex align-items-center" (click)="addProperty()" [disabled]="loading"
+    aria-label="Add New Environment" role="button">
     <i class="fas fa-plus"></i> <span class="ms-2">Add New Property</span>
   </button>
 </div>
@@ -38,30 +39,35 @@
   </div>
 
   <div *ngIf="!loading && filteredProperties.length > 0" class="table-responsive">
-    
+
     <div class="table-responsive table-container">
 
-    <table class="table custom-table shadow-sm">
-      <thead>
-        <tr>
-          <th>Property Key</th>
+      <table class="table custom-table shadow-sm">
+        <thead>
+          <tr>
+            <th *ngFor="let column of columns; let i = index"
+              [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}" class="text-center">
+              {{ column.name }}
+              <div class="resize-handle" (mousedown)="onMouseDown($event, i)"></div>
+            </th>
+            <!-- <th [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}" class="text-center">Property Key</th>
           <th>Property Value</th>
-          <th class="text-center full-width ps-4">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let property of paginatedProperties; let i = index">
-          <td class="property-cell">{{ (currentPage - 1) * pageSize + i + 1 }}. &nbsp;{{ property.propertyKey }}</td>
-          <td>{{ property.propertyValue }}</td>
-          <td class="text-center">
-            <i class="fas fa-edit edit ms-3" (click)="editProperty(property)"></i>
-            <i class="fas fa-trash-alt delete ms-3" (click)="deleteProperty(property.id)"></i>
-            <i class="fas fa-info-circle audit ms-3"></i>
+          <th class="text-center full-width ps-4">Actions</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let property of paginatedProperties; let i = index">
+            <td class="property-cell">{{ (currentPage - 1) * pageSize + i + 1 }}. &nbsp;{{ property.propertyKey }}</td>
+            <td>{{ property.propertyValue }}</td>
+            <td class="text-center">
+              <i class="fas fa-edit edit ms-3" (click)="editProperty(property)"></i>
+              <i class="fas fa-trash-alt delete ms-3" (click)="deleteProperty(property.id)"></i>
+              <i class="fas fa-info-circle audit ms-3"></i>
 
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
       <div class="items-per-page">
@@ -74,50 +80,44 @@
         </select>
       </div>
       <div class="pagination-controls">
-        <!-- Previous Page -->
         <span class="pagination-nav" [class.disabled]="currentPage === 1" (click)="goToPreviousPage()">
-          <i class="fas fa-angle-double-left"></i> <!-- Elegant Icon -->
+          <i class="fas fa-angle-double-left"></i>
         </span>
-      
-        <!-- Pages -->
         <ng-container *ngFor="let page of pages">
-          <span *ngIf="page !== -1" 
-                class="pagination-page" 
-                [class.active]="page === currentPage" 
-                (click)="goToPage(page)">
+          <span *ngIf="page !== -1" class="pagination-page" [class.active]="page === currentPage"
+            (click)="goToPage(page)">
             {{ page }}
           </span>
           <span *ngIf="page === -1" class="pagination-dots">...</span>
         </ng-container>
-      
-        <!-- Next Page -->
+
         <span class="pagination-nav" [class.disabled]="currentPage === totalPages" (click)="goToNextPage()">
-          <i class="fas fa-angle-double-right"></i> <!-- Elegant Icon -->
+          <i class="fas fa-angle-double-right"></i>
         </span>
       </div>
     </div>
-</div>
-
-<div *ngIf="!loading && properties.length === 0" class="text-center my-5">
-  <div class="no-properties-container">
-    <i class="fas fa-folder-open" style="font-size: 60px; color: #ffc107;"></i>
-    <h4 class="text-muted mt-3">No Properties Found</h4>
-    <p class="text-secondary mb-4">
-      It seems like there are no properties available for this tenant and environment. Start managing your properties
-      today!
-    </p>
-    <button class="btn btn-primary" style="border-radius: 25px; font-weight: 600; padding: 10px 20px;"
-      (click)="navigateToProperties()">
-      Add Properties
-    </button>
   </div>
-</div>
 
-<div *ngIf="!loading && searchKeyword && paginatedProperties.length === 0" class="no-results">
-  <div class="no-results-content">
-    <i class="fas fa-search fa-3x"></i>
-    <h4 class="mt-3">No Results Found</h4>
-    <p class="text-muted">We couldn’t find anything matching "<span class="highlight">{{ searchKeyword }}</span>".</p>
-    <button class="btn btn-primary btn-try-again" (click)="clearSearch()">Try Again</button>
+  <div *ngIf="!loading && properties.length === 0" class="text-center my-5">
+    <div class="no-properties-container">
+      <i class="fas fa-folder-open" style="font-size: 60px; color: #ffc107;"></i>
+      <h4 class="text-muted mt-3">No Properties Found</h4>
+      <p class="text-secondary mb-4">
+        It seems like there are no properties available for this tenant and environment. Start managing your properties
+        today!
+      </p>
+      <button class="btn btn-primary" style="border-radius: 25px; font-weight: 600; padding: 10px 20px;"
+        (click)="navigateToProperties()">
+        Add Properties
+      </button>
+    </div>
   </div>
-</div>
+
+  <div *ngIf="!loading && searchKeyword && paginatedProperties.length === 0" class="no-results">
+    <div class="no-results-content">
+      <i class="fas fa-search fa-3x"></i>
+      <h4 class="mt-3">No Results Found</h4>
+      <p class="text-muted">We couldn’t find anything matching "<span class="highlight">{{ searchKeyword }}</span>".</p>
+      <button class="btn btn-primary btn-try-again" (click)="clearSearch()">Try Again</button>
+    </div>
+  </div>

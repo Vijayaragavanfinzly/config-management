@@ -8,7 +8,7 @@ import { Environment } from '../../model/environment.interface';
 })
 export class EnvironmentService {
 
-  private baseUrl = 'http://localhost:8080/api'
+  private baseUrl = 'http://localhost:8080'
   constructor(private http:HttpClient) { }
 
   getAllEnvironments():Observable<any>{

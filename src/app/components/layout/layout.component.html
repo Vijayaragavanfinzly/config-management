@@ -15,6 +15,7 @@
         ></i>
         <i 
           class="fas fa-times close-icon" 
+          title="Hide (ALT + 1)"
           *ngIf="!isSidebarCollapsed"
         ></i>
       </a>
@@ -39,6 +40,13 @@
             <i class="fas fa-exchange-alt"></i>
             <span *ngIf="!isSidebarCollapsed">&nbsp;Compare</span>
             <small *ngIf="isSidebarCollapsed" class="collapsed-text">Compare</small>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/clone" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-dna"></i>
+            <span *ngIf="!isSidebarCollapsed">&nbsp;&nbsp;Clone</span>
+            <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">Clone</small>
           </a>
         </li>
       </ul>

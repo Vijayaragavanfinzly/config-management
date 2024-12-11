@@ -9,23 +9,23 @@ import { AddProperty } from '../../model/add.property.interface';
 })
 export class PropertyService {
 
-  private baseUrl = 'http://localhost:8080/api'
+  private baseUrl = 'http://localhost:8080'
 
   constructor(private http:HttpClient) { }
 
   getTenantProperties(tenant:string,environment:string):Observable<any>{
-    return this.http.get<any>(`${this.baseUrl}/${tenant}/${environment}`);
+    return this.http.get<any>(`${this.baseUrl}/properties/${tenant}/${environment}`);
   }
 
   addProperty(property:AddProperty):Observable<any>{
-    return this.http.post<any>(`${this.baseUrl}/tenant-env-configuration`, property);  
+    return this.http.post<any>(`${this.baseUrl}/properties`, property);  
   }
 
   updateProperty(property: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}`, property);
+    return this.http.put(`${this.baseUrl}/properties`, property);
   }
 
   deleteProperty(id:string):Observable<any>{
-    return this.http.delete(`${this.baseUrl}/${id}`);
+    return this.http.delete(`${this.baseUrl}/properties/${id}`);
   }
 }

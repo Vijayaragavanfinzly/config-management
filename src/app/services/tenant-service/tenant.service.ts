@@ -8,22 +8,19 @@ import { Property } from '../../model/property.interface';
 })
 export class TenantService {
 
-  private baseUrl = 'http://localhost:8080/api'
+  private baseUrl = 'http://localhost:8080'
 
   constructor(private http:HttpClient) { }
-
-
-  
 
   getAllTenants():Observable<any>{
     return this.http.get<any>(`${this.baseUrl}/tenants`);
   }
 
   getTenantEnvironments(tenant:string):Observable<any>{
-    return this.http.get<any>(`${this.baseUrl}/${tenant}`);
+    return this.http.get<any>(`${this.baseUrl}/tenants/${tenant}`);
   }
 
   addNewTenantWithEnvironment(payload:any):Observable<any>{
-    return this.http.post<any>(`${this.baseUrl}`,payload);
+    return this.http.post<any>(`${this.baseUrl}/tenant-env`,payload);
   }
 }

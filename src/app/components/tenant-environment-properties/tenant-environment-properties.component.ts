@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TenantService } from '../../services/tenant-service/tenant.service';
@@ -35,8 +35,23 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   totalPages: number = 0;
   pages: number[] = []
 
+  columns = [
+    { name: 'Property Key', field: 'propertyKey', width: 300 },
+    { name: 'Property Value', field: 'PropertyValue', width: 300 },
+    { name: 'Actions', field: 'actions', width: 150 },
+  ];
+
+  private startX: number = 0;
+  private startWidth: number = 0;
+  private currentColumnIndex: number = 0;
+  private tableType: string = '';
+  private removeListeners: Function[] = [];
+
+  private readonly MIN_COLUMN_WIDTH = 100;
+
+
   constructor(private route: ActivatedRoute,
-    private dialog: MatDialog, private propertyService: PropertyService, private snackBar: MatSnackBar
+    private dialog: MatDialog, private propertyService: PropertyService, private snackBar: MatSnackBar, private renderer: Renderer2
   ) { }
 
   ngOnInit(): void {
@@ -71,14 +86,17 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
 
   filterProperties() {
     if (this.searchKeyword.trim()) {
-      this.filteredProperties = this.properties.filter(
-        property =>
-          property.propertyKey.toLowerCase().includes(this.searchKeyword.toLowerCase()) ||
-          property.propertyValue.toLowerCase().includes(this.searchKeyword.toLowerCase())
-      );
-    } else {
+      this.filteredProperties = this.properties.filter(property => {
+          const key = property.propertyKey || "";
+          const value = property.propertyValue || "";
+          return (
+              key.toLowerCase().includes(this.searchKeyword.toLowerCase()) ||
+              value.toLowerCase().includes(this.searchKeyword.toLowerCase())
+          );
+      });
+  } else {
       this.filteredProperties = [...this.properties];
-    }
+  }
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -186,6 +204,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
                 verticalPosition: 'top',
               });
               this.loadPropertiesForTenants();
+              this.clearSearch();
             }
             else {
               this.snackBar.open(response.message, 'Close', {
@@ -239,6 +258,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
               console.log(response.message);
               console.log('Property updated:');
               this.loadPropertiesForTenants();
+              this.clearSearch();
             }
             else {
               this.snackBar.open(response.message, 'Close', {
@@ -275,6 +295,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
               console.log(res.message);
               console.log('Property Deleted!');
               this.loadPropertiesForTenants();
+              this.clearSearch();
             }
             else{
               this.snackBar.open(res.message, 'Close', {
@@ -297,6 +318,36 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   }
   navigateToProperties() {
     this.addProperty();
+  }
+
+
+
+
+  onMouseDown(event: MouseEvent, columnIndex: number): void {
+    event.preventDefault();
+
+    this.currentColumnIndex = columnIndex;
+    this.startX = event.clientX;
+    this.startWidth = this.columns[columnIndex].width;
+
+    this.removeListeners.forEach((remove) => remove());
+    this.removeListeners = [];
+
+    const moveListener = this.renderer.listen('document', 'mousemove', (moveEvent) => this.onMouseMove(moveEvent));
+    const upListener = this.renderer.listen('document', 'mouseup', () => this.onMouseUp());
+
+    this.removeListeners.push(moveListener, upListener);
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    const delta = event.clientX - this.startX;
+    const newWidth = Math.max(this.startWidth + delta, this.MIN_COLUMN_WIDTH);
+    this.columns[this.currentColumnIndex].width = newWidth;
+  }
+
+  onMouseUp(): void {
+    this.removeListeners.forEach((remove) => remove());
+    this.removeListeners = [];
   }
 
 }

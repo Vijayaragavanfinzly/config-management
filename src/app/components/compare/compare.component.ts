@@ -1,26 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { TenantService } from '../../services/tenant-service/tenant.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CompareService } from '../../services/compare-service/compare.service';
-import { SpinnerComponent } from "../miscellaneous/spinner/spinner.component";
 import { RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { ComparePropertyDialogComponent } from '../miscellaneous/dialogs/compare-property-dialog/compare-property-dialog.component';
 import { PropertyService } from '../../services/property-service/property.service';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { UpdateComparePropertyDialogComponent } from '../miscellaneous/dialogs/update-compare-property-dialog/update-compare-property-dialog.component';
 import { ConfirmCopyPropertyDialogComponent } from '../miscellaneous/dialogs/confirm-copy-property-dialog/confirm-copy-property-dialog.component';
-import { MatIcon } from '@angular/material/icon';
 
 
 @Component({
   selector: 'app-compare',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterModule, MatTabsModule, DragDropModule],
+  imports: [FormsModule, CommonModule, RouterModule, MatTabsModule],
   templateUrl: './compare.component.html',
   styleUrls: ['./compare.component.css'],
 })
@@ -38,13 +33,36 @@ export class CompareComponent implements OnInit {
   filteredSameData: any[] = [];
   filteredDifferentData: any[] = [];
   hoveredRow: any = null;
+  matchingPropertySize : number = 0;
+  nonMatchingPropertySize : number = 0;
 
   activeTab: number = 0;
   searchQuery: string = '';
   showSearchBar: boolean = false;
 
+  matchingColumns = [
+    { name: 'Property Key', field: 'propertyKey', width: 150 },
+    { name: 'Property Value', field: 'PropertyValue1', width: 150 },
+  ];
 
-  constructor(private tenantService: TenantService, private compareService: CompareService, private dialog: MatDialog, private propertyService: PropertyService, private snackBar: MatSnackBar) { }
+  differentColumns = [
+    { name: 'Property Key', field: 'propertyKey', width: 300 },
+    { name: 'Tenant 1 Value', field: 'PropertyValue1', width: 250 },
+    { name: 'Actions T1', field: 'actionsT1', width: 100 },
+    { name: 'Tenant 2 Value', field: 'PropertyValue2', width: 250 },
+    { name: 'Actions T2', field: 'actionsT2', width: 100 },
+  ];
+
+  private startX: number = 0;
+  private startWidth: number = 0;
+  private currentColumnIndex: number = 0;
+  private tableType: string = '';
+  private removeListeners: Function[] = [];
+
+  private readonly MIN_COLUMN_WIDTH = 100;
+
+
+  constructor(private tenantService: TenantService, private compareService: CompareService, private dialog: MatDialog, private propertyService: PropertyService, private snackBar: MatSnackBar,private renderer: Renderer2) { }
 
   ngOnInit(): void {
     this.loadAllTenants();
@@ -87,7 +105,11 @@ export class CompareComponent implements OnInit {
           console.log('Comparison result:', data);
           this.comparisonData = data.data;
           this.filteredSameData = this.comparisonData.filter(entry => entry.isSame === true);
+          this.matchingPropertySize = this.filteredSameData.length;
           this.filteredDifferentData = this.comparisonData.filter(entry => entry.isSame === false);
+          this.nonMatchingPropertySize = this.filteredDifferentData.length;
+          console.log(this.matchingPropertySize + " " + this.nonMatchingPropertySize);
+          
         },
         error: (err) => console.error('Error comparing environments:', err),
       });
@@ -111,85 +133,12 @@ export class CompareComponent implements OnInit {
     this.comparisonData = [];
     this.filteredSameData = [];
     this.filteredDifferentData = []
+    this.searchQuery = ''
     this.snackBar.open('Comparison cleared successfully!', 'Close', {
       duration: 3000,
       panelClass: ['custom-toast', 'toast-success'],
       horizontalPosition: 'center',
       verticalPosition: 'top',
-    });
-  }
-
-  openDialog(entry: any): void {
-    console.log(entry);
-
-    const dialogRef = this.dialog.open(ComparePropertyDialogComponent, {
-      data: {
-        source: entry.PropertyValue1,
-        destination: entry.PropertyValue2,
-        tenant1: this.selectedTenant1,
-        environment1: this.selectedEnv1,
-        tenant2: this.selectedTenant2,
-        environment2: this.selectedEnv2
-      },
-      panelClass: 'custom-dialog-container',
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result === 'sourceToDest') {
-        this.updateDatabase(entry, entry.PropertyValue1, 'sourceToDest');
-      } else if (result === 'destToSource') {
-        this.updateDatabase(entry, entry.PropertyValue2, 'destToSource');
-      }
-    });
-  }
-
-  updateDatabase(entry: any, newValue: string, direction: string): void {
-    const tenant = direction === 'sourceToDest' ? this.selectedTenant2 : this.selectedTenant1;
-    const environment = direction === 'sourceToDest' ? this.selectedEnv2 : this.selectedEnv1;
-    if (newValue === null) {
-      this.snackBar.open("Can't assign a empty value", 'Close', {
-        duration: 3000,
-        panelClass: ['custom-toast', 'toast-error'],
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-      });
-      return;
-    }
-    const payload = {
-      propertyKey: entry.propertyKey,
-      propertyValue: newValue,
-      tenant,
-      environment,
-    };
-
-    this.compareService.editProperty(tenant, environment, entry.propertyKey, newValue).subscribe({
-      next: (response) => {
-        console.log(response);
-
-        if (direction === 'sourceToDest') {
-          entry.PropertyValue2 = newValue;
-        } else if (direction === 'destToSource') {
-          entry.PropertyValue1 = newValue;
-        }
-        console.log('Database updated successfully');
-        this.compareEnvironments();
-        this.snackBar.open('Configuration updated successfully!', 'Close', {
-          duration: 3000,
-          panelClass: ['custom-toast', 'toast-success'],
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
-      },
-      error: (err) => {
-        console.error('Error updating database:', err)
-        this.snackBar.open('Update Failed! Try Again!', 'Close', {
-          duration: 3000,
-          panelClass: ['custom-toast', 'toast-error'],
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
-      }
-
     });
   }
 
@@ -333,6 +282,53 @@ export class CompareComponent implements OnInit {
   clearSearch() {
     this.searchQuery = '';
     this.filterResults();
+  }
+
+
+  onMouseDown(event: MouseEvent, columnIndex: number, tableType: string) {
+    event.preventDefault();
+
+    this.tableType = tableType;
+    this.currentColumnIndex = columnIndex;
+    this.startX = event.clientX;
+    this.startWidth =
+      this.tableType === 'matching'
+        ? this.matchingColumns[columnIndex].width
+        : this.differentColumns[columnIndex].width;
+
+    this.removeListeners.forEach((remove) => remove());
+    this.removeListeners = [];
+
+    const moveListener = this.renderer.listen(
+      'document',
+      'mousemove',
+      (moveEvent: MouseEvent) => this.onMouseMove(moveEvent)
+    );
+    const upListener = this.renderer.listen('document', 'mouseup', () =>
+      this.onMouseUp(moveListener, upListener)
+    );
+
+    this.removeListeners.push(moveListener, upListener);
+  }
+
+  onMouseMove(event: MouseEvent) {
+    const deltaX = event.clientX - this.startX;
+    const newWidth = Math.max(this.startWidth + deltaX, this.MIN_COLUMN_WIDTH);
+
+    if (this.tableType === 'matching') {
+      this.matchingColumns[this.currentColumnIndex].width = newWidth;
+    } else {
+      this.differentColumns[this.currentColumnIndex].width = newWidth;
+    }
+  }
+
+  onMouseUp(moveListener: Function, upListener: Function) {
+    moveListener();
+    upListener();
+    this.removeListeners = [];
+
+    this.tableType = '';
+    this.currentColumnIndex = -1;
   }
 
 }

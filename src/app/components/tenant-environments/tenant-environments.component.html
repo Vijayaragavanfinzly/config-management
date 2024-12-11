@@ -18,7 +18,7 @@
 <div *ngIf="!loading && environments.length > 0" class="container mt-5 search-bar">
   <div class="form-control search-input-container">
     <i class="fas fa-search search-icon"></i>
-    <input type="text" class=" search-input" [(ngModel)]="searchKeyword" (input)="filterEnvironment()" placeholder=" Search by Environment ..." />
+    <input type="text" class="form-control search-input" [(ngModel)]="searchKeyword" (input)="filterEnvironment()" placeholder=" Search by Environment ..." />
   </div>
   <button class="btn add-btn me-4 d-flex align-items-center" [disabled]="loading"  (click)="addNewEnvironmentForTenant()" aria-label="Add New Environment" 
   role="button">
