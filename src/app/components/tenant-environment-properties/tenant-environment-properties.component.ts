@@ -12,6 +12,9 @@ import { SpinnerComponent } from '../miscellaneous/spinner/spinner.component';
 import { AddPropertyDialogComponent } from '../miscellaneous/dialogs/add-property-dialog/add-property-dialog.component';
 import { PropertyDialogComponent } from '../miscellaneous/dialogs/edit-property-dialog/edit-property-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ExportService } from '../../services/export-service/export.service';
+import { ApplicationService } from '../../services/application-service/application.service';
+import { MatDialogConfig } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-tenant-environment-properties',
@@ -49,9 +52,11 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
 
   private readonly MIN_COLUMN_WIDTH = 100;
 
+  applications: string[] = [];
+
 
   constructor(private route: ActivatedRoute,
-    private dialog: MatDialog, private propertyService: PropertyService, private snackBar: MatSnackBar, private renderer: Renderer2
+    private dialog: MatDialog, private propertyService: PropertyService, private snackBar: MatSnackBar, private renderer: Renderer2, private exportService:ExportService,private applicationService:ApplicationService
   ) { }
 
   ngOnInit(): void {
@@ -60,6 +65,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
       this.tenant = param['tenant']
       if (this.environment && this.tenant) {
         this.loadPropertiesForTenants();
+        this.loadApplications();
       }
     })
   }
@@ -80,6 +86,25 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
       },
       complete: () => {
         this.loading = false
+      }
+    })
+  }
+
+  loadApplications():void{
+    this.applicationService.getAllApplications().subscribe({
+      next:(data:any)=>{
+        console.log(data);
+        
+        if(data.statusCode == '200'){
+          this.applications = data.data;
+          console.log(this.applications);
+        }
+      },
+      error:(err)=>{
+        console.error("Failed to fetch applications:", err);
+      },
+      complete:()=>{
+        console.log("Application loading process completed.");
       }
     })
   }
@@ -171,26 +196,53 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     this.filterProperties();
   }
 
+  exportProperties():void{
+    this.exportService.exportProperties(this.tenant,this.environment).subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${this.tenant}_${this.environment}_properties.sql`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+  });
+  }
+
 
   addProperty() {
-    const dialogRef = this.dialog.open(AddPropertyDialogComponent, {
-      width: '400px',
-      data: {
-        tenant: this.tenant,
-        environment: this.environment,
-        propertyKey: '',
-        propertyValue: '',
-        id: null,
-      }
-    });
-
+    const dialogConfig = new MatDialogConfig();
+  
+    // Set custom dialog properties
+    dialogConfig.minWidth = '800px'; // Customize the width of the dialog
+    dialogConfig.minHeight = '400px';
+    dialogConfig.maxHeight = '580px';
+    dialogConfig.maxWidth = '900px';
+    dialogConfig.data = {
+      tenant: this.tenant,
+      environment: this.environment,
+      propertyKey: '',
+      propertyValue: '',
+      id: null,
+      applications: this.applications,
+      fieldGroups: ['Global', 'Application', 'Customer'],
+      target: ['config_server', 'parameter_store'],
+      type: ['environment', 'tenant', 'client_adapter']
+    };
+  
+    // Open the dialog with the configuration
+    const dialogRef = this.dialog.open(AddPropertyDialogComponent, dialogConfig);
+  
     dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
       if (result) {
         const payload = {
           environment: this.environment,
           tenant: this.tenant,
           propertyKey: result.propertyKey.trim(),
-          propertyValue: result.propertyValue.trim()
+          propertyValue: result.propertyValue.trim(),
+          application: result.application,
+          field_group: result.fieldGroup,
+          target: result.target,
+          type: result.type
         };
         this.propertyService.addProperty(payload).subscribe({
           next: (response) => {
@@ -205,8 +257,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
               });
               this.loadPropertiesForTenants();
               this.clearSearch();
-            }
-            else {
+            } else {
               this.snackBar.open(response.message, 'Close', {
                 duration: 3000,
                 panelClass: ['custom-toast', 'toast-error'],
@@ -214,7 +265,6 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
                 verticalPosition: 'top',
               });
             }
-
           },
           error: (err) => {
             console.log(err);
@@ -233,7 +283,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
 
   editProperty(property: Property) {
     const dialogRef = this.dialog.open(PropertyDialogComponent, {
-      width: '400px',
+      width: '600px',
       data: {
         propertyKey: property.propertyKey,
         propertyValue: property.propertyValue,
@@ -279,7 +329,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
 
   deleteProperty(id: string) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '400px',
+      width: '600px',
     });
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) {

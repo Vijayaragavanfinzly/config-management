@@ -2,13 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { TenantService } from '../../services/tenant-service/tenant.service';
-import { Environment } from '../../model/environment.interface';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { AddTenantDialogComponent } from '../miscellaneous/dialogs/add-tenant-dialog/add-tenant-dialog.component';
 import { SpinnerComponent } from '../miscellaneous/spinner/spinner.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AddEnvironmentDialogComponent } from '../miscellaneous/dialogs/add-environment-dialog/add-environment-dialog.component';
 
 @Component({
   selector: 'app-tenant-environments',
@@ -26,7 +26,7 @@ export class TenantEnvironmentsComponent implements OnInit {
   environments: any[] = [];
   filteredEnvironments: any[] = [];
   searchKeyword: string = ""
-  loading: Boolean = false;
+  loading: boolean = false;
 
   constructor(private route: ActivatedRoute, private tenantService: TenantService, private dialog: MatDialog, private snackBar: MatSnackBar) { }
 
@@ -46,12 +46,10 @@ export class TenantEnvironmentsComponent implements OnInit {
     this.tenantService.getTenantEnvironments(this.tenant).subscribe({
       next: (data: any) => {
         console.log(data);
-
         this.environments = data.data.environments;
         this.tenantName = data.data.tenantName;
-        this.application = data.data.application;
-        this.fieldGroup = data.data.fieldGroup;
-        this.filteredEnvironments = [...this.environments]
+        this.filteredEnvironments = this.environments.filter(env => env !== 'PENDING');
+
         console.log("Tenant Name : " + this.tenantName);
         console.log("Loaded environments for tenant:", this.environments);
       },
@@ -71,42 +69,37 @@ export class TenantEnvironmentsComponent implements OnInit {
     });
   }
 
-  filterEnvironment() {
+  filterEnvironment(): void {
     if (this.searchKeyword.trim()) {
       console.log(this.searchKeyword);
-
-      this.filteredEnvironments = this.environments.filter((environment) => {
-        return environment.toLowerCase().includes(this.searchKeyword.toLowerCase())
-      });
-    }
-    else {
-      this.filteredEnvironments = [...this.environments]
+      this.filteredEnvironments = this.environments.filter(environment =>
+        environment.name.toLowerCase().includes(this.searchKeyword.toLowerCase()) && environment.status !== 'PENDING'
+      );
+    } else {
+      this.filteredEnvironments = this.environments.filter(env => env.status !== 'PENDING');
     }
   }
-  clearSearch() {
+
+  clearSearch(): void {
     this.searchKeyword = '';
     this.filterEnvironment();
   }
 
   addNewEnvironmentForTenant(): void {
-    const dialogRef = this.dialog.open(AddTenantDialogComponent, {
+    const dialogRef = this.dialog.open(AddEnvironmentDialogComponent, {
       width: '600px',
       data: {
         tenant: this.tenant,
         environment: '',
-        tenant_name: this.tenantName,
-        application: this.application,
-        fieldGroup: this.fieldGroup,
+        tenant_name: this.tenantName
       }
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         const payload = {
-          environment: result.environment.toUpperCase(),
-          tenantName: result.tenant_name,
-          tenant: result.tenant,
-          application: result.application,
-          fieldGroup: result.field_group
+          environment: result.environment.toLowerCase(),
+          tenantName: this.tenantName,
+          tenant: this.tenant,
         };
         console.log(result);
         console.log(payload);
@@ -138,5 +131,4 @@ export class TenantEnvironmentsComponent implements OnInit {
       }
     });
   }
-
 }

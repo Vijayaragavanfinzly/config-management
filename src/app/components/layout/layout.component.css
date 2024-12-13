@@ -42,6 +42,7 @@
   color: #333;
   padding: 12px 22px;
   margin-bottom: 10px;
+  margin-left: 10px;
   display: flex;
   align-items: center;
   width: 100%;
@@ -175,9 +176,12 @@ li a{
 }
 
 .sidebar.collapsed li a{
-  right: 15px;
+  right: 20px;
 }
 .sidebar.collapsed .nav-toggle{
+  right: 10px;
+}
+.sidebar.collapsed .logout{
   right: 10px;
 }
 

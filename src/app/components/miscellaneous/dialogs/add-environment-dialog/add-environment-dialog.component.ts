@@ -2,14 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatOption } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
-  selector: 'app-add-tenant-dialog',
+  selector: 'app-add-environment-dialog',
   standalone: true,
   imports: [
     CommonModule,
@@ -21,20 +20,21 @@ import {MatSelectModule} from '@angular/material/select';
     MatFormFieldModule,
     MatSelectModule
   ],
-  templateUrl: './add-tenant-dialog.component.html',
-  styleUrls: ['./add-tenant-dialog.component.css'],
+  templateUrl: './add-environment-dialog.component.html',
+  styleUrl: './add-environment-dialog.component.css'
 })
-export class AddTenantDialogComponent {
+export class AddEnvironmentDialogComponent {
   tenantForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<AddTenantDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { tenant?: string; tenant_name?: string }
+    private dialogRef: MatDialogRef<AddEnvironmentDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { tenant?: string; tenant_name?: string;environment?:string; }
   ) {
     this.tenantForm = this.fb.group({
       tenant: ['', Validators.required],
       tenant_name: ['', Validators.required],
+      environment:['',Validators.required],
     });
     if (data?.tenant) {
       this.tenantForm.patchValue({ tenant: data.tenant });
@@ -45,6 +45,8 @@ export class AddTenantDialogComponent {
       this.tenantForm.get('tenant_name')?.disable();
     }
   }
+
+  
 
   onSave(): void {
     const formData = {

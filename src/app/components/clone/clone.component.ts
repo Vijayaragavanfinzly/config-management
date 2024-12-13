@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TenantService } from '../../services/tenant-service/tenant.service';
 import { CloneService } from '../../services/clone-service/clone.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PropertyService } from '../../services/property-service/property.service';
 
 @Component({
   selector: 'app-clone',
@@ -15,17 +16,31 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class CloneComponent {
   tenants: any[] = [];
-  selectedTenant1: string = '';
-  selectedTenant2: string = '';
+  selectedTenant: string = '';
   tenant1Environments: string[] = [];
   tenant2Environments: string[] = [];
-  selectedEnv1: string = '';
-  selectedEnv2: string = '';
+  selectedEnv: string = '';
   searchQuery: string = '';
-  loading:boolean = false
+  loading:boolean = false;
+
+  manualTenant: string = '';
+  manualEnv: string = '';
+
+  clonedProperties :any[] = [];
+  columns: { name: string; width: number }[] = [
+    { name: 'Property Key', width: 200 },
+    { name: 'Property Value', width: 300 }
+  ];
+
+  private startX: number = 0;
+  private startWidth: number = 0;
+  private currentColumnIndex: number = 0;
+  private tableType: string = '';
+  private removeListeners: Function[] = [];
+  private readonly MIN_COLUMN_WIDTH = 100;
 
 
-  constructor(private tenantService:TenantService,private cloneService:CloneService,private snackBar: MatSnackBar){
+  constructor(private tenantService:TenantService,private cloneService:CloneService,private snackBar: MatSnackBar,private renderer:Renderer2,private propertService:PropertyService){
 
   }
 
@@ -47,7 +62,7 @@ export class CloneComponent {
 
   loadEnvironmentsForTenant(tenantKey: string): void {
     this.loading = true;
-    const selectedTenant = tenantKey === 'tenant1' ? this.selectedTenant1 : this.selectedTenant2;
+    const selectedTenant = tenantKey === 'tenant1' ? this.manualTenant : this.selectedTenant;
 
     this.tenantService.getTenantEnvironments(selectedTenant).subscribe({
       next: (data) => {
@@ -64,8 +79,11 @@ export class CloneComponent {
   }
 
   cloneProperties(): void {
-    if (!this.selectedTenant1 || !this.selectedEnv1 || !this.selectedTenant2 || !this.selectedEnv2) {
-      this.snackBar.open('Please select an environment for both tenants.', 'Close', {
+    console.log(this.tenants);
+    console.log(this.tenant2Environments);
+  
+    if (!this.manualTenant || !this.manualEnv || !this.selectedTenant || !this.selectedEnv) {
+      this.snackBar.open('Please fill all the fields', 'Close', {
         duration: 3000,
         panelClass: ['custom-toast', 'toast-error'],
         horizontalPosition: 'center',
@@ -73,39 +91,76 @@ export class CloneComponent {
       });
       return;
     }
-
+  
+    // Ensure tenant & environment combination is unique
+    if (this.tenants.some(t => t.tenant === this.manualTenant && this.tenant2Environments.includes(this.manualEnv))) {
+      this.snackBar.open('Tenant & Environment Already Exist!', 'Close', {
+        duration: 3000,
+        panelClass: ['custom-toast', 'toast-error'],
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
+      return;
+    }
+  
     this.loading = true;
-
-    this.cloneService.cloneTenants(this.selectedTenant1,this.selectedEnv1,this.selectedTenant2,this.selectedEnv2).subscribe({
+  
+    // Clone tenants
+    this.cloneService.cloneTenants(this.manualTenant.toLowerCase(), this.manualEnv.toLowerCase(), this.selectedTenant, this.selectedEnv).subscribe({
       next: (data) => {
         console.log(data);
-        if(data.statusCode == "200"){
+        console.log(data.statusCode);
+        
+        if (data.statusCode === 200) {
           this.snackBar.open('Cloned Successfully!', 'Close', {
             duration: 3000,
             panelClass: ['custom-toast', 'toast-success'],
             horizontalPosition: 'center',
             verticalPosition: 'top',
           });
-          this.loading = false;
-          console.log("cloning successful!");
+          console.log("cloning");
           
+          this.propertService.getTenantProperties(this.manualTenant, this.manualEnv).subscribe({
+            next: (data: any) => {
+              this.clonedProperties = data.data;
+              console.log(this.clonedProperties);
+            },
+            error: (err) => {
+              console.error("Error fetching properties for tenant:", err);
+            },
+            complete: () => {
+              this.loading = false; // Ensure loading is reset
+            }
+          });
+        } else {
+          this.snackBar.open('Unexpected response from server', 'Close', {
+            duration: 3000,
+            panelClass: ['custom-toast', 'toast-error'],
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          });
+          this.loading = false;
         }
-        
-        
       },
       error: (err) => {
         console.error('Error during cloning:', err);
-        alert('Cloning failed. Please try again.');
-        this.loading = false;
+        this.snackBar.open('Cloning failed. Please try again.', 'Close', {
+          duration: 3000,
+          panelClass: ['custom-toast', 'toast-error'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+        this.loading = false; // Ensure loading is reset on error
       },
     });
   }
+  
 
   clearSelections(): void {
-    this.selectedTenant1 = '';
-    this.selectedTenant2 = '';
-    this.selectedEnv1 = '';
-    this.selectedEnv2 = '';
+    this.manualTenant = '';
+    this.manualEnv = '';
+    this.selectedTenant = '';
+    this.selectedEnv = '';
     this.tenant1Environments = [];
     this.tenant2Environments = [];
     this.searchQuery = ''
@@ -115,5 +170,32 @@ export class CloneComponent {
       horizontalPosition: 'center',
       verticalPosition: 'top',
     });
+  }
+
+  onMouseDown(event: MouseEvent, columnIndex: number): void {
+    event.preventDefault();
+
+    this.currentColumnIndex = columnIndex;
+    this.startX = event.clientX;
+    this.startWidth = this.columns[columnIndex].width;
+
+    this.removeListeners.forEach((remove) => remove());
+    this.removeListeners = [];
+
+    const moveListener = this.renderer.listen('document', 'mousemove', (moveEvent) => this.onMouseMove(moveEvent));
+    const upListener = this.renderer.listen('document', 'mouseup', () => this.onMouseUp());
+
+    this.removeListeners.push(moveListener, upListener);
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    const delta = event.clientX - this.startX;
+    const newWidth = Math.max(this.startWidth + delta, this.MIN_COLUMN_WIDTH);
+    this.columns[this.currentColumnIndex].width = newWidth;
+  }
+
+  onMouseUp(): void {
+    this.removeListeners.forEach((remove) => remove());
+    this.removeListeners = [];
   }
 }

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 
@@ -23,7 +23,9 @@ export class LayoutComponent implements OnInit {
 
   isSidebarCollapsed :Boolean = false;
 
-  
+  constructor(private router:Router){
+
+  }
   
 
   themes: Record<string, Theme> = {
@@ -71,12 +73,25 @@ export class LayoutComponent implements OnInit {
       this.applyTheme(savedTheme);
     }
   }
+  
 
   @HostListener('window:keydown',['$event'])
   handleKeyoardToggle(event: KeyboardEvent){
     if(event.altKey && event.key === '1'){
       event.preventDefault();
       this.toggleSidebar();
+    }
+    if(event.altKey && (event.key === 't' || event.key === 'T')){
+      event.preventDefault();
+      this.router.navigate(['/tenants']);
+    }
+    if(event.altKey && (event.key === 'c' || event.key === 'C')){
+      event.preventDefault();
+      this.router.navigate(['/compare']);
+    }
+    if(event.altKey && (event.key === 'X' || event.key === 'x')){
+      event.preventDefault();
+      this.router.navigate(['/clone']);
     }
   }
 

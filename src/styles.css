@@ -1,11 +1,15 @@
+@import "@ng-select/ng-select/themes/material.theme.css";
 :root {
   --primary-color: #17a2b8;
-  --secondary-color: #92C7CF;
+  --secondary-color: #138496;
   --background-light: #FBF9F1;
   --accent-beige: #E5E1DA;
   --gray-color:#f9f9f9;
 }
 /* =================================================================================== */
+.btn{
+  font-weight: 500;
+}
 
 .custom-snackbar {
   background-color: #ffffff;

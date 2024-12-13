@@ -1,31 +1,7 @@
 <div class="dialog-container">
-  <h2 *ngIf="data?.applications" mat-dialog-title>Create New Tenant</h2>
-  <h2 *ngIf="!data?.applications" mat-dialog-title>Create New Environment</h2>
+  <h2 mat-dialog-title>Create New Tenant</h2>
   <mat-dialog-content>
     <form [formGroup]="tenantForm">
-      <div *ngIf="data?.applications" class="form-group">
-        <mat-form-field appearance="outline" class="full-width stylish-dropdown">
-          <mat-label>Application</mat-label>
-          <mat-select formControlName="application">
-            <mat-option *ngFor="let app of data.applications" [value]="app">{{ app }}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="tenantForm.get('application')?.invalid">
-            Application is required
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <div *ngIf="data?.field_groups" class="form-group">
-        <mat-form-field appearance="outline" class="full-width stylish-dropdown">
-          <mat-label>Field Group</mat-label>
-          <mat-select formControlName="field_group">
-            <mat-option *ngFor="let group of data.field_groups" [value]="group">{{ group }}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="tenantForm.get('field_group')?.invalid">
-            Field Group is required
-          </mat-error>
-        </mat-form-field>
-      </div>
 
       <div class="form-group">
         <mat-form-field appearance="outline" class="full-width">
@@ -47,15 +23,6 @@
         </mat-form-field>
       </div>
       
-      <div class="form-group">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Environment</mat-label>
-          <input matInput formControlName="environment" placeholder="Eg. PREPROD2" />
-          <mat-error *ngIf="tenantForm.get('environment')?.invalid">
-            Environment is required
-          </mat-error>
-        </mat-form-field>
-      </div>
     </form>
   </mat-dialog-content>
   <mat-dialog-actions class="dialog-actions">

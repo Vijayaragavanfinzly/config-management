@@ -21,13 +21,13 @@
       </a>
       
       <ul class="nav flex-column mb-auto">
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a routerLink="/environments" routerLinkActive="active" class="nav-link">
             <i class="fas fa-cogs"></i>
             <span *ngIf="!isSidebarCollapsed">Environments</span>
             <small *ngIf="isSidebarCollapsed" class="collapsed-text">Environments</small>
           </a>
-        </li>
+        </li> -->
         <li class="nav-item">
           <a routerLink="/tenants" routerLinkActive="active" class="nav-link">
             <i class="fas fa-user-friends"></i>
@@ -55,7 +55,7 @@
         class="logout mt-auto position-absolute bottom-0 start-0 w-100 p-3 nav-item "
       >
         <a
-          class="nav-link d-flex text-decoration-none"
+          class="nav-link d-flex text-decoration-none logout"
         >
           <i class="fas fa-sign-out-alt"></i>
           <span *ngIf="!isSidebarCollapsed">Logout</span>

@@ -1,0 +1,19 @@
+
+.dialog-container {
+    width: 100%;
+    margin: auto;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .form-group {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }

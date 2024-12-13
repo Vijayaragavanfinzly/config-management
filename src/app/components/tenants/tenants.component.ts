@@ -98,24 +98,23 @@ export class TenantsComponent implements OnInit {
       width: '700px',
       data: {
         tenant: '',
-        environment: '',
         tenant_name: '',
-        applications: this.applications,
-        field_groups: ['Global','Application','Customer']
       }
     });
+  
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log(result);
+  
         const payload = {
-          environment: result.environment.toUpperCase(),
+          environment: 'PENDING',
           tenantName: result.tenant_name,
-          tenant: result.tenant.toUpperCase(),
-          application:result.application,
-          fieldGroup:result.field_group
+          tenant: result.tenant.toLowerCase(),
         };
-        this.tenantService.addNewTenantWithEnvironment(payload).subscribe({
+  
+        this.tenantService.addNewTenant(payload).subscribe({
           next: (data: any) => {
+            
             if (data && data.statusCode === 201) {
               console.log("Tenant Environment added successfully!");
               this.snackBar.open('Tenant & Environment Added Successfully!', 'Close', {
@@ -124,23 +123,29 @@ export class TenantsComponent implements OnInit {
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
-              console.log(data.message);
-              this.loadTenants();
+              this.loadTenants();  
             } else {
-              this.snackBar.open('Tenant & Environment Already Exists !', 'Close', {
+              this.snackBar.open(data.message, 'Close', {
                 duration: 3000,
                 panelClass: ['custom-toast', 'toast-error'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
-              console.error("Failed to add Tenant Environment:", data?.message || "Unknown error");
+              
             }
           },
           error: (error) => {
             console.error("Error while adding Tenant Environment:", error);
+            this.snackBar.open('Failed to Add Tenant & Environment!', 'Close', {
+              duration: 3000,
+              panelClass: ['custom-toast', 'toast-error'],
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
           }
-        })
+        });
       }
     });
   }
+  
 }

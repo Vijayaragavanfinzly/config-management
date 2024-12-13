@@ -23,4 +23,8 @@ export class TenantService {
   addNewTenantWithEnvironment(payload:any):Observable<any>{
     return this.http.post<any>(`${this.baseUrl}/tenant-env`,payload);
   }
+  addNewTenant(payload:any):Observable<any>{
+    return this.http.post<any>(`${this.baseUrl}/tenant`,payload);
+
+  }
 }

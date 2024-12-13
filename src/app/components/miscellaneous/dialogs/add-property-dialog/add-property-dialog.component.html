@@ -1,44 +1,98 @@
 <div class="dialog-container">
-  <h2 mat-dialog-title>Add New Property</h2>
-  <mat-dialog-content>
-    <form [formGroup]="propertyForm">
-      <div class="form-group">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Environment Name</mat-label>
-          <input matInput formControlName="environment" readonly />
-          <mat-error *ngIf="propertyForm.get('environment')?.invalid">Environment is required</mat-error>
-        </mat-form-field>
+  <div class="dialog-header">
+    <h2>Add New Property</h2>
+  </div>
+  <div class="dialog-content">
+    <form [formGroup]="propertyForm" class="property-form">
+      <!-- First row with three items -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="environment" class="form-label">Environment Name</label>
+          <input id="environment" type="text" formControlName="environment" readonly class="form-input" />
+          <div *ngIf="propertyForm.get('environment')?.invalid" class="error-text">Environment is required</div>
+        </div>
+  
+        <div class="form-group">
+          <label for="tenant" class="form-label">Tenant Name</label>
+          <input id="tenant" type="text" formControlName="tenant" readonly class="form-input" />
+          <div *ngIf="propertyForm.get('tenant')?.invalid" class="error-text">Tenant is required</div>
+        </div>
+  
+        <div class="form-group">
+          <label for="application" class="form-label">Application</label>
+          <ng-select
+            [items]="data.applications"
+            bindLabel="name"
+            [searchable]="true"
+            formControlName="application"
+            placeholder="Select an application"
+            class="stylish-dropdown"
+          ></ng-select>
+          <div *ngIf="propertyForm.get('application')?.invalid" class="error-text">Application is required</div>
+        </div>
       </div>
 
-      <div class="form-group">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Tenant Name</mat-label>
-          <input matInput formControlName="tenant" readonly />
-          <mat-error *ngIf="propertyForm.get('tenant')?.invalid">Tenant ID is required</mat-error>
-        </mat-form-field>
+      <!-- Second row with three items -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fieldGroup" class="form-label">Field Group</label>
+          <ng-select
+            [items]="data.fieldGroups"
+            bindLabel="name"
+            [searchable]="true"
+            formControlName="fieldGroup"
+            placeholder="Select a Field Group"
+            class="stylish-dropdown"
+          ></ng-select>
+          <div *ngIf="propertyForm.get('fieldGroup')?.invalid" class="error-text">Field Group is required</div>
+        </div>
+  
+        <div class="form-group">
+          <label for="type" class="form-label">Type</label>
+          <ng-select
+            [items]="data.type"
+            [searchable]="true"
+            bindLabel="name"
+            formControlName="type"
+            placeholder="Select a Type"
+            class="stylish-dropdown"
+          ></ng-select>
+          <div *ngIf="propertyForm.get('type')?.invalid" class="error-text">Type is required</div>
+        </div>
+  
+        <div class="form-group">
+          <label for="target" class="form-label">Target</label>
+          <ng-select
+            [items]="data.target"
+            [searchable]="true"
+            bindLabel="name"
+            formControlName="target"
+            placeholder="Select a Target"
+            class="stylish-dropdown"
+          ></ng-select>
+          <div *ngIf="propertyForm.get('target')?.invalid" class="error-text">Target is required</div>
+        </div>
       </div>
-
-      <div class="form-group">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Property Key</mat-label>
-          <input matInput formControlName="propertyKey" />
-          <mat-error *ngIf="propertyForm.get('propertyKey')?.invalid">Property Key is required</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="form-group">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Property Value</mat-label>
-          <input matInput formControlName="propertyValue" />
-          <mat-error *ngIf="propertyForm.get('propertyValue')?.invalid">Property Value is required</mat-error>
-        </mat-form-field>
+  
+      <!-- Last row with Property Key and Property Value -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="propertyKey" class="form-label">Property Key</label>
+          <input id="propertyKey" type="text" formControlName="propertyKey" class="form-input" />
+          <div *ngIf="propertyForm.get('propertyKey')?.invalid" class="error-text">Property Key is required</div>
+        </div>
+  
+        <div class="form-group">
+          <label for="propertyValue" class="form-label">Property Value</label>
+          <input id="propertyValue" type="text" formControlName="propertyValue" class="form-input" />
+          <div *ngIf="propertyForm.get('propertyValue')?.invalid" class="error-text">Property Value is required</div>
+        </div>
       </div>
     </form>
-  </mat-dialog-content>
-  <mat-dialog-actions class="dialog-actions">
-    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="propertyForm.invalid">
-      Save
-    </button>
-    <button mat-flat-button color="warn" (click)="onCancel()">Cancel</button>
-  </mat-dialog-actions>
+  </div>
+  
+  <div class="dialog-actions">
+    <button class="btn btn-primary" (click)="onSave()" [disabled]="propertyForm.invalid">Save</button>
+    <button class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+  </div>
 </div>

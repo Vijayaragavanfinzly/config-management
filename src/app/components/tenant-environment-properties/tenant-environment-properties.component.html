@@ -3,17 +3,17 @@
     <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
       <li class="breadcrumb-item">
         <a [routerLink]="['/tenants']" class="breadcrumb-link">
-          <i class="fas fa-link mr-2"></i> Tenants
+          <i class="fas fa-link mr-2"></i> TENANTS
         </a>
       </li>
       <li class="breadcrumb-item">
         <a [routerLink]="['/tenants', tenant]" [routerLinkActive]="['active']" class="breadcrumb-link">
-          {{ tenant }}
+          {{ tenant | uppercase}}
         </a>
       </li>
       <li class="breadcrumb-item active">
         <a [routerLink]="['/tenants', tenant, environment]" [routerLinkActive]="['active']" class="breadcrumb-link">
-          {{ environment }}
+          {{ environment | uppercase}}
         </a>
       </li>
     </ol>
@@ -26,9 +26,13 @@
     <input type="text" class="form-control search-input" [(ngModel)]="searchKeyword" (input)="filterProperties()"
       placeholder=" Search by Property key or value ..." />
   </div>
-  <button class="btn add-btn me-4 d-flex align-items-center" (click)="addProperty()" [disabled]="loading"
+  <button class="btn add-btn d-flex align-items-center ms-4" (click)="addProperty()" [disabled]="loading"
     aria-label="Add New Environment" role="button">
-    <i class="fas fa-plus"></i> <span class="ms-2">Add New Property</span>
+    <i class="fas fa-plus"></i> <span class="ms-2 pb-1">Add</span>
+  </button>
+  <button class="btn add-btn ms-4" (click)="exportProperties()" [disabled]="loading"
+    aria-label="Add New Environment" role="button">
+    <i class="fas fa-plus"></i> <span class="ms-2 pb-1 ">Export</span>
   </button>
 </div>
 
@@ -50,9 +54,6 @@
               {{ column.name }}
               <div class="resize-handle" (mousedown)="onMouseDown($event, i)"></div>
             </th>
-            <!-- <th [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}" class="text-center">Property Key</th>
-          <th>Property Value</th>
-          <th class="text-center full-width ps-4">Actions</th> -->
           </tr>
         </thead>
         <tbody>

@@ -278,7 +278,7 @@ table.custom-table tbody tr:nth-child(odd) td{
 .add-btn {
   background-color: var(--primary-color);
   color: #fff;
-  width: 250px;
+  width: 200px;
   padding: 10px;
   display: flex;
   justify-content: center;
@@ -331,7 +331,7 @@ table.custom-table tbody tr:nth-child(odd) td{
 }
 
 .search-input-container {
-  width: 76%;
+  width: 60%;
   height: 50px;
   display: flex;
   border: 1px solid #ddd;
@@ -524,12 +524,14 @@ input{
   border-radius: 8px;
   background-color: #f8f9fa;
   color: #333;
+  outline: none;
   transition: background-color 0.3s ease;
 }
 
 .items-per-page .form-select:focus {
   outline: none;
-  border-color: var(--primary-color);
+  box-shadow: none;
+  
 }
 
 .items-per-page .form-select:hover {

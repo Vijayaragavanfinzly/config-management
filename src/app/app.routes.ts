@@ -8,6 +8,8 @@ import { TenantEnvironmentsComponent } from './components/tenant-environments/te
 import { TenantEnvironmentPropertiesComponent } from './components/tenant-environment-properties/tenant-environment-properties.component';
 import { CompareComponent } from './components/compare/compare.component';
 import { CloneComponent } from './components/clone/clone.component';
+import { CompareByTenantComponent } from './components/compare-by-tenant/compare-by-tenant.component';
+import { CompareByEnvironmentComponent } from './components/compare-by-environment/compare-by-environment.component';
 
 export const routes: Routes = [
     {
@@ -29,6 +31,14 @@ export const routes: Routes = [
             {
                 path:'accounts',
                 component:AccountComponent
+            },
+            {
+                path:'compare/compareByTenant',
+                component:CompareByTenantComponent
+            },
+            {
+                path:'compare/compareByEnvironment',
+                component:CompareByEnvironmentComponent
             },
             {
                 path: 'environments/environment',

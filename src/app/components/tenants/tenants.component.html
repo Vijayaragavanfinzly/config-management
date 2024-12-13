@@ -3,7 +3,7 @@
     <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
       <li class="breadcrumb-item" [routerLinkActive]="['active']">
         <a [routerLink]="['/tenants']" class="breadcrumb-link">
-          <i class="fas fa-link mr-2"></i> Tenants
+          <i class="fas fa-link mr-2"></i> TENANTS
         </a>
       </li>
     </ol>
@@ -39,15 +39,21 @@
     <div *ngFor="let tenant of filteredTenants" class="tile-card">
       <div class="tile-header"></div>
       <div class="tile-body">
-        <h4 class="tile-title">{{ tenant.tenant }}</h4>
-        <p class="tile-description">Customize and explore features unique to {{ tenant.tenantName }}.</p>
+        <h4 class="tile-title">{{ tenant.tenant | uppercase }}</h4>
+        <p class="tile-description">
+          Explore the available environments under 
+          <strong>{{ tenant.tenantName | uppercase }}</strong>.
+        </p>
         <div class="tile-footer">
-          <button class="btn btn-primary" [routerLink]="['/tenants',tenant.tenant]">View Details</button>
+          <button class="btn btn-primary" [routerLink]="['/tenants',tenant.tenant]">
+            Explore Tenant
+          </button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 
 
 
