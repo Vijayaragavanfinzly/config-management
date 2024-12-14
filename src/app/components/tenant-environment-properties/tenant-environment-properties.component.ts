@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, HostListener, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TenantService } from '../../services/tenant-service/tenant.service';
@@ -15,11 +15,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ExportService } from '../../services/export-service/export.service';
 import { ApplicationService } from '../../services/application-service/application.service';
 import { MatDialogConfig } from '@angular/material/dialog';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-tenant-environment-properties',
   standalone: true,
-  imports: [RouterModule, SpinnerComponent, CommonModule, MatDialogModule, MatButtonModule, FormsModule],
+  imports: [RouterModule, SpinnerComponent, CommonModule, MatDialogModule, MatButtonModule, FormsModule,MatSidenavModule,MatIconModule,MatInputModule,MatSelectModule,NgSelectComponent],
   templateUrl: './tenant-environment-properties.component.html',
   styleUrl: './tenant-environment-properties.component.css'
 })
@@ -27,11 +32,13 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
 
   tenant: string = '';
   environment: string = '';
-  properties: Property[] = [];
+  properties: any[] = [];
   filteredProperties: Property[] = [];
   paginatedProperties: Property[] = [];
   searchKeyword: string = '';
   loading: Boolean = false;
+  selectedIds: string[] = [];
+  isAllSelected: boolean = false;
 
   currentPage: number = 1;
   pageSize: number = 10;
@@ -52,11 +59,26 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
 
   private readonly MIN_COLUMN_WIDTH = 100;
 
+  showSearchDrawer = false;
+  advancedSearch = {
+    keyword: '',
+    application: '',
+    fieldGroup: '',
+    type: '',
+    target: '',
+  }
+
+  isDrawerOpen = false;
+
+  fieldGroups:string[] = ['Global', 'Application', 'Customer']
+  targets:string[] = ['config_server', 'parameter_store']
+  types:string[] = ['environment', 'tenant', 'client_adapter']
+
   applications: string[] = [];
 
 
   constructor(private route: ActivatedRoute,
-    private dialog: MatDialog, private propertyService: PropertyService, private snackBar: MatSnackBar, private renderer: Renderer2, private exportService:ExportService,private applicationService:ApplicationService
+    private dialog: MatDialog, private propertyService: PropertyService, private snackBar: MatSnackBar, private renderer: Renderer2, private exportService: ExportService, private applicationService: ApplicationService
   ) { }
 
   ngOnInit(): void {
@@ -70,11 +92,21 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     })
   }
 
+  @HostListener('window:keydown',['$event'])
+    handleKeyoardToggle(event: KeyboardEvent){
+      if(event.key === 'Escape'){
+        event.preventDefault();
+        this.isDrawerOpen = false;
+      }
+    }
+
   loadPropertiesForTenants() {
     this.loading = true;
     this.propertyService.getTenantProperties(this.tenant, this.environment).subscribe({
       next: (data: any) => {
         this.properties = data.data;
+        console.log(this.properties);
+
         this.filteredProperties = [...this.properties];
         this.currentPage = 1;
         this.updatePagination();
@@ -90,20 +122,20 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     })
   }
 
-  loadApplications():void{
+  loadApplications(): void {
     this.applicationService.getAllApplications().subscribe({
-      next:(data:any)=>{
+      next: (data: any) => {
         console.log(data);
-        
-        if(data.statusCode == '200'){
+
+        if (data.statusCode == '200') {
           this.applications = data.data;
           console.log(this.applications);
         }
       },
-      error:(err)=>{
+      error: (err) => {
         console.error("Failed to fetch applications:", err);
       },
-      complete:()=>{
+      complete: () => {
         console.log("Application loading process completed.");
       }
     })
@@ -112,16 +144,16 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   filterProperties() {
     if (this.searchKeyword.trim()) {
       this.filteredProperties = this.properties.filter(property => {
-          const key = property.propertyKey || "";
-          const value = property.propertyValue || "";
-          return (
-              key.toLowerCase().includes(this.searchKeyword.toLowerCase()) ||
-              value.toLowerCase().includes(this.searchKeyword.toLowerCase())
-          );
+        const key = property.propertyKey || "";
+        const value = property.propertyValue || "";
+        return (
+          key.toLowerCase().includes(this.searchKeyword.toLowerCase()) ||
+          value.toLowerCase().includes(this.searchKeyword.toLowerCase())
+        );
       });
-  } else {
+    } else {
       this.filteredProperties = [...this.properties];
-  }
+    }
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -196,21 +228,43 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     this.filterProperties();
   }
 
-  exportProperties():void{
-    this.exportService.exportProperties(this.tenant,this.environment).subscribe(blob => {
+  exportProperties(): void {
+    if (this.selectedIds.length === 0) {
+      const confirmExportAll = confirm("No properties selected. Do you want to export all properties?");
+      if (confirmExportAll) {
+        this.exportAllProperties();
+      }
+    } else {
+      this.exportSelectedProperties();
+    }
+  }
+
+  exportAllProperties(): void {
+    this.exportService.exportProperties(this.tenant, this.environment).subscribe(blob => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = `${this.tenant}_${this.environment}_properties.sql`;
       a.click();
       window.URL.revokeObjectURL(url);
-  });
+    });
+  }
+
+  exportSelectedProperties(): void {
+    this.exportService.exportSelectedProperties(this.tenant, this.environment, this.selectedIds).subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${this.tenant}_${this.environment}_selected_properties.sql`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
   }
 
 
   addProperty() {
     const dialogConfig = new MatDialogConfig();
-  
+
     // Set custom dialog properties
     dialogConfig.minWidth = '800px'; // Customize the width of the dialog
     dialogConfig.minHeight = '400px';
@@ -223,14 +277,14 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
       propertyValue: '',
       id: null,
       applications: this.applications,
-      fieldGroups: ['Global', 'Application', 'Customer'],
-      target: ['config_server', 'parameter_store'],
-      type: ['environment', 'tenant', 'client_adapter']
+      fieldGroups: this.fieldGroups,
+      target: this.targets,
+      type: this.types
     };
-  
+
     // Open the dialog with the configuration
     const dialogRef = this.dialog.open(AddPropertyDialogComponent, dialogConfig);
-  
+
     dialogRef.afterClosed().subscribe((result) => {
       console.log(result);
       if (result) {
@@ -281,17 +335,32 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     });
   }
 
-  editProperty(property: Property) {
-    const dialogRef = this.dialog.open(PropertyDialogComponent, {
-      width: '600px',
-      data: {
-        propertyKey: property.propertyKey,
-        propertyValue: property.propertyValue,
-        id: property.id,
-        tenant: this.tenant,
-        environment: this.environment
-      }
-    });
+  editProperty(property: any) {
+    const dialogConfig = new MatDialogConfig();
+
+
+    dialogConfig.minWidth = '800px'; // Customize the width of the dialog
+    dialogConfig.minHeight = '400px';
+    dialogConfig.maxHeight = '580px';
+    dialogConfig.maxWidth = '900px';
+    dialogConfig.data = {
+      tenant: this.tenant,
+      environment: this.environment,
+      propertyKey: property.propertyKey,
+      propertyValue: property.propertyValue,
+      id: property.id,
+      applications: this.applications,
+      fieldGroups: this.fieldGroups,
+      targets: this.targets,
+      types: this.types,
+      application: property.application,
+      fieldGroup: property.fieldGroup,
+      type: property.type,
+      target: property.target
+    };
+
+    const dialogRef = this.dialog.open(PropertyDialogComponent, dialogConfig);
+
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
@@ -347,7 +416,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
               this.loadPropertiesForTenants();
               this.clearSearch();
             }
-            else{
+            else {
               this.snackBar.open(res.message, 'Close', {
                 duration: 3000,
                 panelClass: ['custom-toast', 'toast-error'],
@@ -398,6 +467,83 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   onMouseUp(): void {
     this.removeListeners.forEach((remove) => remove());
     this.removeListeners = [];
+  }
+
+  handleSelectAll(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement) {
+      this.selectAll(inputElement.checked);
+    }
+  }
+
+  toggleSearchDrawer(): void {
+    this.showSearchDrawer = !this.showSearchDrawer;
+  }
+
+  toggleSelection(propertyId: string, event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement.checked) {
+      this.selectedIds.push(propertyId);
+    } else {
+      const index = this.selectedIds.indexOf(propertyId);
+      if (index > -1) {
+        this.selectedIds.splice(index, 1);
+      }
+    }
+    console.log(this.selectedIds);
+
+    this.isAllSelected = this.selectedIds.length === this.properties.length;
+  }
+
+
+  selectAll(checked: boolean): void {
+    if (checked) {
+      this.selectedIds = this.filteredProperties.map(property => property.id);
+    } else {
+      this.selectedIds = [];
+    }
+    this.isAllSelected = checked;
+    console.log(this.selectedIds);
+
+  }
+
+  applyAdvancedSearch(): void {
+    const { keyword, application, fieldGroup, type, target } = this.advancedSearch;
+  
+    this.filteredProperties = this.properties.filter(property => {
+      const matchesKeyword =
+        keyword ? (property.propertyKey + property.propertyValue).toLowerCase().includes(keyword.toLowerCase()) : true;
+      const matchesApplication = application ? property.application === application : true;
+      const matchesFieldGroup = fieldGroup ? property.fieldGroup === fieldGroup : true;
+      const matchesType = type ? property.type === type : true;
+      const matchesTarget = target ? property.target === target : true;
+  
+      return matchesKeyword && matchesApplication && matchesFieldGroup && matchesType && matchesTarget;
+    });
+  
+    this.currentPage = 1;
+    this.updatePagination();
+    this.toggleDrawer();
+  }
+  
+  resetSearch(): void {
+    this.advancedSearch = {
+      keyword: '',
+      application: '',
+      fieldGroup: '',
+      type: '',
+      target: ''
+    };
+    this.filterProperties();
+  }
+
+  toggleDrawer() {
+    this.isDrawerOpen = !this.isDrawerOpen;
+  }
+
+  applyFilters() {
+    console.log('Applied Filters:', this.advancedSearch);
+    // Logic to filter data based on criteria
   }
 
 }

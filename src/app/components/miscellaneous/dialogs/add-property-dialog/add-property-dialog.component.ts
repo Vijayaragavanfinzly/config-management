@@ -12,7 +12,7 @@ import { NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent 
   selector: 'app-add-property-dialog',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatInputModule, MatDialogModule,
-    MatFormFieldModule,NgSelectComponent,NgLabelTemplateDirective,NgOptionTemplateDirective],
+    MatFormFieldModule,NgSelectComponent],
   templateUrl: './add-property-dialog.component.html',
   styleUrl: './add-property-dialog.component.css'
 })

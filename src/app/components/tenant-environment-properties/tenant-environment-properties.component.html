@@ -21,19 +21,77 @@
 </div>
 
 <div *ngIf="!loading && properties.length > 0" class="container mt-5 search-bar">
-  <div class="form-control search-input-container">
-    <i class="fas fa-search search-icon"></i>
-    <input type="text" class="form-control search-input" [(ngModel)]="searchKeyword" (input)="filterProperties()"
-      placeholder=" Search by Property key or value ..." />
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="drawer-container">
+      <i
+        class="fas fa-search advanced-search-icon ms-4"
+        (click)="toggleDrawer()"
+        title="Advanced Search"
+        aria-label="Advanced Search"
+        role="button"
+      ></i>
+      <div class="drawer" [class.open]="isDrawerOpen">
+        <div class="drawer-header">
+          <h2>Advanced Search</h2>
+          <button class="close-drawer-button" (click)="toggleDrawer()">&#x2715;</button>
+        </div>
+        <div class="drawer-body">
+          <form (submit)="applyFilters()">
+            <div class="form-group">
+              <label for="keyword">Keyword</label>
+              <input type="text" id="keyword" placeholder="Enter keywords" [(ngModel)]="advancedSearch.keyword"
+                name="keyword" />
+            </div>
+            <div class="form-group">
+              <label for="application" class="form-label">Application</label>
+              <ng-select [items]="applications" bindLabel="name" [searchable]="true"
+                [(ngModel)]="advancedSearch.application" name="application" placeholder="Select an application"
+                class="stylish-dropdown"></ng-select>
+            </div>
+            <div class="form-group">
+              <label for="fieldGroup" class="form-label">Field Group</label>
+              <ng-select [items]="fieldGroups" bindLabel="name" [searchable]="true"
+                [(ngModel)]="advancedSearch.fieldGroup" name="fieldGroup" placeholder="Select a Field Group"
+                class="stylish-dropdown"></ng-select>
+            </div>
+            <div class="form-group">
+              <label for="type" class="form-label">Type</label>
+              <ng-select [items]="types" bindLabel="name" [searchable]="true" [(ngModel)]="advancedSearch.type"
+                name="type" placeholder="Select a Type" class="stylish-dropdown"></ng-select>
+            </div>
+            <div class="form-group">
+              <label for="target" class="form-label">Target</label>
+              <ng-select [items]="targets" bindLabel="name" [searchable]="true" [(ngModel)]="advancedSearch.target"
+                name="target" placeholder="Select a Target" class="stylish-dropdown"></ng-select>
+            </div>
+            <button type="submit" (click)="applyAdvancedSearch()" class="search-button">Search</button>
+            <button class="btn btn-outline-secondary ms-2 reset-button" (click)="resetSearch()">Reset</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    
   </div>
-  <button class="btn add-btn d-flex align-items-center ms-4" (click)="addProperty()" [disabled]="loading"
-    aria-label="Add New Environment" role="button">
-    <i class="fas fa-plus"></i> <span class="ms-2 pb-1">Add</span>
-  </button>
-  <button class="btn add-btn ms-4" (click)="exportProperties()" [disabled]="loading"
-    aria-label="Add New Environment" role="button">
-    <i class="fas fa-plus"></i> <span class="ms-2 pb-1 ">Export</span>
-  </button>
+  <div
+    class="drawer-backdrop"
+    *ngIf="isDrawerOpen"
+    (click)="toggleDrawer()"
+  ></div>
+  <div class="action-buttons d-flex align-items-center">
+    <button class="btn btn-sm action-btn add-btn" (click)="addProperty()" [disabled]="loading" aria-label="Add New Environment" role="button">
+      <i class="fas fa-plus"></i> Add
+    </button>
+    <button
+      class="btn btn-sm action-btn ms-2 add-btn"
+      (click)="exportProperties()"
+      [disabled]="loading"
+      aria-label="Export Properties"
+      role="button"
+    >
+      <i class="fas fa-file-export"></i> Export
+    </button>
+  </div>
 </div>
 
 <div class="container mt-2">
@@ -49,6 +107,10 @@
       <table class="table custom-table shadow-sm">
         <thead>
           <tr>
+            <th class="text-center" style="width: 50px;">
+              <input type="checkbox" id="select-all" (change)="handleSelectAll($event)" [checked]="isAllSelected" />
+              <label for="select-all"></label>
+            </th>
             <th *ngFor="let column of columns; let i = index"
               [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}" class="text-center">
               {{ column.name }}
@@ -58,6 +120,11 @@
         </thead>
         <tbody>
           <tr *ngFor="let property of paginatedProperties; let i = index">
+            <td class="text-center">
+              <input type="checkbox" id="property-{{ property.id }}" (change)="toggleSelection(property.id, $event)"
+                [checked]="selectedIds.includes(property.id)" />
+              <label for="property-{{ property.id }}"></label>
+            </td>
             <td class="property-cell">{{ (currentPage - 1) * pageSize + i + 1 }}. &nbsp;{{ property.propertyKey }}</td>
             <td>{{ property.propertyValue }}</td>
             <td class="text-center">

@@ -16,5 +16,9 @@ export class ExportService {
     return this.http.get(`${this.baseUrl}/exportProperties/${tenant}/${environment}`, { responseType: 'blob' });
   }
 
+  exportSelectedProperties(tenant: string, environment: string, selectedIds: string[]): Observable<any> {
+    return this.http.post(`${this.baseUrl}/exportSelectedProperties/${tenant}/${environment}`, selectedIds , { responseType: 'blob' });
+  }
+
 
 }

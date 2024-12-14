@@ -3,4 +3,7 @@ export interface AddProperty{
     environment:string,
     propertyKey:string,
     propertyValue:string,
+    application:string,
+    fieldGroup:string,
+    
 }

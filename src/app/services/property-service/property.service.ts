@@ -17,7 +17,7 @@ export class PropertyService {
     return this.http.get<any>(`${this.baseUrl}/properties/${tenant}/${environment}`);
   }
 
-  addProperty(property:AddProperty):Observable<any>{
+  addProperty(property:any):Observable<any>{
     return this.http.post<any>(`${this.baseUrl}/properties`, property);  
   }
 
