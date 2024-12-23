@@ -10,16 +10,18 @@ import { CompareService } from '../../services/compare-service/compare.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PropertyService } from '../../services/property-service/property.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-compare-by-environment',
   standalone: true,
-  imports: [FormsModule,CommonModule,RouterModule,MatTabsModule],
+  imports: [FormsModule,CommonModule,RouterModule,MatTabsModule,NgSelectComponent],
   templateUrl: './compare-by-environment.component.html',
   styleUrl: './compare-by-environment.component.css'
 })
 export class CompareByEnvironmentComponent implements OnInit{
   tenants: any[] = [];
+  tenantNames: string[] = [];
   selectedTenant1: string = '';
   selectedTenant2: string = '';
   tenant1Environments: string[] = [];
@@ -34,6 +36,8 @@ export class CompareByEnvironmentComponent implements OnInit{
   hoveredRow: any = null;
   matchingPropertySize : number = 0;
   nonMatchingPropertySize : number = 0;
+  filteredDistinctData: any[] = [];
+  distinctPropertySize : number = 0;
 
   activeTab: number = 0;
   searchQuery: string = '';
@@ -47,9 +51,9 @@ export class CompareByEnvironmentComponent implements OnInit{
   differentColumns = [
     { name: 'Property Key', field: 'propertyKey', width: 300 },
     { name: 'Tenant 1 Value', field: 'PropertyValue1', width: 250 },
-    { name: 'Actions T1', field: 'actionsT1', width: 100 },
+    { name: 'Actions', field: 'actionsT1', width: 100 },
     { name: 'Tenant 2 Value', field: 'PropertyValue2', width: 250 },
-    { name: 'Actions T2', field: 'actionsT2', width: 100 },
+    { name: 'Actions', field: 'actionsT2', width: 100 },
   ];
 
   private startX: number = 0;
@@ -72,7 +76,7 @@ export class CompareByEnvironmentComponent implements OnInit{
       next: (data) => {
         this.tenants = data.data;
         console.log(this.tenants);
-
+        this.tenantNames = this.tenants.map((tenant) => tenant.tenant.toUpperCase()); 
       },
       error: (err) => console.error('Error fetching tenants:', err),
     });
@@ -80,15 +84,19 @@ export class CompareByEnvironmentComponent implements OnInit{
 
   loadEnvironmentsForTenant(tenantKey: string): void {
     this.loading = true;
-    const selectedTenant = tenantKey === 'tenant1' ? this.selectedTenant1 : this.selectedTenant2;
+    const selectedTenant = tenantKey === 'tenant1' ? this.selectedTenant1.toLowerCase() : this.selectedTenant2.toLowerCase();
 
     this.tenantService.getTenantEnvironments(selectedTenant).subscribe({
       next: (data) => {
         const environments = data.data.environments;
+        const filteredEnvironments = environments
+        .filter((env: string) => env.toUpperCase() !== 'PENDING')
+        .map((env: string) => env.toUpperCase());
+
         if (tenantKey === 'tenant1') {
-          this.tenant1Environments = environments;
+          this.tenant1Environments = filteredEnvironments;
         } else {
-          this.tenant2Environments = environments;
+          this.tenant2Environments = filteredEnvironments;
         }
         this.loading = false;
       },
@@ -99,11 +107,22 @@ export class CompareByEnvironmentComponent implements OnInit{
   compareEnvironments(): void {
     if (this.selectedTenant1 && this.selectedEnv1 && this.selectedEnv2) {
       console.log('Comparing environments:', this.selectedEnv1, this.selectedEnv2);
-      this.compareService.compareTenants(this.selectedTenant1, this.selectedEnv1, this.selectedTenant1, this.selectedEnv2).subscribe({
+      if(this.selectedEnv1 === this.selectedEnv2){
+        this.snackBar.open('Both Environments cannot be same', 'Close', {
+          duration: 3000,
+          panelClass: ['custom-toast', 'toast-error'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+        return;
+      }
+      this.compareService.compareTenants(this.selectedTenant1, this.selectedEnv1.toLowerCase(), this.selectedTenant1, this.selectedEnv2.toLowerCase()).subscribe({
         next: (data) => {
           console.log('Comparison result:', data);
-          this.comparisonData = data.data;
+          this.comparisonData = data.data.result2;
           this.filteredSameData = this.comparisonData.filter(entry => entry.isSame === true);
+          this.filteredDistinctData = data.data.result1;
+          this.distinctPropertySize = this.filteredDistinctData.length;
           this.matchingPropertySize = this.filteredSameData.length;
           this.filteredDifferentData = this.comparisonData.filter(entry => entry.isSame === false);
           this.nonMatchingPropertySize = this.filteredDifferentData.length;
@@ -112,7 +131,7 @@ export class CompareByEnvironmentComponent implements OnInit{
         error: (err) => console.error('Error comparing environments:', err),
       });
     } else {
-      this.snackBar.open('Please select an environment for both tenants.', 'Close', {
+      this.snackBar.open('Please fill all the required fields.', 'Close', {
         duration: 3000,
         panelClass: ['custom-toast', 'toast-error'],
         horizontalPosition: 'center',
@@ -159,7 +178,13 @@ export class CompareByEnvironmentComponent implements OnInit{
     dialogRef.afterClosed().subscribe(result => {
 
       if (result) {
-        this.compareService.editProperty(targetTenant, targetEnvironment, propertyKey, propertyValue).subscribe({
+        const payload = {
+          targetTenant,
+          targetEnvironment,
+          propertyKey,
+          propertyValue
+        }
+        this.compareService.editProperty(payload).subscribe({
           next: (response) => {
             console.log(response);
 
@@ -209,7 +234,15 @@ export class CompareByEnvironmentComponent implements OnInit{
         console.log(updatedData);
         entry[propertyValue] = updatedData.propertyValue;
         console.log('Updated entry:', entry);
-        this.compareService.editProperty(tenant, environment, entry.propertyKey, updatedData.propertyValue).subscribe({
+        const key = entry.propertyKey;
+        const value = updatedData.propertyValue
+        const payload = {
+          tenant, 
+          environment, 
+          key,
+          value
+        }
+        this.compareService.editProperty(payload).subscribe({
           next: (response) => {
             console.log(response);
 

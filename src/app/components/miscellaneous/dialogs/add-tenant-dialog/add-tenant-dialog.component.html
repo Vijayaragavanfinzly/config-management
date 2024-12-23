@@ -5,10 +5,10 @@
 
       <div class="form-group">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Tenant</mat-label>
+          <mat-label>Tenant ID</mat-label>
           <input matInput formControlName="tenant" placeholder="Eg. 1STSB" />
           <mat-error *ngIf="tenantForm.get('tenant')?.invalid">
-            Tenant is required
+            Tenant ID is required
           </mat-error>
         </mat-form-field>
       </div>

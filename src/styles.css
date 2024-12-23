@@ -1,4 +1,15 @@
 @import "@ng-select/ng-select/themes/material.theme.css";
+
+
+/* Theme 1: Sunset */
+:root {
+  --primary-color: #ff9a8b;
+  --secondary-color: #fad0c4;
+  --accent-color: #fbc2eb;
+  --background-color: #f6e3e4;
+  --text-color: #333333;
+}
+
 :root {
   --primary-color: #17a2b8;
   --secondary-color: #138496;
@@ -6,6 +17,69 @@
   --accent-beige: #E5E1DA;
   --gray-color:#f9f9f9;
 }
+
+/* Theme 2: Ocean */
+.theme-ocean {
+  --primary-color: #0072ff;
+  --secondary-color: #00c6ff;
+  --accent-color: #79ffe1;
+  --background-color: #e3fdfd;
+  --text-color: #00273d;
+}
+
+/* Theme 3: Forest */
+.theme-forest {
+  --primary-color: #355c7d;
+  --secondary-color: #6c5b7b;
+  --accent-color: #c06c84;
+  --background-color: #f8ede3;
+  --text-color: #2c3e50;
+}
+
+/* Theme 4: Retro */
+.theme-retro {
+  --primary-color: #ff7675;
+  --secondary-color: #74b9ff;
+  --accent-color: #a29bfe;
+  --background-color: #dfe6e9;
+  --text-color: #2d3436;
+}
+/* Theme 1: Lavender */
+.theme-lavender {
+  --primary-color: #F5EFFF;
+  --secondary-color: #E5D9F2;
+  --accent-color: #CDC1FF;
+  --background-color: #A294F9;
+  --text-color: #4A347B;
+}
+
+/* Theme 2: Mint */
+.theme-mint {
+  --primary-color: #ACE1AF;
+  --secondary-color: #B0EBB4;
+  --accent-color: #BFF6C3;
+  --background-color: #E0FBE2;
+  --text-color: #2A5E3C;
+}
+
+/* Theme 3: Sand */
+.theme-sand {
+  --primary-color: #FFF2D7;
+  --secondary-color: #FFE0B5;
+  --accent-color: #F8C794;
+  --background-color: #D8AE7E;
+  --text-color: #5C3A20;
+}
+
+/* Theme 4: Retro Earthy */
+.theme-retro-earthy {
+  --primary-color: #C9B6A6;
+  --secondary-color: #D2C4B7;
+  --accent-color: #E4D6C8;
+  --background-color: #F5ECE6;
+  --text-color: #3E3023;
+}
+
 /* =================================================================================== */
 .btn{
   font-weight: 500;

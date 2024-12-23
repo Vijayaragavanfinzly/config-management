@@ -62,15 +62,19 @@ export class CloneComponent {
 
   loadEnvironmentsForTenant(tenantKey: string): void {
     this.loading = true;
-    const selectedTenant = tenantKey === 'tenant1' ? this.manualTenant : this.selectedTenant;
+    const selectedTenant = tenantKey === 'tenant1' ? this.manualTenant.toLowerCase() : this.selectedTenant.toLowerCase();
 
     this.tenantService.getTenantEnvironments(selectedTenant).subscribe({
       next: (data) => {
         const environments = data.data.environments;
+        const filteredEnvironments = environments
+        .filter((env: string) => env.toUpperCase() !== 'PENDING')
+        .map((env: string) => env.toUpperCase());
+
         if (tenantKey === 'tenant1') {
-          this.tenant1Environments = environments;
+          this.tenant1Environments = filteredEnvironments;
         } else {
-          this.tenant2Environments = environments;
+          this.tenant2Environments = filteredEnvironments;
         }
         this.loading = false;
       },

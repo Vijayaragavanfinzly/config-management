@@ -1,7 +1,6 @@
 import { Component, HostListener, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { TenantService } from '../../services/tenant-service/tenant.service';
 import { Property } from '../../model/property.interface';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,6 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { NgSelectComponent } from '@ng-select/ng-select';
+import { ExportConfirmationComponent } from '../miscellaneous/dialogs/export-confirmation/export-confirmation.component';
 
 @Component({
   selector: 'app-tenant-environment-properties',
@@ -39,6 +39,8 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   loading: Boolean = false;
   selectedIds: string[] = [];
   isAllSelected: boolean = false;
+
+  propertySize:number = 0;
 
   currentPage: number = 1;
   pageSize: number = 10;
@@ -108,6 +110,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
         console.log(this.properties);
 
         this.filteredProperties = [...this.properties];
+        this.propertySize = this.filteredProperties.length;
         this.currentPage = 1;
         this.updatePagination();
         console.log("Loaded properties for " + this.tenant + " " + this.environment, this.properties);
@@ -123,6 +126,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   }
 
   loadApplications(): void {
+    this.loading = true;
     this.applicationService.getAllApplications().subscribe({
       next: (data: any) => {
         console.log(data);
@@ -136,12 +140,14 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
         console.error("Failed to fetch applications:", err);
       },
       complete: () => {
+        this.loading = false
         console.log("Application loading process completed.");
       }
     })
   }
 
   filterProperties() {
+    this.loading = true;
     if (this.searchKeyword.trim()) {
       this.filteredProperties = this.properties.filter(property => {
         const key = property.propertyKey || "";
@@ -156,6 +162,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     }
     this.currentPage = 1;
     this.updatePagination();
+    this.loading = false;
   }
 
   updatePagination() {
@@ -226,38 +233,85 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   clearSearch(): void {
     this.searchKeyword = '';
     this.filterProperties();
+    this.resetSearch();
   }
 
   exportProperties(): void {
     if (this.selectedIds.length === 0) {
-      const confirmExportAll = confirm("No properties selected. Do you want to export all properties?");
-      if (confirmExportAll) {
-        this.exportAllProperties();
-      }
+      const dialogRef = this.dialog.open(ExportConfirmationComponent, {
+        width: '600px',
+      });
+      dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.exportAllProperties();
+        } else {
+          console.log('Export cancelled');
+        }
+      });
     } else {
       this.exportSelectedProperties();
     }
   }
 
   exportAllProperties(): void {
-    this.exportService.exportProperties(this.tenant, this.environment).subscribe(blob => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${this.tenant}_${this.environment}_properties.sql`;
-      a.click();
-      window.URL.revokeObjectURL(url);
+    this.exportService.exportProperties(this.tenant, this.environment).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${this.tenant}_${this.environment}_properties.sql`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.snackBar.open('Exported Successfully!', 'Close', {
+          duration: 3000,
+          panelClass: ['custom-toast', 'toast-success'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      },
+      error: (err) => {
+        console.error("Error exporting properties:", err);
+        this.snackBar.open('Export failed.', 'Close', {
+          duration: 3000,
+          panelClass: ['custom-toast', 'toast-error'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      },
+      complete: () => {
+      },
     });
   }
 
   exportSelectedProperties(): void {
-    this.exportService.exportSelectedProperties(this.tenant, this.environment, this.selectedIds).subscribe(blob => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${this.tenant}_${this.environment}_selected_properties.sql`;
-      a.click();
-      window.URL.revokeObjectURL(url);
+    
+    this.exportService.exportSelectedProperties(this.tenant, this.environment, this.selectedIds).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${this.tenant}_${this.environment}_properties.sql`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.snackBar.open('Configuration Exported Successfully!', 'Close', {
+          duration: 3000,
+          panelClass: ['custom-toast', 'toast-success'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      },
+      error: (err) => {
+        console.error("Error exporting properties:", err);
+        this.snackBar.open('Export failed.', 'Close', {
+          duration: 3000,
+          panelClass: ['custom-toast', 'toast-error'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      },
+      complete: () => {
+        
+      },
     });
   }
 
@@ -338,7 +392,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   editProperty(property: any) {
     const dialogConfig = new MatDialogConfig();
 
-
+    
     dialogConfig.minWidth = '800px'; // Customize the width of the dialog
     dialogConfig.minHeight = '400px';
     dialogConfig.maxHeight = '580px';
@@ -520,6 +574,8 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   
       return matchesKeyword && matchesApplication && matchesFieldGroup && matchesType && matchesTarget;
     });
+
+    this.propertySize = this.filteredProperties.length;
   
     this.currentPage = 1;
     this.updatePagination();
@@ -535,6 +591,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
       target: ''
     };
     this.filterProperties();
+    // this.toggleDrawer();
   }
 
   toggleDrawer() {
@@ -543,7 +600,6 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
 
   applyFilters() {
     console.log('Applied Filters:', this.advancedSearch);
-    // Logic to filter data based on criteria
   }
 
 }

@@ -1,0 +1,63 @@
+<div class="container mt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
+            <li class="breadcrumb-item" [routerLinkActive]="['active']">
+                <a [routerLink]="['/settings']" class="breadcrumb-link">
+                    <i class="fas fa-link mr-2"></i> Settings
+                </a>
+            </li>
+        </ol>
+    </nav>
+
+    <div class="settings-container">
+        <h2>Settings</h2>
+
+        <!-- Shortcuts Section -->
+        <div class="shortcuts-section">
+            <h3>Keyboard Shortcuts</h3>
+            <ul>
+                <li>
+                    <span class="shortcut-description">SideBar</span>
+                    <span class="shortcut-key">Alt + 1</span>
+                </li>
+                <li>
+                    <span class="shortcut-description">Go to Tenants</span>
+                    <span class="shortcut-key">Alt + T</span>
+                </li>
+                <li>
+                    <span class="shortcut-description">Go to Compare</span>
+                    <span class="shortcut-key">Alt + C</span>
+                </li>
+                <li>
+                    <span class="shortcut-description">Go to Clone</span>
+                    <span class="shortcut-key">Ctrl + X</span>
+                </li>
+                <li>
+                    <span class="shortcut-description">Navigation Bar</span>
+                    <span class="shortcut-key">Alt + Home</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Theme Palette Section -->
+        <!-- <div class="theme-palette-section">
+          <h3>Theme Palette</h3>
+          <div class="theme-options">
+            <div *ngFor="let theme of themes" class="theme-box" [ngStyle]="{ background: theme.color }" (click)="selectTheme(theme)">
+              <span>{{ theme.name }}</span>
+            </div>
+          </div>
+        </div> -->
+        <h2 class="section-header">Theme Palette</h2>
+        <div class="theme-palette">
+            <div (click)="setTheme('default')" class="theme-box theme-sunset" title="Sunset Theme"></div>
+            <div (click)="setTheme('theme-ocean')" class="theme-box theme-ocean" title="Ocean Theme"></div>
+            <div (click)="setTheme('theme-forest')" class="theme-box theme-forest" title="Forest Theme"></div>
+            <div (click)="setTheme('theme-retro')" class="theme-box theme-night" title="Night Theme"></div>
+            <div (click)="setTheme('theme-lavender')" class="theme-box theme-lavender" title="Lavender Theme"></div>
+            <div (click)="setTheme('theme-mint')" class="theme-box theme-mint" title="Mint Theme"></div>
+            <div (click)="setTheme('theme-sand')" class="theme-box theme-sand" title="Sand Theme"></div>
+        </div>
+    </div>
+
+</div>

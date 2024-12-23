@@ -29,13 +29,6 @@
           </a>
         </li> -->
         <li class="nav-item">
-          <a routerLink="/tenants" routerLinkActive="active" class="nav-link">
-            <i class="fas fa-user-friends"></i>
-            <span *ngIf="!isSidebarCollapsed">Tenants</span>
-            <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">Tenants</small>
-          </a>
-        </li>
-        <li class="nav-item">
           <a routerLink="/compare" routerLinkActive="active" class="nav-link">
             <i class="fas fa-exchange-alt"></i>
             <span *ngIf="!isSidebarCollapsed">&nbsp;Compare</span>
@@ -43,12 +36,36 @@
           </a>
         </li>
         <li class="nav-item">
+          <a routerLink="/tenants" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-user-friends"></i>
+            <span *ngIf="!isSidebarCollapsed">Tenants</span>
+            <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">Tenants</small>
+          </a>
+        </li>
+        
+        <li class="nav-item">
           <a routerLink="/clone" routerLinkActive="active" class="nav-link">
             <i class="fas fa-dna"></i>
             <span *ngIf="!isSidebarCollapsed">&nbsp;&nbsp;Clone</span>
             <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">Clone</small>
           </a>
         </li>
+        <!-- <li class="nav-item">
+          <a routerLink="/settings" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-cogs"></i>
+            <span *ngIf="!isSidebarCollapsed">Settings</span>
+            <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">Settings</small>
+          </a>
+        </li> -->
+
+        <li class="nav-item">
+          <a routerLink="/compare-environments" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-exchange-alt"></i>
+            <span *ngIf="!isSidebarCollapsed">&nbsp;Compare Live</span>
+            <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">Compare Live</small>
+          </a>
+        </li>
+
       </ul>
       
       <div

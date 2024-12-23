@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Confirm Copy</h2>
+<!-- <h2 mat-dialog-title>Confirm Copy</h2>
 <mat-dialog-content>
   <p>{{data.message}}</p>
 </mat-dialog-content>
@@ -7,4 +7,17 @@
   <button mat-flat-button color="primary" (click)="onConfirm()">Transfer</button>
   <button mat-flat-button color="warn" (click)="onCancel()">Cancel</button>
 
-</mat-dialog-actions>
+</mat-dialog-actions> -->
+<!--  -->
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>Confirm Transfer</h2>
+  </div>
+  <div class="dialog-content">
+    <p class="dialog-message">{{data.message}}</p>
+  </div>
+  <div class="dialog-actions mt-4">
+    <button class="btn btn-secondary cancel" (click)="onCancel()">Cancel</button>
+    <button class="btn btn-danger confirm" (click)="onConfirm()">Transfer</button>
+  </div>
+</div>

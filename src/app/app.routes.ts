@@ -10,6 +10,8 @@ import { CompareComponent } from './components/compare/compare.component';
 import { CloneComponent } from './components/clone/clone.component';
 import { CompareByTenantComponent } from './components/compare-by-tenant/compare-by-tenant.component';
 import { CompareByEnvironmentComponent } from './components/compare-by-environment/compare-by-environment.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import { CompareOnlyEnvComponent } from './components/compare-only-env/compare-only-env.component';
 
 export const routes: Routes = [
     {
@@ -55,6 +57,14 @@ export const routes: Routes = [
             {
                 path:'clone',
                 component:CloneComponent
+            },
+            {
+                path:'settings',
+                component:SettingsComponent
+            },
+            {
+                path:'compare-environments',
+                component:CompareOnlyEnvComponent
             }
         ]
     }

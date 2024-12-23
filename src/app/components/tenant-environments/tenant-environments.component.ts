@@ -73,10 +73,10 @@ export class TenantEnvironmentsComponent implements OnInit {
     if (this.searchKeyword.trim()) {
       console.log(this.searchKeyword);
       this.filteredEnvironments = this.environments.filter(environment =>
-        environment.name.toLowerCase().includes(this.searchKeyword.toLowerCase()) && environment.status !== 'PENDING'
+        environment.toLowerCase().includes(this.searchKeyword.toLowerCase()) && environment !== 'PENDING'
       );
     } else {
-      this.filteredEnvironments = this.environments.filter(env => env.status !== 'PENDING');
+      this.filteredEnvironments = this.environments.filter(env => env !== 'PENDING');
     }
   }
 

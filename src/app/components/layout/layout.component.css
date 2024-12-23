@@ -5,7 +5,8 @@
 
 .sidebar {
   width: 250px;
-  background: var(--gray-color);
+  /* background: var(--gray-color); */
+  background: var(--primary-color) !important;
   padding: 20px;
   height: 100vh;
   position: fixed;
@@ -39,7 +40,8 @@
 
 .nav-link {
   font-size: 15px;
-  color: #333;
+  /* color: #333; */
+  color: #ffffff;
   padding: 12px 22px;
   margin-bottom: 10px;
   margin-left: 10px;
@@ -55,7 +57,8 @@
 
 .nav-toggle{
   font-size: 15px;
-  color: #333;
+  /* color: #333; */
+  color: #ffffff;
   padding: 12px 22px;
   margin-bottom: 10px;
   display: inline-flex;
@@ -105,7 +108,8 @@ ul{
 .nav-link small.collapsed-text {
   font-size: 10px;
   padding-left: 5px;
-  color: #888;
+  /* color: #888; */
+  color: whitesmoke;
   display: block;
   text-align: center;
 }
@@ -148,7 +152,8 @@ ul{
 }
 
 .nav-link:hover {
-  color: #818080;
+  /* color: #818080; */
+  color: whitesmoke;
 }
 
 .nav-link::after {
@@ -164,11 +169,13 @@ ul{
 }
 
 .nav-link:hover::after {
-  background-color: var(--primary-color);
+  /* background-color: var(--primary-color); */
+  background-color: white;
 }
 
 .nav-link.active::after {
-  background-color: var(--primary-color);
+  /* background-color: var(--primary-color); */
+  background-color: white;
 }
 
 li a{
@@ -207,17 +214,19 @@ li a{
 }
 
 .logo-icon.expanded-logo {
-  background-image: url('../../../../public/assets/finzly_logo.png');
+  background-image: url('../../../../public/assets/finzly-white.svg');
+  height: 40px;
 }
 
 .logo-icon.collapsed-logo {
-  background-image: url('../../../../public/assets/favicon.ico');
+  background-image: url('../../../../public/assets/download_logo.png');
   margin: auto;
 }
 .logout{
 }
 .logout a {
-  color: #333;
+  /* color: #333; */
+  color: #ffffff;
   transition: color 0.3s ease;
 }
 .logout a i{
@@ -229,7 +238,7 @@ li a{
 }
 .logout a:hover {
   cursor: pointer;
-  color: #818080;
+  /* color: #818080; */
 }
 .collapsed-text {
   font-size: 10px;

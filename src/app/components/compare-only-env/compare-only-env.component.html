@@ -1,15 +1,9 @@
 <div class="container mt-3">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
-            <li class="breadcrumb-item">
-                <a [routerLink]="['/compare']" class="breadcrumb-link">
-                    <i class="fas fa-link mr-2"></i> COMPARE
-                </a>
-            </li>
             <li class="breadcrumb-item active">
-                <a [routerLink]="['/compare/compareByEnvironment']" [routerLinkActive]="['active']"
-                    class="breadcrumb-link">
-                    COMPARE BY ENVIRONMENTS
+                <a [routerLink]="['/compare-environments']" [routerLinkActive]="['active']" class="breadcrumb-link">
+                    <i class="fas fa-link mr-2"></i> COMPARE BY ENVIRONMENTS
                 </a>
             </li>
         </ol>
@@ -20,16 +14,16 @@
         <div class="compare-cards">
             <div class="tenant-card">
                 <label for="tenant">Tenant</label>
-                <ng-select class="stylish-dropdown" id="tenant" [(ngModel)]="selectedTenant1" [items]="tenantNames"
+                <!-- <ng-select class="stylish-dropdown" id="tenant" [(ngModel)]="selectedTenant1" [items]="tenantNames"
                     bindLabel="tenant" placeholder="Select Tenant" (change)="loadEnvironmentsForTenant('tenant1')"
                     [searchable]="true" required>
-                </ng-select>
-                <ng-select class="stylish-dropdown" id="env1" [(ngModel)]="selectedEnv1" [items]="tenant1Environments"
-                    placeholder="Select Environment 1" [disabled]="!selectedTenant1" [searchable]="true" required>
+                </ng-select> -->
+                <ng-select class="stylish-dropdown" id="env1" [(ngModel)]="selectedEnv1" [items]="environments"
+                    placeholder="Select Environment 1" [searchable]="true" required>
                 </ng-select>
 
-                <ng-select class="stylish-dropdown" id="env2" [(ngModel)]="selectedEnv2" [items]="tenant1Environments"
-                    placeholder="Select Environment 2" [disabled]="!selectedTenant1" [searchable]="true" required>
+                <ng-select class="stylish-dropdown" id="env2" [(ngModel)]="selectedEnv2" [items]="environments"
+                    placeholder="Select Environment 2" [searchable]="true" required>
                 </ng-select>
 
             </div>
@@ -55,16 +49,6 @@
                     placeholder=" Search by Property Key or Value ..." />
             </div>
         </div>
-        <div class="mt-2 mb-4" *ngIf="filteredSameData.length > 0 || filteredDifferentData.length > 0">
-            <div class="alert alert-success shadow-sm" role="alert">
-              <h5 class="mb-2"><i class="fas fa-info-circle"></i> Note</h5>
-              <ul class="mb-0">
-                <li><strong>NA:</strong> Indicates that the property is either unavailable or missing in the current
-                  environment for the selected tenant.</li>
-                <li><strong>TENANT_ID Placeholder:</strong> Refers to the tenant ID chosen when comparing two tenants.</li>
-              </ul>
-            </div>
-          </div>
         <div *ngIf="!loading && searchQuery && filteredSameData.length === 0 && filteredDifferentData.length === 0"
             class="no-results">
             <div class="no-results-content text-center">
@@ -80,7 +64,7 @@
             class="mt-6 custom-tab-group" animationDuration="500ms" mat-align-tabs="center" backgroundColor="primary">
             <mat-tab>
                 <ng-template mat-tab-label>
-                    <span class="mat-tab-label">Matching Properties</span>
+                    <span class="mat-tab-label">Shared Properties</span>
                     <span class="badge">{{ matchingPropertySize }}</span>
                 </ng-template>
                 <div *ngIf="filteredSameData.length > 0" class="table-responsive table-container">
@@ -116,7 +100,7 @@
 
             <mat-tab>
                 <ng-template mat-tab-label>
-                    <span class="mat-tab-label">Non-Matching Properties</span>
+                    <span class="mat-tab-label">Distinct Properties</span>
                     <span class="badge">{{ nonMatchingPropertySize }}</span>
                 </ng-template>
                 <div *ngIf="filteredDifferentData.length > 0" class="table-responsive table-container">
@@ -127,10 +111,10 @@
                                     [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}"
                                     class="text-center">
                                     <span *ngIf="column.name === 'Tenant 1 Value'">
-                                        {{ selectedTenant1 + " - " + selectedEnv1 }}
+                                        {{ selectedEnv1 }}
                                     </span>
                                     <span *ngIf="column.name === 'Tenant 2 Value'">
-                                        {{ selectedTenant1 + " - " + selectedEnv2 }}
+                                        {{ selectedEnv2 }}
                                     </span>
                                     <span *ngIf="column.name !== 'Tenant 1 Value' && column.name !== 'Tenant 2 Value'">
                                         {{ column.name }}
@@ -148,7 +132,7 @@
                                     <div class="d-flex">{{ entry.PropertyValue1 !== null ? entry.PropertyValue1 : '-'
                                         }}</div>
                                 </td>
-                                <td class="text-center">
+                                <!-- <td class="text-center">
                                     <i class="fas fa-pencil-alt action-icon me-2" title="Edit Value 1"
                                         (click)="editProperty(entry, 'PropertyValue1')" style="color: #28a745;"></i>
                                     <i class="fas fa-arrow-circle-right action-icon me-2"
@@ -161,12 +145,12 @@
                                     <i class="fas fa-copy action-icon" title="Copy"
                                         (click)="copyToClipboard(entry.PropertyValue1)" style="color: #6c757d;">
                                     </i>
-                                </td>
+                                </td> -->
                                 <td>
                                     <div class="d-flex">{{ entry.PropertyValue2 !== null ? entry.PropertyValue2 : '-'
                                         }}</div>
                                 </td>
-                                <td class="text-center">
+                                <!-- <td class="text-center">
                                     <i class="fas fa-pencil-alt action-icon me-2" title="Edit Value 2"
                                         (click)="editProperty(entry, 'PropertyValue2')" style="color: #28a745;"></i>
                                     <i class="fas fa-arrow-circle-left action-icon me-2"
@@ -179,7 +163,7 @@
                                     <i class="fas fa-copy action-icon" title="Copy"
                                         (click)="copyToClipboard(entry.PropertyValue2)" style="color: #6c757d;">
                                     </i>
-                                </td>
+                                </td> -->
                             </tr>
                         </tbody>
                     </table>
@@ -194,7 +178,7 @@
                     </div>
                 </div>
             </mat-tab>
-            <mat-tab>
+            <!-- <mat-tab>
                 <ng-template mat-tab-label>
                   <span class="mat-tab-label">Unique Properties</span>
                   <span class="badge">{{ distinctPropertySize }}</span>
@@ -227,7 +211,7 @@
                     </p>
                   </div>
                 </div>
-              </mat-tab>
+              </mat-tab> -->
         </mat-tab-group>
     </div>
 
