@@ -95,7 +95,9 @@ export class CompareByTenantComponent {
   commonPropertiesColumns_different = [
     { name: 'Property Key', field: 'propertyKey', width: 150 },
     { name: 'Property Value 1', field: 'PropertyValue1', width: 150 },
-    { name: 'Property Value 2', field: 'PropertyValue2', width: 150 }
+    { name: 'Actions T1', field: 'actionsT1', width: 100 },
+    { name: 'Property Value 2', field: 'PropertyValue2', width: 150 },
+    { name: 'Actions T1', field: 'actionsT1', width: 100 },
   ]
 
   tenantPropertiesColumn_same = [
@@ -219,6 +221,7 @@ export class CompareByTenantComponent {
             this.filteredTenantBasedPropertiesDifferentData = this.filteredTenantBasedProperties.filter(entry => entry.isSame === false);
             this.filteredRemainingPropertiesSameData = this.filteredRemainingProperties.filter(entry => entry.isSame === true);
             this.filteredRemainingPropertiesDifferentData = this.filteredRemainingProperties.filter(entry => entry.isSame === false);
+            console.log("filteredRema",this.filteredRemainingPropertiesDifferentData);
             this.tenantPropertySameSize = this.filteredTenantBasedPropertiesSameData.length;
             this.tenantPropertyDifferentSize = this.filteredTenantBasedPropertiesDifferentData.length;
             this.nonTenantPropertySameSize = this.filteredRemainingPropertiesSameData.length;

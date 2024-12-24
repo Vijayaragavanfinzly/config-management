@@ -82,7 +82,7 @@
                         <tbody class="table-body">
                             <tr *ngFor="let entry of filteredSameData">
                                 <td class="">{{ entry.propertyKey || '-' }}</td>
-                                <td class="">{{ entry.PropertyValue1 !== '' ? entry.PropertyValue1 : '-' }}</td>
+                                <td class="">{{ entry.propertyValue1 !== '' ? entry.propertyValue1 : '-' }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -129,7 +129,7 @@
                                     {{ entry.propertyKey || '-' }}
                                 </td>
                                 <td>
-                                    <div class="d-flex">{{ entry.PropertyValue1 !== null ? entry.PropertyValue1 : '-'
+                                    <div class="d-flex">{{ entry.propertyValue1 !== null ? entry.propertyValue1 : '-'
                                         }}</div>
                                 </td>
                                 <!-- <td class="text-center">
@@ -147,7 +147,7 @@
                                     </i>
                                 </td> -->
                                 <td>
-                                    <div class="d-flex">{{ entry.PropertyValue2 !== null ? entry.PropertyValue2 : '-'
+                                    <div class="d-flex">{{ entry.propertyValue2 !== null ? entry.propertyValue2 : '-'
                                         }}</div>
                                 </td>
                                 <!-- <td class="text-center">

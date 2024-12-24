@@ -10,6 +10,7 @@ import { SpinnerComponent } from '../miscellaneous/spinner/spinner.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddEnvironmentDialogComponent } from '../miscellaneous/dialogs/add-environment-dialog/add-environment-dialog.component';
 
+
 @Component({
   selector: 'app-tenant-environments',
   standalone: true,
@@ -91,7 +92,8 @@ export class TenantEnvironmentsComponent implements OnInit {
       data: {
         tenant: this.tenant,
         environment: '',
-        tenant_name: this.tenantName
+        tenant_name: this.tenantName,
+        release:''
       }
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -100,6 +102,7 @@ export class TenantEnvironmentsComponent implements OnInit {
           environment: result.environment.toLowerCase(),
           tenantName: this.tenantName,
           tenant: this.tenant,
+          release:result.release
         };
         console.log(result);
         console.log(payload);

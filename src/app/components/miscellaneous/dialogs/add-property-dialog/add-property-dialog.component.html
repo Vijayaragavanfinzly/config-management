@@ -82,7 +82,14 @@
           <div *ngIf="propertyForm.get('propertyValue')?.touched && propertyForm.get('propertyValue')?.invalid" class="error-text">Property Value is required</div>
         </div>
       </div>
-
+      <!-- Third row -->
+      <div class="form-row">
+        <div class="form-group" >
+          <label for="release" class="form-label">Release</label>
+          <input id="release" type="text" formControlName="release" class="form-input" style="width: 200px;" />
+          <div *ngIf="propertyForm.get('release')?.touched && propertyForm.get('release')?.invalid" class="error-text">release is required</div>
+        </div>
+      </div>
       
       
     </form>

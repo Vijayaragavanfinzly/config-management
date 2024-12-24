@@ -198,7 +198,33 @@
           <tr *ngFor="let entry of filteredRemainingPropertiesDifferentData">
             <td class="">{{ entry.propertyKey || '-' }}</td>
             <td class="">{{ entry.PropertyValue1 !== '' ? entry.PropertyValue1 : '-' }}</td>
+            <td class="text-center">
+              <i class="fas fa-pencil-alt action-icon me-2" title="Edit Value 1"
+                (click)="editProperty(entry, 'value1')" style="color: #28a745;"></i>
+              <i class="fas fa-arrow-circle-right action-icon me-2" title="Copy Value 1 to Tenant 2" (click)="openConfirmationDialog(
+                      selectedTenant2,
+                      selectedEnv2,
+                      entry.value1,
+                      entry.propertyKey2
+                    )" style="color: red;"></i>
+              <i class="fas fa-copy action-icon" title="Copy" (click)="copyToClipboard(entry.value1)"
+                style="color: #6c757d;">
+              </i>
+            </td>
             <td class="">{{entry.PropertyValue2 !== '' ? entry.PropertyValue2 : '-'}}</td>
+            <td class="text-center">
+              <i class="fas fa-pencil-alt action-icon me-2" title="Edit Value 1"
+                (click)="editProperty(entry, 'value1')" style="color: #28a745;"></i>
+              <i class="fas fa-arrow-circle-right action-icon me-2" title="Copy Value 1 to Tenant 2" (click)="openConfirmationDialog(
+                      selectedTenant2,
+                      selectedEnv2,
+                      entry.value1,
+                      entry.propertyKey2
+                    )" style="color: red;"></i>
+              <i class="fas fa-copy action-icon" title="Copy" (click)="copyToClipboard(entry.value1)"
+                style="color: #6c757d;">
+              </i>
+            </td>
           </tr>
         </tbody>
       </table>

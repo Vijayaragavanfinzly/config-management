@@ -32,6 +32,15 @@
               </mat-error>
             </mat-form-field>
           </div>
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Release</mat-label>
+              <input matInput formControlName="release" placeholder="Eg 5.2.0" />
+              <mat-error *ngIf="tenantForm.get('release')?.invalid">
+                Release is required
+              </mat-error>
+            </mat-form-field>
+          </div>
         
       </form>
     </mat-dialog-content>

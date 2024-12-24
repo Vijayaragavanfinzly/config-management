@@ -126,6 +126,7 @@ export class CompareOnlyEnvComponent implements OnInit{
             console.log('Comparison result:', data);
             this.comparisonData = data.data;
             this.filteredSameData = this.comparisonData.filter(entry => entry.isSame === true);
+            console.log('filteredSameData',this.filteredSameData);
             this.matchingPropertySize = this.filteredSameData.length;
             this.filteredDifferentData = this.comparisonData.filter(entry => entry.isSame === false);
             this.nonMatchingPropertySize = this.filteredDifferentData.length;
