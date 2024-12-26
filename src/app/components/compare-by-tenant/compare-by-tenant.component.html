@@ -20,24 +20,50 @@
     <div class="compare-cards">
       <div class="tenant-card">
         <label for="tenant1">Tenant 1</label>
-        <ng-select id="tenant1" [items]="tenantNames" bindLabel="tenant" [(ngModel)]="selectedTenant1"
-          (change)="loadEnvironmentsForTenant('tenant1')" [searchable]="true" placeholder="Select Tenant 1">
-        </ng-select>
-        <ng-select id="env1" [items]="tenant1Environments" [(ngModel)]="selectedEnv1" [disabled]="!selectedTenant1"
-          placeholder="Select Environment" [searchable]="true">
-        </ng-select>
-
+        <ng-select
+          id="tenant1"
+          [items]="tenantNames"
+          bindLabel="tenant"
+          [(ngModel)]="selectedTenant1"
+          (change)="loadEnvironmentsForTenant('tenant1')"
+          [searchable]="true"
+          placeholder="Select Tenant 1"
+          class="custom-ng-select"
+        ></ng-select>
+        <ng-select
+          id="env1"
+          [items]="tenant1Environments"
+          [(ngModel)]="selectedEnv1"
+          [disabled]="!selectedTenant1"
+          placeholder="Select Environment"
+          [searchable]="true"
+          class="custom-ng-select"
+        ></ng-select>
       </div>
-
+    
       <div class="tenant-card">
         <label for="tenant2">Tenant 2</label>
-        <ng-select id="tenant2" [items]="tenantNames" bindLabel="tenant" [(ngModel)]="selectedTenant2"
-          (change)="loadEnvironmentsForTenant('tenant2')" [searchable]="true" placeholder="Select Tenant 2">
-        </ng-select>
-        <ng-select id="env2" [items]="tenant2Environments" [(ngModel)]="selectedEnv2" [disabled]="!selectedTenant2"
-          placeholder="Select Environment" [searchable]="true">
-        </ng-select>
+        <ng-select
+          id="tenant2"
+          [items]="tenantNames"
+          bindLabel="tenant"
+          [(ngModel)]="selectedTenant2"
+          (change)="loadEnvironmentsForTenant('tenant2')"
+          [searchable]="true"
+          placeholder="Select Tenant 2"
+          class="custom-ng-select"
+        ></ng-select>
+        <ng-select
+          id="env2"
+          [items]="tenant2Environments"
+          [(ngModel)]="selectedEnv2"
+          [disabled]="!selectedTenant2"
+          placeholder="Select Environment"
+          [searchable]="true"
+          class="custom-ng-select"
+        ></ng-select>
       </div>
+    
       <div class="action-buttons">
         <button class="btn-primary" id="compareButton" (click)="compareEnvironments()">
           <i class="fas fa-bolt"></i> Compare
@@ -47,17 +73,9 @@
         </button>
       </div>
     </div>
+    
 
-    <!-- <div class="mt-2 mb-4" *ngIf="filteredTenantBasedProperties.length > 0 || filteredRemainingProperties.length > 0">
-      <div class="alert alert-success shadow-sm" role="alert">
-        <h5 class="mb-2"><i class="fas fa-info-circle"></i> Note</h5>
-        <ul class="mb-0">
-          <li><strong>NA:</strong> Indicates that the property is either unavailable or missing in the current
-            environment for the selected tenant.</li>
-          <li><strong>TENANT_ID Placeholder:</strong> Refers to the tenant ID chosen when comparing two tenants.</li>
-        </ul>
-      </div>
-    </div> -->
+
     <!-- <div *ngIf="filteredTenantBasedProperties.length > 0 || filteredRemainingProperties.length > 0 || searchQuery"
       class="container search-bar">
       <div class="search-input-container">
@@ -85,30 +103,40 @@
         [ngClass]="{'active': activeTab === 'tenant'}"
         (click)="setActiveTab('tenant')">
           <i class="fa-solid fa-building"></i>
-          <span>Tenant Properties</span>
+          <span>Tenant Properties ({{ tenantBasedSized }})</span>
         </div>
   
         <div class="tab" [ngClass]="{'active': activeTab === 'common'}"
         (click)="setActiveTab('common')">
           <i class="fa-solid fa-layer-group"></i>
-          <span>Non-Tenant Properties</span>
+          <span>Non-Tenant Properties ({{ nonTenantBasedSize }})</span>
         </div>
       </div>
 
 
       <div class="dropdown-container" *ngIf="filteredTenantBasedProperties.length > 0 || filteredRemainingProperties.length > 0">
         <div class="dropdown">
-          <button class="dropdown-toggle1" (click)="toggleDropdown()">
+          <button class="dropdown-toggle1 ps-2 d-flex justify-content-around align-items-center" (click)="toggleDropdown()">
             {{ selectedFilter }}
             <i class="fa-solid fa-chevron-down" [ngClass]="{'rotated': showDropdown}"></i>
           </button>
           <div class="dropdown-menu" [class.show]="showDropdown">
-            <div class="dropdown-item" (click)="selectFilter('Matching')">
-              <i class="fa-solid fa-check"></i> Matching
-            </div>
-            <div class="dropdown-item" (click)="selectFilter('Non-Matching')">
-              <i class="fa-solid fa-times"></i> Non-Matching
-            </div>
+            <ng-container *ngIf="activeTab === 'tenant'">
+              <div class="dropdown-item" (click)="selectFilter('Matching')">
+                <i class="fa-solid fa-check"></i> Matching ({{ tenantPropertySameSize }})
+              </div>
+              <div class="dropdown-item" (click)="selectFilter('Non-Matching')">
+                <i class="fa-solid fa-times"></i> Non-Matching ({{ tenantPropertyDifferentSize }})
+              </div>
+            </ng-container>
+            <ng-container *ngIf="activeTab === 'common'">
+              <div class="dropdown-item" (click)="selectFilter('Matching')">
+                <i class="fa-solid fa-check"></i> Matching ({{ nonTenantPropertySameSize }})
+              </div>
+              <div class="dropdown-item" (click)="selectFilter('Non-Matching')">
+                <i class="fa-solid fa-times"></i> Non-Matching ({{ nonTenantPropertyDifferentSize }})
+              </div>
+            </ng-container>
           </div>
         </div>
       </div>
@@ -198,7 +226,33 @@
           <tr *ngFor="let entry of filteredRemainingPropertiesDifferentData">
             <td class="">{{ entry.propertyKey || '-' }}</td>
             <td class="">{{ entry.PropertyValue1 !== '' ? entry.PropertyValue1 : '-' }}</td>
+            <td class="text-center">
+              <i class="fas fa-pencil-alt action-icon me-2" title="Edit Value 1"
+                (click)="editRemainingDifferentProperty(entry, 'PropertyValue1')" style="color: #28a745;"></i>
+              <i class="fas fa-arrow-circle-right action-icon me-2" title="Copy Value 1 to Tenant 2" (click)="openConfirmationDialog(
+                      selectedTenant2,
+                      selectedEnv2,
+                      entry.PropertyValue1,
+                      entry.propertyKey
+                    )" style="color: red;"></i>
+              <i class="fas fa-copy action-icon" title="Copy" (click)="copyToClipboard(entry.PropertyValue1)"
+                style="color: #6c757d;">
+              </i>
+            </td>
             <td class="">{{entry.PropertyValue2 !== '' ? entry.PropertyValue2 : '-'}}</td>
+            <td class="text-center">
+              <i class="fas fa-pencil-alt action-icon me-2" title="Edit Value 1"
+                (click)="editRemainingDifferentProperty(entry, 'PropertyValue2')" style="color: #28a745;"></i>
+              <i class="fas fa-arrow-circle-left action-icon me-2" title="Copy Value 1 to Tenant 2" (click)="openConfirmationDialog(
+                      selectedTenant1,
+                      selectedEnv1,
+                      entry.PropertyValue2,
+                      entry.propertyKey
+                    )" style="color: red;"></i>
+              <i class="fas fa-copy action-icon" title="Copy" (click)="copyToClipboard(entry.PropertyValue2)"
+                style="color: #6c757d;">
+              </i>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -262,6 +316,17 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="mt-5 mb-4" *ngIf="filteredTenantBasedProperties.length > 0 || filteredRemainingProperties.length > 0">
+      <div class="alert alert-success shadow-sm" role="alert">
+        <h5 class="mb-2"><i class="fas fa-info-circle"></i> Note</h5>
+        <ul class="mb-0">
+          <li><strong>NA:</strong> Indicates that the property is either unavailable or missing in the current
+            environment for the selected tenant.</li>
+          <li><strong>TENANT_ID Placeholder:</strong> Refers to the tenant ID chosen when comparing two tenants.</li>
+        </ul>
+      </div>
     </div>
 
   </div>

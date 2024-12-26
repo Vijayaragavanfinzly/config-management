@@ -91,7 +91,8 @@ export class TenantEnvironmentsComponent implements OnInit {
       data: {
         tenant: this.tenant,
         environment: '',
-        tenant_name: this.tenantName
+        tenant_name: this.tenantName,
+        release: ''
       }
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -100,6 +101,7 @@ export class TenantEnvironmentsComponent implements OnInit {
           environment: result.environment.toLowerCase(),
           tenantName: this.tenantName,
           tenant: this.tenant,
+          release:result.release
         };
         console.log(result);
         console.log(payload);

@@ -124,6 +124,7 @@
             <!-- {{ (currentPage - 1) * pageSize + i + 1 }}. &nbsp; -->
             <td class="property-cell">{{ property.propertyKey }}</td>
             <td>{{ property.propertyValue }}</td>
+            <td class="text-center">{{property.release}}</td>
             <td class="text-center">
               <i class="fas fa-edit edit ms-3" (click)="editProperty(property)"></i>
               <i class="fas fa-trash-alt delete ms-3" (click)="deleteProperty(property.id)"></i>
@@ -135,12 +136,10 @@
       </table>
     </div>
     <div class="pagination-container d-flex justify-content-between align-items-center mt-3 mb-3">
-      <!-- Total Records -->
       <div class="total-records">
         Total Records: <strong>{{propertySize}}</strong>
       </div>
     
-      <!-- Pagination Controls -->
       <div class="pagination-controls d-flex align-items-center">
         <span class="pagination-nav" [class.disabled]="currentPage === 1" (click)="goToPreviousPage()">
           <i class="fas fa-angle-double-left"></i>

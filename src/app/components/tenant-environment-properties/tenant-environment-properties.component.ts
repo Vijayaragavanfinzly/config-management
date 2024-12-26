@@ -50,6 +50,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   columns = [
     { name: 'Property Key', field: 'propertyKey', width: 300 },
     { name: 'Property Value', field: 'PropertyValue', width: 300 },
+    {name: 'Release Version', field:'releaseVersion', width:150},
     { name: 'Actions', field: 'actions', width: 150 },
   ];
 
@@ -69,7 +70,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     type: '',
     target: '',
   }
-
+  release:string = '';
   isDrawerOpen = false;
 
   fieldGroups:string[] = ['Global', 'Application', 'Customer']
@@ -108,10 +109,10 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
       next: (data: any) => {
         this.properties = data.data;
         console.log(this.properties);
-
         this.filteredProperties = [...this.properties];
         this.propertySize = this.filteredProperties.length;
         this.currentPage = 1;
+        this.release = this.properties[0].release;
         this.updatePagination();
         console.log("Loaded properties for " + this.tenant + " " + this.environment, this.properties);
         console.log(this.filteredProperties);
@@ -350,7 +351,8 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
           application: result.application,
           field_group: result.fieldGroup,
           target: result.target,
-          type: result.type
+          type: result.type,
+          release:this.release
         };
         this.propertyService.addProperty(payload).subscribe({
           next: (response) => {
@@ -410,7 +412,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
       application: property.application,
       fieldGroup: property.fieldGroup,
       type: property.type,
-      target: property.target
+      target: property.target,
     };
 
     const dialogRef = this.dialog.open(PropertyDialogComponent, dialogConfig);

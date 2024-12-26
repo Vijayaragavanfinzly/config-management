@@ -1,50 +1,54 @@
 <div class="dialog-container">
-    <h2 mat-dialog-title>Create New Tenant</h2>
-    <mat-dialog-content>
-      <form [formGroup]="tenantForm">
-  
-        <div class="form-group">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Tenant ID</mat-label>
-            <input matInput formControlName="tenant" placeholder="Eg. 1STSB" />
-            <mat-error *ngIf="tenantForm.get('tenant')?.invalid">
-              Tenant ID is required
-            </mat-error>
-          </mat-form-field>
-        </div>
-  
-        <div class="form-group">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Tenant Name</mat-label>
-            <input matInput formControlName="tenant_name" placeholder="Eg. First Source Bank" />
-            <mat-error *ngIf="tenantForm.get('tenant_name')?.invalid">
-              Tenant Name is required
-            </mat-error>
-          </mat-form-field>
-        </div>
+  <h2 mat-dialog-title>Create New Tenant</h2>
+  <mat-dialog-content>
+    <form [formGroup]="tenantForm">
 
-        <div class="form-group">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Environment</mat-label>
-              <input matInput formControlName="environment" placeholder="Eg. QA" />
-              <mat-error *ngIf="tenantForm.get('environment')?.invalid">
-                Environment is required
-              </mat-error>
-            </mat-form-field>
-          </div>
-        
-      </form>
-    </mat-dialog-content>
-    <mat-dialog-actions class="dialog-actions">
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="onSave()"
-        [disabled]="tenantForm.invalid"
-      >
-        Add
-      </button>
-      <button mat-flat-button color="warn" (click)="onCancel()">Cancel</button>
-    </mat-dialog-actions>
-  </div>
-  
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tenant ID</mat-label>
+          <input matInput formControlName="tenant" placeholder="Eg. 1STSB" />
+          <mat-error *ngIf="tenantForm.get('tenant')?.invalid">
+            Tenant ID is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tenant Name</mat-label>
+          <input matInput formControlName="tenant_name" placeholder="Eg. First Source Bank" />
+          <mat-error *ngIf="tenantForm.get('tenant_name')?.invalid">
+            Tenant Name is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Environment</mat-label>
+          <input matInput formControlName="environment" placeholder="Eg. QA" />
+          <mat-error *ngIf="tenantForm.get('environment')?.invalid">
+            Environment is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Release</mat-label>
+          <input matInput formControlName="release" placeholder="Eg 5.2.0" />
+          <mat-error *ngIf="tenantForm.get('release')?.invalid">
+            Release is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions class="dialog-actions">
+    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="tenantForm.invalid">
+      Add
+    </button>
+    <button mat-flat-button color="warn" (click)="onCancel()">Cancel</button>
+  </mat-dialog-actions>
+</div>

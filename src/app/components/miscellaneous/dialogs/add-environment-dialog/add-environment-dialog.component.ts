@@ -29,12 +29,13 @@ export class AddEnvironmentDialogComponent {
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<AddEnvironmentDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { tenant?: string; tenant_name?: string;environment?:string; }
+    @Inject(MAT_DIALOG_DATA) public data: { tenant?: string; tenant_name?: string;environment?:string;release?:string }
   ) {
     this.tenantForm = this.fb.group({
       tenant: ['', Validators.required],
       tenant_name: ['', Validators.required],
       environment:['',Validators.required],
+      release:['',Validators.required]
     });
     if (data?.tenant) {
       this.tenantForm.patchValue({ tenant: data.tenant });

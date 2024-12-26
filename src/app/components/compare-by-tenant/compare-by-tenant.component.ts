@@ -53,6 +53,7 @@ export class CompareByTenantComponent {
 
   filteredRemainingPropertiesSameData: any[] = [];
   filteredRemainingPropertiesDifferentData: any[] = [];
+  
 
 
 
@@ -95,7 +96,9 @@ export class CompareByTenantComponent {
   commonPropertiesColumns_different = [
     { name: 'Property Key', field: 'propertyKey', width: 150 },
     { name: 'Property Value 1', field: 'PropertyValue1', width: 150 },
-    { name: 'Property Value 2', field: 'PropertyValue2', width: 150 }
+    { name: 'Actions', field: 'actionsT1', width: 100 },
+    { name: 'Property Value 2', field: 'PropertyValue2', width: 150 },
+    { name: 'Actions', field: 'actionsT2', width: 100 },
   ]
 
   tenantPropertiesColumn_same = [
@@ -138,17 +141,6 @@ export class CompareByTenantComponent {
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
   }
-
-  // selectFilter(option: string) {
-  //   if (option === 'matching') {
-  //     this.filters.matching = true;
-  //     this.filters.nonMatching = false;
-  //   } else if (option === 'nonMatching') {
-  //     this.filters.nonMatching = true;
-  //     this.filters.matching = false;
-  //   }
-  //   this.showDropdown = false;
-  // }
 
   selectFilter(option: string) {
     this.selectedFilter = option;
@@ -384,6 +376,67 @@ export class CompareByTenantComponent {
     });
 
   }
+
+  editRemainingDifferentProperty(entry: any, propertyValue: string) {
+    console.log(entry);
+    const property = entry[propertyValue];
+
+    const tenant = propertyValue === 'PropertyValue1' ? this.selectedTenant1 : this.selectedTenant2;
+    const environment = propertyValue === 'PropertyValue1' ? this.selectedEnv1 : this.selectedEnv2;
+
+    const dialogRef = this.dialog.open(UpdateComparePropertyDialogComponent, {
+      width: '600px',
+      data: {
+        propertyKey: entry.propertyKey,
+        propertyValue: property,
+        tenant: propertyValue === 'PropertyValue1' ? this.selectedTenant1 : this.selectedTenant2,
+        environment: propertyValue === 'PropertyValue1' ? this.selectedEnv1 : this.selectedEnv2,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((updatedData) => {
+      if (updatedData) {
+        console.log("hi");
+        
+        console.log(updatedData);
+        entry[propertyValue] = updatedData.propertyValue;
+        console.log('Updated entry:', entry);
+        const payload = {
+          tenant,
+          environment,
+          propertyKey: entry.propertyKey,
+          propertyValue: updatedData.propertyValue,
+        };
+        console.log("Edit is in progress");
+        
+        this.compareService.editProperty(payload).subscribe({
+          next: (response) => {
+            console.log(response);
+
+            console.log('Database updated successfully');
+            this.compareEnvironments();
+            this.snackBar.open('Configuration updated successfully!', 'Close', {
+              duration: 3000,
+              panelClass: ['custom-toast', 'toast-success'],
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
+          },
+          error: (err) => {
+            console.error('Error updating database:', err)
+            this.snackBar.open('Update Failed! Try Again!', 'Close', {
+              duration: 3000,
+              panelClass: ['custom-toast', 'toast-error'],
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
+          }
+        });
+      }
+    });
+
+  }
+
 
   copyToClipboard(text: string): void {
     navigator.clipboard.writeText(text).then(() => {
