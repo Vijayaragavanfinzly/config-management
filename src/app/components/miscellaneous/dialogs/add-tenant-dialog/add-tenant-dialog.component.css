@@ -1,59 +1,80 @@
-/* .dialog-container {
-    width: 100%;
-  }
-  
-  .full-width {
-    width: 100%;
-  }
-  
-  .dialog-actions {
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  .form-group {
-    margin-top: 15px;
-    margin-bottom: 15px;
-  }
-   */
+.dialog-container {
+  width: 100%;
+  margin: auto;
+  background: linear-gradient(135deg, #ffffff, #f4f7fc);
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  animation: fadeIn 0.4s ease-in-out;
+}
 
+.dialog-header h2 {
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+}
 
-   .dialog-container {
-    width: 100%;
-    margin: auto;
-  }
-  
-  .full-width {
-    width: 100%;
-  }
+.dialog-content {
+  margin-bottom: 20px;
+}
 
-  .dialog-actions {
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  .form-group {
-    margin-top: 15px;
-    margin-bottom: 15px;
-  }
-  
-  /* .stylish-dropdown mat-form-field {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  
-  .stylish-dropdown mat-select {
-    font-weight: 500;
-    color: #333;
-  }
-  
-  .stylish-dropdown mat-form-field.mat-form-field-appearance-fill .mat-form-field-flex {
-    padding: 12px;
-  }
-  
-  .mat-dialog-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  } */
+.form-group {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.stylish-input mat-form-field {
+  background-color: #ffffff;
+  border-radius: 10px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: space-around;
+  gap: 15px;
+}
+
+.dialog-actions .btn {
+  width: 150px;
+  padding: 10px 20px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.dialog-actions .btn.cancel {
+  background: linear-gradient(135deg, #6c757d, #868e96);
+}
+
+.dialog-actions .btn.cancel:hover {
+  background: linear-gradient(135deg, #5a6268, #6e7881);
+  transform: scale(1.05);
+}
+
+.dialog-actions .btn.add {
+  background: linear-gradient(135deg, #007bff, #1d87f1);
+}
+
+.dialog-actions .btn.add:hover {
+  background: linear-gradient(135deg, #0056b3, #1565c0);
+  transform: scale(1.05);
+}
+
+/* .dialog-container input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+} */

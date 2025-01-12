@@ -2,12 +2,12 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
       <li class="breadcrumb-item">
-        <a [routerLink]="['/tenants']" class="breadcrumb-link">
+        <a [routerLink]="['/tenants']" class="breadcrumb-link" matTooltip="Navigate to Tenants Page">
           <i class="fas fa-link mr-2"></i> TENANTS
         </a>
       </li>
       <li class="breadcrumb-item active">
-        <a [routerLink]="['/tenants', tenant]" [routerLinkActive]="['active']" class="breadcrumb-link">
+        <a [routerLink]="['/tenants', tenant]" [routerLinkActive]="['active']" class="breadcrumb-link" matTooltip="All environments associated with the selected tenant are accessible here." matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip">
           {{ tenant | uppercase }}
         </a>
       </li>
@@ -38,6 +38,8 @@
     (click)="addNewEnvironmentForTenant()"
     aria-label="Add New Environment"
     role="button"
+    matTooltip="Click to add a new environment for the selected tenant."
+    matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip"
   >
     <i class="fas fa-plus"></i> <span class="ms-2">Add New Environment</span>
   </button>

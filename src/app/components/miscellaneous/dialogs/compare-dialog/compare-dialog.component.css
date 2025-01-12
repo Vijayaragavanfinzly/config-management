@@ -1,0 +1,190 @@
+.comparison-dialog-container {
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.dialog-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title-icon {
+  font-size: 1.6rem;
+  color: #5c6bc0;
+}
+
+.title-underline {
+  border: 0;
+  border-top: 2px solid #5c6bc0;
+  margin-top: 5px;
+}
+
+.dialog-content {
+  margin-top: 15px;
+}
+
+.status-card {
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.match-env {
+  background-color: #e8f5e9;
+  color: black;
+}
+
+.diff-env {
+  background-color: #fff3e0;
+  color: black;
+}
+
+.missing-env {
+  background-color: #ffebee;
+  color: black;
+}
+
+.unknown-env {
+  background-color: #e3f2fd;
+  color: black;
+}
+
+.status-icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.env-comparison {
+  display: flex;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.env-card {
+  flex: 1;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f4f4f4;
+}
+
+.env-title {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.data-list {
+  list-style: none;
+  padding: 0;
+}
+
+.data-list li {
+  padding: 5px 0;
+}
+
+.data-list .different {
+  color: black;
+  font-weight: bold;
+}
+
+.btn-close {
+  font-weight: bold;
+  padding: 8px 15px;
+  border-radius: 5px;
+}
+
+
+
+.value-comparison-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 10px 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.value-box {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 4px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.value-box.match {
+  background-color: #e5f9f2;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.value-box.different {
+  background-color: #feebeb;
+    margin-left: 0;
+    padding-left: 0;
+}
+.value-box.match span{
+  background-color: #8cdbbf;
+    padding: 10px 15px;
+    margin-left: 0;
+}
+.value-box.different span{
+  background-color: #faa5a5;
+    padding: 10px 15px;
+    margin-left: 0px;
+  
+}
+
+.divider {
+  width: 10px;
+}
+
+.value-text {
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.value-text:hover {
+  text-decoration: underline;
+}
+.comparison-dialog-container .dialog-title {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comparison-dialog-container .close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 8px;
+  color: #555;
+  background: none;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.comparison-dialog-container .close-btn:hover {
+  color: #000;
+  opacity: 0.8;
+}
+
+.comparison-dialog-container .close-btn mat-icon {
+  font-size: 24px;
+}
+
+.dialog-title .title-icon {
+  margin-right: 8px;
+}

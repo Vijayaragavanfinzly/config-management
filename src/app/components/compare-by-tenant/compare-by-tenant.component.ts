@@ -32,10 +32,7 @@ export class CompareByTenantComponent {
   selectedEnv2: string = '';
   allEnvironments: string[] = [];
   loading: boolean = false;
-  // comparisonData: any[] = [];
-  // filteredSameData: any[] = [];
-  // filteredDifferentData: any[] = [];
-  // filteredDistinctData: any[] = [];
+
   hoveredRow: any = null;
 
   tenantBasedSized: number = 0;
@@ -54,7 +51,21 @@ export class CompareByTenantComponent {
   filteredRemainingPropertiesSameData: any[] = [];
   filteredRemainingPropertiesDifferentData: any[] = [];
   
+  paginatedTenantProperties: any[] = [];
+  paginatedNonTenantProperties: any[] = [];
+  paginatedTenantSameProperties: any[] = [];
+  paginatedTenantDifferentProperties: any[] = [];
+  paginatedNonTenantSameProperties: any[] = [];
+  paginatedNonTenantDifferentProperties: any[] = [];
 
+
+
+  propertySize:number = 0;
+
+  currentPage: number = 1;
+  pageSize: number = 10;
+  totalPages: number = 0;
+  pages: number[] = []
 
 
   activeTab: string = 'tenant';
@@ -145,6 +156,8 @@ export class CompareByTenantComponent {
   selectFilter(option: string) {
     this.selectedFilter = option;
     this.showDropdown = false;
+    this.updatePagination();
+    this.currentPage = 1;
   }
 
 
@@ -178,8 +191,10 @@ export class CompareByTenantComponent {
 
         if (tenantKey === 'tenant1') {
           this.tenant1Environments = filteredEnvironments;
+          this.selectedEnv1 = '';
         } else {
           this.tenant2Environments = filteredEnvironments;
+          this.selectedEnv2 = '';
         }
         this.loading = false;
       },
@@ -215,6 +230,8 @@ export class CompareByTenantComponent {
             this.tenantPropertyDifferentSize = this.filteredTenantBasedPropertiesDifferentData.length;
             this.nonTenantPropertySameSize = this.filteredRemainingPropertiesSameData.length;
             this.nonTenantPropertyDifferentSize = this.filteredRemainingPropertiesDifferentData.length;
+            this.currentPage = 1;
+            this.updatePagination();
             console.log(this.filteredRemainingProperties);
           }
           else {
@@ -239,6 +256,119 @@ export class CompareByTenantComponent {
         horizontalPosition: 'center',
         verticalPosition: 'top',
       });
+    }
+  }
+
+  updatePagination() {
+    if(this.activeTab === 'tenant' && this.selectedFilter === 'Matching'){
+      this.totalPages = Math.ceil(this.filteredTenantBasedPropertiesSameData.length / this.pageSize);
+      if (this.currentPage > this.totalPages) {
+        this.currentPage = this.totalPages;
+      }
+      this.pages = this.getVisiblePages();
+      this.paginatedTenantSameProperties = this.getPaginatedData();
+    }
+    else if(this.activeTab === 'tenant' && this.selectedFilter !== 'Matching'){
+      this.totalPages = Math.ceil(this.filteredTenantBasedPropertiesDifferentData.length / this.pageSize);
+      if (this.currentPage > this.totalPages) {
+        this.currentPage = this.totalPages;
+      }
+      this.pages = this.getVisiblePages();
+      this.paginatedTenantDifferentProperties = this.getPaginatedData();
+    }
+    else if(this.activeTab === 'common' && this.selectedFilter === 'Matching'){
+      this.totalPages = Math.ceil(this.filteredRemainingPropertiesSameData.length / this.pageSize);
+      if (this.currentPage > this.totalPages) {
+        this.currentPage = this.totalPages;
+      }
+      this.pages = this.getVisiblePages();
+      this.paginatedNonTenantSameProperties = this.getPaginatedData();
+    }
+    else if(this.activeTab === 'common' && this.selectedFilter !== 'Matching'){
+      this.totalPages = Math.ceil(this.filteredRemainingPropertiesDifferentData.length / this.pageSize);
+      if (this.currentPage > this.totalPages) {
+        this.currentPage = this.totalPages;
+      }
+      this.pages = this.getVisiblePages();
+      this.paginatedNonTenantDifferentProperties = this.getPaginatedData();
+    }
+    
+  }
+
+    getPaginatedData(): any {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      let length = 0;
+      if(this.activeTab === 'tenant' && this.selectedFilter === 'Matching'){
+        length = this.filteredTenantBasedPropertiesSameData.length;
+      }
+      else if(this.activeTab === 'tenant' && this.selectedFilter !== 'Matching'){
+        length = this.filteredTenantBasedPropertiesDifferentData.length;
+      }
+      else if(this.activeTab === 'common' && this.selectedFilter === 'Matching'){
+        length = this.filteredRemainingPropertiesSameData.length;
+      }
+      else if(this.activeTab === 'common' && this.selectedFilter !== 'Matching'){
+        length = this.filteredRemainingPropertiesDifferentData.length;
+      }
+      const endIndex = Math.min(parseInt(startIndex.toString()) + parseInt(this.pageSize.toString()),length);
+  
+      console.log(`Start Index: ${startIndex}`);
+      console.log(`End Index: ${endIndex}`);
+      
+      if(this.activeTab === 'tenant' && this.selectedFilter === 'Matching'){
+        return this.filteredTenantBasedPropertiesSameData.slice(startIndex, endIndex);
+      }
+      else if(this.activeTab === 'tenant' && this.selectedFilter !== 'Matching'){
+        return this.filteredTenantBasedPropertiesDifferentData.slice(startIndex, endIndex);
+      }
+      else if(this.activeTab === 'common' && this.selectedFilter === 'Matching'){
+        return this.filteredRemainingPropertiesSameData.slice(startIndex, endIndex);
+      }
+      else if(this.activeTab === 'common' && this.selectedFilter !== 'Matching'){
+        return this.filteredRemainingPropertiesDifferentData.slice(startIndex, endIndex);
+      }
+    }
+  
+
+  getVisiblePages(): number[] {
+    const maxPagesToShow = 5;
+    const visiblePages: number[] = [];
+    const startPage = Math.max(1, this.currentPage - 2);
+    const endPage = Math.min(this.totalPages, this.currentPage + 2);
+
+    if (startPage > 1) {
+      visiblePages.push(1);
+      if (startPage > 2) visiblePages.push(-1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      visiblePages.push(i);
+    }
+
+    if (endPage < this.totalPages) {
+      if (endPage < this.totalPages - 1) visiblePages.push(-1);
+      visiblePages.push(this.totalPages);
+    }
+
+    return visiblePages;
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  goToPreviousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePagination();
+    }
+  }
+
+  goToNextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePagination();
     }
   }
 
@@ -498,6 +628,16 @@ export class CompareByTenantComponent {
     )
   }
 
+  getActiveTabCount(): number {
+    if (this.activeTab === 'tenant') {
+      return this.selectedFilter === 'Matching' ? this.tenantPropertySameSize : this.tenantPropertyDifferentSize;
+    } else if (this.activeTab === 'common') {
+      return this.selectedFilter === 'Matching' ? this.nonTenantPropertySameSize : this.nonTenantPropertyDifferentSize;
+    }
+    return 0;
+  }
+  
+
   clearSearch() {
     this.searchQuery = '';
     this.filterResults();
@@ -547,5 +687,7 @@ export class CompareByTenantComponent {
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
+    this.updatePagination();
+    this.currentPage = 1;
   }
 }

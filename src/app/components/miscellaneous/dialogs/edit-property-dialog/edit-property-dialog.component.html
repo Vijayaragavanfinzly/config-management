@@ -93,6 +93,13 @@
             Property Value is required
           </div>
         </div>
+        <div class="form-group">
+          <label for="release" class="form-label">Release</label>
+          <input id="release" type="text" formControlName="release" class="form-input" />
+          <div *ngIf="propertyForm.get('release')?.touched && propertyForm.get('release')?.invalid" class="error-text">
+            Release is required
+          </div>
+        </div>
       </div>
     </form>
   </div>

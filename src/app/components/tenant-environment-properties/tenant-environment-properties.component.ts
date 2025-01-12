@@ -20,11 +20,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { ExportConfirmationComponent } from '../miscellaneous/dialogs/export-confirmation/export-confirmation.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-tenant-environment-properties',
   standalone: true,
-  imports: [RouterModule, SpinnerComponent, CommonModule, MatDialogModule, MatButtonModule, FormsModule,MatSidenavModule,MatIconModule,MatInputModule,MatSelectModule,NgSelectComponent],
+  imports: [RouterModule, SpinnerComponent, CommonModule, MatDialogModule, MatButtonModule, FormsModule,MatSidenavModule,MatIconModule,MatInputModule,MatSelectModule,NgSelectComponent,MatTooltipModule],
   templateUrl: './tenant-environment-properties.component.html',
   styleUrl: './tenant-environment-properties.component.css'
 })
@@ -334,7 +335,8 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
       applications: this.applications,
       fieldGroups: this.fieldGroups,
       target: this.targets,
-      type: this.types
+      type: this.types,
+      release: this.release
     };
 
     // Open the dialog with the configuration
@@ -352,7 +354,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
           field_group: result.fieldGroup,
           target: result.target,
           type: result.type,
-          release:this.release
+          release:result.release
         };
         this.propertyService.addProperty(payload).subscribe({
           next: (response) => {
@@ -413,6 +415,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
       fieldGroup: property.fieldGroup,
       type: property.type,
       target: property.target,
+      release : property.release,
     };
 
     const dialogRef = this.dialog.open(PropertyDialogComponent, dialogConfig);

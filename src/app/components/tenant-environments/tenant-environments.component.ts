@@ -9,11 +9,12 @@ import { AddTenantDialogComponent } from '../miscellaneous/dialogs/add-tenant-di
 import { SpinnerComponent } from '../miscellaneous/spinner/spinner.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddEnvironmentDialogComponent } from '../miscellaneous/dialogs/add-environment-dialog/add-environment-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-tenant-environments',
   standalone: true,
-  imports: [RouterModule, CommonModule, SpinnerComponent, MatDialogModule, MatButtonModule, FormsModule],
+  imports: [RouterModule, CommonModule, MatDialogModule, MatButtonModule, FormsModule,MatTooltipModule],
   templateUrl: './tenant-environments.component.html',
   styleUrl: './tenant-environments.component.css'
 })

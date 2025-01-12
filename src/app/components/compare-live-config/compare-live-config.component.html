@@ -1,0 +1,120 @@
+<div class="container mt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['/compare']" class="breadcrumb-link" matTooltip="Navigate to the Compare page">
+                    COMPARE
+                </a>
+            </li>
+            <li class="breadcrumb-item active">
+                <a [routerLink]="['/compare/compareByTenant']" [routerLinkActive]="['active']" class="breadcrumb-link"
+                    matTooltip="Compare tenants by their properties">
+                    COMPARE LIVE
+                </a>
+            </li>
+        </ol>
+    </nav>
+</div>
+
+<div class="container compare-container">
+    <div class="selection-container">
+        <div class="select-container">
+            <label for="env1" class="custom-label">Environment 1:</label>
+            <select id="env1" class="custom-select" [(ngModel)]="selectedEnv1" (change)="onEnvChange()">
+                <option value="" disabled selected>Select Environment</option>
+                <option *ngFor="let env of environments" [value]="env">
+                    {{ env }}
+                </option>
+            </select>
+        </div>
+
+        <div class="select-container">
+            <label for="env2" class="custom-label">Environment 2:</label>
+            <select id="env2" class="custom-select" [(ngModel)]="selectedEnv2" (change)="onEnvChange()">
+                <option value="" disabled selected>Select Environment</option>
+                <option *ngFor="let env of environments" [value]="env">
+                    {{ env }}
+                </option>
+            </select>
+        </div>
+
+        <div class="button-container">
+            <button class="compare-button" (click)="onCompare()">Compare</button>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="spinner-container" *ngIf="loading">
+    <app-spinner></app-spinner>
+  </div>
+
+<div class="container comparing-container" *ngIf="!loading && comparisonResult">
+    <div class="keys-display-container mt-1">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow-sm mb-3">
+                    <!-- <div class="card-header bg-primary text-white d-flex justify-content-between">
+              <span>Environment 1 Keys</span>
+              <span>Environment 2 Keys</span>
+            </div> -->
+                    <div class="card-header custom-header d-flex">
+                        <!-- Left Section: Environment 1 -->
+                        <div class="header-section d-flex justify-content-between align-items-center w-50">
+                            <h6 class="mb-0">Env 1 Keys: <span class="key-count">{{ lengthOfKey1 || 0 }}</span></h6>
+                            <button class="btn btn-outline-light btn-sm copy-btn" (click)="copyKeys(comparisonKey1)"
+                                title="Copy Environment 1 Keys">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                        </div>
+                        <div class="header-section d-flex justify-content-between align-items-center w-50 ml-5">
+                            <h6 class="mb-0 ml-2">Env 2 Keys: <span class="key-count">{{ lengthOfKey2 || 0 }}</span>
+                            </h6>
+                            <button class="btn btn-outline-light btn-sm copy-btn" (click)="copyKeys(comparisonKey2)"
+                                title="Copy Environment 2 Keys">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <div *ngFor="let key of comparisonKey1; let i = index"
+                                class="d-flex single-row position-relative">
+                                <!-- Environment 1 Key -->
+                                <li class="list-group-item fixed-width me-5" [ngClass]="{
+                        'bg-gray': !key || comparisonResult[key]?.status === 'MISSING_IN_ENV1',
+                        'bg-nothing': key && (comparisonResult[key]?.status === 'MATCH'),
+                        'bg-light-green': key && (comparisonResult[key]?.status === 'DIFFERENT') && comparisonResult[key]?.value_env1 !== comparisonResult[key]?.value_env2
+                      }">
+                                    <span [ngClass]="{
+                          'bg-light-green-inside': key && (comparisonResult[key]?.status === 'DIFFERENT') && comparisonResult[key]?.value_env1 !== comparisonResult[key]?.value_env2
+                        }" [innerHTML]="key"></span>
+                                </li>
+                                <!-- Icon Between Items -->
+                                <div class="comparison-icon position-absolute"
+                                    (click)="openComparisonDialog(key, comparisonKey2[i])"
+                                    title="Show Comparison Details">
+                                    <i class="fas fa-balance-scale"></i>
+                                </div>
+                                <!-- Environment 2 Key -->
+                                <li class="list-group-item fixed-width" [ngClass]="{
+                        'bg-gray': !comparisonKey2[i] || comparisonResult[comparisonKey2[i]]?.status === 'MISSING_IN_ENV2',
+                        'bg-nothing': comparisonKey2[i] && (comparisonResult[comparisonKey2[i]]?.status === 'MATCH'),
+                        'bg-light-red': comparisonKey2[i] && (comparisonResult[comparisonKey2[i]]?.status === 'DIFFERENT') && comparisonResult[comparisonKey2[i]]?.value_env1!== comparisonResult[comparisonKey2[i]]?.value_env2
+                      }">
+                                    <span [ngClass]="{
+                          'bg-light-red-inside': key && (comparisonResult[key]?.status === 'DIFFERENT') && comparisonResult[key]?.value_env1!== comparisonResult[key]?.value_env2
+                        }" [innerHTML]="comparisonKey2[i]"></span>
+                                </li>
+                            </div>
+                        </ul>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

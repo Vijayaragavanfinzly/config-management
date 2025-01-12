@@ -46,6 +46,7 @@ export class PropertyDialogComponent {
       fieldGroup: string;
       type: string;
       target: string;
+      release:string
     }
   ) {
     this.propertyForm = this.fb.group({
@@ -58,6 +59,7 @@ export class PropertyDialogComponent {
       target: [data.target, Validators.required],
       type: [data.type, Validators.required],
       application: [data.application, Validators.required],
+      release : [data.release,Validators.required]
     });
   }
 

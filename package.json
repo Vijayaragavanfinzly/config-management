@@ -26,7 +26,10 @@
     "bootstrap": "^5.3.3",
     "colresizable": "^1.6.0",
     "jquery": "^3.7.1",
+    "ngx-mat-select-search": "^7.0.9",
+    "ngx-tippy-wrapper": "^6.3.0",
     "rxjs": "~7.8.0",
+    "tippy.js": "^6.3.7",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
   },

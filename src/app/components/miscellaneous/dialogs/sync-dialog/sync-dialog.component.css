@@ -1,0 +1,87 @@
+.dialog-container {
+    width: 100%;
+    /* max-width: 400px; */
+    margin: auto;
+    background: linear-gradient(135deg, #ffffff, #f4f7fc);
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.dialog-header h2 {
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.dialog-content {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.dialog-message {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    color: #555;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: space-around;
+    gap: 12px;
+}
+
+.dialog-actions button {
+    width: 120px;
+    padding: 10px 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+
+}
+.dialog-actions button:focus {
+    outline: none; /* Removes focus outline */
+    box-shadow: none; /* Ensures no extra focus styling */
+  }
+  
+.dialog-actions button.cancel {
+    background: linear-gradient(135deg, #6c757d, #868e96);
+}
+
+.dialog-actions button.cancel:hover {
+    background: linear-gradient(135deg, #5a6268, #6e7881);
+    transform: scale(1.05);
+}
+
+.dialog-actions button.export {
+    background: linear-gradient(135deg, #007bff, #1d87f1);
+}
+
+.dialog-actions button.export:hover {
+    background: linear-gradient(135deg, #0056b3, #1565c0);
+    transform: scale(1.05);
+}
+
+
+.dialog-container input:focus,
+.dialog-container .ng-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+.dialog-container input:focus,
+.dialog-container .ng-select:focus {
+    outline: none;
+}

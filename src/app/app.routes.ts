@@ -12,6 +12,9 @@ import { CompareByTenantComponent } from './components/compare-by-tenant/compare
 import { CompareByEnvironmentComponent } from './components/compare-by-environment/compare-by-environment.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { CompareOnlyEnvComponent } from './components/compare-only-env/compare-only-env.component';
+import { CompareLiveConfigComponent } from './components/compare-live-config/compare-live-config.component';
+import { CompareConfigDbComponent } from './components/compare-config-db/compare-config-db.component';
+import { FaqComponent } from './components/faq/faq.component';
 
 export const routes: Routes = [
     {
@@ -65,6 +68,18 @@ export const routes: Routes = [
             {
                 path:'compare-environments',
                 component:CompareOnlyEnvComponent
+            },
+            {
+                path:'config-live',
+                component:CompareLiveConfigComponent
+            },
+            {
+                path:'compare-config',
+                component:CompareConfigDbComponent
+            },
+            {
+                path:'faq',
+                component:FaqComponent
             }
         ]
     }

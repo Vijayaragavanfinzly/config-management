@@ -14,8 +14,7 @@
           *ngIf="isSidebarCollapsed"
         ></i>
         <i 
-          class="fas fa-times close-icon" 
-          title="Hide (ALT + 1)"
+          class="fas fa-times close-icon"
           *ngIf="!isSidebarCollapsed"
         ></i>
       </a>
@@ -28,11 +27,18 @@
             <small *ngIf="isSidebarCollapsed" class="collapsed-text">Environments</small>
           </a>
         </li> -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a routerLink="/compare" routerLinkActive="active" class="nav-link">
             <i class="fas fa-exchange-alt"></i>
             <span *ngIf="!isSidebarCollapsed">&nbsp;Compare</span>
             <small *ngIf="isSidebarCollapsed" class="collapsed-text">Compare</small>
+          </a>
+        </li> -->
+        <li class="nav-item">
+          <a routerLink="/compare-environments" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-exchange-alt"></i>
+            <span *ngIf="!isSidebarCollapsed">&nbsp;Compare</span>
+            <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">Compare</small>
           </a>
         </li>
         <li class="nav-item">
@@ -58,11 +64,27 @@
           </a>
         </li> -->
 
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a routerLink="/compare-environments" routerLinkActive="active" class="nav-link">
             <i class="fas fa-exchange-alt"></i>
             <span *ngIf="!isSidebarCollapsed">&nbsp;Compare Live</span>
             <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">Compare Live</small>
+          </a>
+        </li> -->
+
+        <li class="nav-item">
+          <a (click)="openSyncDialog()" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-sync"></i>
+            <span *ngIf="!isSidebarCollapsed">&nbsp;Sync</span>
+            <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">Sync</small>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a routerLink="/faq" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-question-circle"></i>
+            <span *ngIf="!isSidebarCollapsed">&nbsp;FAQ</span>
+            <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">FAQ</small>
           </a>
         </li>
 

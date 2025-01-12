@@ -1,7 +1,7 @@
 <div class="container mt-3">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
-      <li class="breadcrumb-item" [routerLinkActive]="['active']">
+      <li class="breadcrumb-item" [routerLinkActive]="['active']" matTooltip="All Available Tenants are Listed here" matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip">
         <a [routerLink]="['/tenants']" class="breadcrumb-link">
           <i class="fas fa-link mr-2"></i> TENANTS
         </a>
@@ -16,7 +16,7 @@
     <input type="text" class="form-control search-input" [(ngModel)]="searchKeyword" (input)="filterTenants()"
       placeholder=" Search by Tenant Name ..." />
   </div>
-  <button class="btn add-btn me-4 d-flex align-items-center" (click)="addNewTenant()">
+  <button class="btn add-btn me-4 d-flex align-items-center" (click)="addNewTenant()" matTooltip="Click to Add New Tenant..." matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip">
     <i class="fas fa-plus"></i> <span class="ms-2">Add New Tenant</span>
   </button>
 </div>

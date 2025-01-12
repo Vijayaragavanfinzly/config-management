@@ -10,12 +10,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { SpinnerComponent } from '../miscellaneous/spinner/spinner.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApplicationService } from '../../services/application-service/application.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @Component({
   selector: 'app-tenants',
   standalone: true,
-  imports: [RouterModule, CommonModule, SpinnerComponent, FormsModule, MatDialogModule, MatButtonModule],
+  imports: [RouterModule, CommonModule, SpinnerComponent, FormsModule, MatDialogModule, MatButtonModule,MatTooltipModule],
   templateUrl: './tenants.component.html',
   styleUrl: './tenants.component.css'
 })

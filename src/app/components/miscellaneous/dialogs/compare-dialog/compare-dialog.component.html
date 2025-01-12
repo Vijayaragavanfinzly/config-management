@@ -1,0 +1,70 @@
+<div class="comparison-dialog-container">
+  <h2 mat-dialog-title class="dialog-title">
+    <span class="title-icon">🔍</span> Comparison Overview
+    <hr class="title-underline" />
+    <!-- Close Button -->
+    <button mat-icon-button class="close-btn" (click)="closeDialog()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
+
+  <div mat-dialog-content class="dialog-content">
+    <ng-container [ngSwitch]="comparisonData.status">
+      <!-- Missing in Environment -->
+      <div *ngSwitchCase="'MISSING_IN_ENV1'" class="status-card missing-env">
+        <div class="status-icon">❌</div>
+        <p>
+          <strong>Environment 1 Missing:</strong> Data not available in Environment 1, so no comparison is possible.
+        </p>
+      </div>
+
+      <div *ngSwitchCase="'MISSING_IN_ENV2'" class="status-card missing-env">
+        <div class="status-icon">❌</div>
+        <p>
+          <strong>Environment 2 Missing:</strong> Data not available in Environment 2, so no comparison is possible.
+        </p>
+      </div>
+
+      <div *ngSwitchCase="'MATCH'" class="">
+        <div *ngIf="comparisonData" class="value-comparison-container">
+          <div class="row">
+            <div class="value-box" [ngClass]="{'match': isMatch, 'different': !isMatch}">
+              <span class="value-text" [matTooltip]="truncate(comparisonData.value_env1)" matTooltipPosition="above">
+                {{ truncate(comparisonData.value_env1) }}
+              </span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="value-box" [ngClass]="{'match': isMatch, 'different': !isMatch}">
+              <span class="value-text" [matTooltip]="truncate(comparisonData.value_env2)" matTooltipPosition="above">
+                {{ truncate(comparisonData.value_env2) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'DIFFERENT'" class="">
+        <div *ngIf="comparisonData" class="value-comparison-container">
+          <div class="row">
+            <!-- Left Side (Environment 1) -->
+            <div class="value-box" [ngClass]="{'match': isMatch, 'different': !isMatch}">
+              <span class="value-text" [matTooltip]="truncate(comparisonData.value_env1)" matTooltipPosition="above">
+                {{ truncate(comparisonData.value_env1) }}
+              </span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="value-box" [ngClass]="{'match': isMatch, 'different': !isMatch}">
+              <span class="value-text" [matTooltip]="truncate(comparisonData.value_env2)" matTooltipPosition="above">
+                {{ truncate(comparisonData.value_env2) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

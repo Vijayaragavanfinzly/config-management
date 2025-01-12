@@ -3,6 +3,11 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { SyncDialogComponent } from '../miscellaneous/dialogs/sync-dialog/sync-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { HttpClient } from '@angular/common/http';
+import { CompareService } from '../../services/compare-service/compare.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface Theme {
   buttonColor: string;
@@ -23,7 +28,7 @@ export class LayoutComponent implements OnInit {
 
   isSidebarCollapsed :Boolean = false;
 
-  constructor(private router:Router){
+  constructor(private router:Router,private dialog:MatDialog,private http:HttpClient,private compareService:CompareService,private snackBar: MatSnackBar){
 
   }
   
@@ -125,5 +130,46 @@ export class LayoutComponent implements OnInit {
     this.isDropdownClicked = !this.isDropdownClicked;
   }
 
+
+  openSyncDialog(): void {
+    const dialogRef = this.dialog.open(SyncDialogComponent, {
+      width: '600px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.callSyncApi();
+      }
+    });
+  }
+
+  callSyncApi(): void {
+    this.compareService.sync().subscribe({
+      next:(data)=>{
+        console.log(data);
+        
+        if(data === "success"){
+          this.snackBar.open('Sync Successful', 'Close', {
+            duration: 3000,
+            panelClass: ['custom-toast', 'toast-success'],
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          });
+        }
+      },
+      error:(err)=>{
+        this.snackBar.open('Sync process failed', 'Close', {
+          duration: 3000,
+          panelClass: ['custom-toast', 'toast-error'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      }
+    })
+    // this.http.post('/save/sync', {}).subscribe({
+    //   next: () => alert('Sync successful!'),
+    //   error: err => alert('Sync failed: ' + err.message)
+    // });
+  }
 
 }

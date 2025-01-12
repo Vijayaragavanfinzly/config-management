@@ -2,10 +2,8 @@
   display: flex;
   height: 100vh;
 }
-
 .sidebar {
   width: 250px;
-  /* background: var(--gray-color); */
   background: var(--primary-color) !important;
   padding: 20px;
   height: 100vh;
@@ -40,7 +38,6 @@
 
 .nav-link {
   font-size: 15px;
-  /* color: #333; */
   color: #ffffff;
   padding: 12px 22px;
   margin-bottom: 10px;
@@ -75,27 +72,23 @@
 
 
 .nav-toggle .close-icon {
-  display: none;
   transform: scale(1.2);
   position: absolute;
-  top: -78px;
-  right: -25px;
+  top: 0px;
+  left: 50%;
+  
   transition: display 0.3s ease;
 }
 
 ul{
   position: absolute;
-  top: 18%;
+  top: 23%;
 }
 
 .sidebar.collapsed ul{
   position: relative;
 }
 
-
-.sidebar:hover .nav-toggle .close-icon {
-  display: block;
-}
 
 .nav-toggle .fa-bars {
   display: block;
@@ -152,7 +145,6 @@ ul{
 }
 
 .nav-link:hover {
-  /* color: #818080; */
   color: whitesmoke;
 }
 
@@ -169,12 +161,10 @@ ul{
 }
 
 .nav-link:hover::after {
-  /* background-color: var(--primary-color); */
   background-color: white;
 }
 
 .nav-link.active::after {
-  /* background-color: var(--primary-color); */
   background-color: white;
 }
 
@@ -238,9 +228,11 @@ li a{
 }
 .logout a:hover {
   cursor: pointer;
-  /* color: #818080; */
 }
 .collapsed-text {
   font-size: 10px;
   color: #777;
+}
+.sidebar:not(.collapsed) ul {
+  left: 10%;
 }

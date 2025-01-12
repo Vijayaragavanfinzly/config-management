@@ -21,7 +21,7 @@ export class AddPropertyDialogComponent implements OnInit{
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<AddPropertyDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { environment: string; tenant: string;applications: string[]; fieldGroups: string[],target:string[],type:string[] }
+    @Inject(MAT_DIALOG_DATA) public data: { environment: string; tenant: string;applications: string[]; fieldGroups: string[],target:string[],type:string[],release:string }
   ) {
     this.propertyForm = this.fb.group({
       environment: [{ value: data.environment, disabled: true }, Validators.required],
@@ -31,7 +31,8 @@ export class AddPropertyDialogComponent implements OnInit{
       application:['',Validators.required],
       fieldGroup:['',Validators.required],
       target:['',Validators.required],
-      type:['',Validators.required]
+      type:['',Validators.required],
+      release:['',Validators.required]
     });
   }
 

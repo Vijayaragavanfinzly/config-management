@@ -1,0 +1,69 @@
+<div class="dialog-container">
+  <h3 class="dialog-title">Compare Configurations</h3>
+  <p class="dialog-description">Property Key: {{ entry.propertykey }}</p>
+
+  <div class="form-container">
+    <mat-form-field appearance="outline" class="search-select">
+      <mat-label>Select Tenant in Environment 1</mat-label>
+      <mat-select
+        [(ngModel)]="selectedTenantEnv1"
+        (selectionChange)="populateTenantData('env1')"
+        panelClass="custom-select-panel"
+        required
+        name="selectedTenantEnv1"
+      >
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="searchInputEnv1"
+            placeholderLabel="Search..."
+            noEntriesFoundLabel="No options found"
+          >
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let tenant of filteredTenantsEnv1" [value]="tenant">
+          {{ tenant | uppercase }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="search-select">
+      <mat-label>Select Tenant in Environment 2</mat-label>
+      <mat-select
+        [(ngModel)]="selectedTenantEnv2"
+        (selectionChange)="populateTenantData('env2')"
+        panelClass="custom-select-panel"
+        required
+        name="selectedTenantEnv2"
+      >
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="searchInputEnv2"
+            placeholderLabel="Search..."
+            noEntriesFoundLabel="No options found"
+          >
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let tenant of filteredTenantsEnv2" [value]="tenant">
+          {{ tenant | uppercase }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Editable Text Fields -->
+  <div *ngIf="selectedTenantEnv1" class="editable-container">
+    <mat-label>Tenant Data for Environment 1</mat-label>
+    <textarea matInput [(ngModel)]="entry['env1-'+selectedTenantEnv1]" rows="3"></textarea>
+  </div>
+
+  <div *ngIf="selectedTenantEnv2" class="editable-container">
+    <mat-label>Tenant Data for Environment 2</mat-label>
+    <textarea matInput [(ngModel)]="entry['env2-'+selectedTenantEnv2]" rows="3"></textarea>
+  </div>
+
+  <!-- Actions -->
+  <div class="dialog-actions">
+    <button mat-raised-button color="primary" (click)="save()">Save</button>
+    <button mat-button color="warn" (click)="closeDialog()">Cancel</button>
+  </div>
+</div>

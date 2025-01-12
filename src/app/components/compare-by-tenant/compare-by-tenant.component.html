@@ -2,12 +2,13 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
       <li class="breadcrumb-item">
-        <a [routerLink]="['/compare']" class="breadcrumb-link">
-          <i class="fas fa-link mr-2"></i> COMPARE
+        <a [routerLink]="['/compare']" class="breadcrumb-link" matTooltip="Navigate to the Compare page">
+          COMPARE
         </a>
       </li>
       <li class="breadcrumb-item active">
-        <a [routerLink]="['/compare/compareByTenant']" [routerLinkActive]="['active']" class="breadcrumb-link">
+        <a [routerLink]="['/compare/compareByTenant']" [routerLinkActive]="['active']" class="breadcrumb-link"
+          matTooltip="Compare tenants by their properties">
           COMPARE BY TENANTS
         </a>
       </li>
@@ -20,60 +21,34 @@
     <div class="compare-cards">
       <div class="tenant-card">
         <label for="tenant1">Tenant 1</label>
-        <ng-select
-          id="tenant1"
-          [items]="tenantNames"
-          bindLabel="tenant"
-          [(ngModel)]="selectedTenant1"
-          (change)="loadEnvironmentsForTenant('tenant1')"
-          [searchable]="true"
-          placeholder="Select Tenant 1"
-          class="custom-ng-select"
-        ></ng-select>
-        <ng-select
-          id="env1"
-          [items]="tenant1Environments"
-          [(ngModel)]="selectedEnv1"
-          [disabled]="!selectedTenant1"
-          placeholder="Select Environment"
-          [searchable]="true"
-          class="custom-ng-select"
-        ></ng-select>
+        <ng-select id="tenant1" [items]="tenantNames" bindLabel="tenant" [(ngModel)]="selectedTenant1"
+          (change)="loadEnvironmentsForTenant('tenant1')" [searchable]="true" placeholder="Select Tenant 1"
+          class="custom-ng-select"></ng-select>
+        <ng-select id="env1" [items]="tenant1Environments" [(ngModel)]="selectedEnv1" [disabled]="!selectedTenant1"
+          placeholder="Select Environment" [searchable]="true" class="custom-ng-select"></ng-select>
       </div>
-    
+
       <div class="tenant-card">
         <label for="tenant2">Tenant 2</label>
-        <ng-select
-          id="tenant2"
-          [items]="tenantNames"
-          bindLabel="tenant"
-          [(ngModel)]="selectedTenant2"
-          (change)="loadEnvironmentsForTenant('tenant2')"
-          [searchable]="true"
-          placeholder="Select Tenant 2"
-          class="custom-ng-select"
-        ></ng-select>
-        <ng-select
-          id="env2"
-          [items]="tenant2Environments"
-          [(ngModel)]="selectedEnv2"
-          [disabled]="!selectedTenant2"
-          placeholder="Select Environment"
-          [searchable]="true"
-          class="custom-ng-select"
-        ></ng-select>
+        <ng-select id="tenant2" [items]="tenantNames" bindLabel="tenant" [(ngModel)]="selectedTenant2"
+          (change)="loadEnvironmentsForTenant('tenant2')" [searchable]="true" placeholder="Select Tenant 2"
+          class="custom-ng-select"></ng-select>
+        <ng-select id="env2" [items]="tenant2Environments" [(ngModel)]="selectedEnv2" [disabled]="!selectedTenant2"
+          placeholder="Select Environment" [searchable]="true" class="custom-ng-select"></ng-select>
       </div>
-    
+
       <div class="action-buttons">
-        <button class="btn-primary" id="compareButton" (click)="compareEnvironments()">
+        <button class="btn-primary" id="compareButton" (click)="compareEnvironments()"
+          matTooltip="Compare the selected tenants" matTooltipPosition="above">
           <i class="fas fa-bolt"></i> Compare
         </button>
-        <button class="btn-secondary" id="clearButton" (click)="clearSelections()">
+        <button class="btn-secondary" id="clearButton" (click)="clearSelections()"
+          matTooltip="Clear All selections" matTooltipPosition="below">
           <i class="fas fa-eraser"></i> Clear
         </button>
       </div>
     </div>
-    
+
 
 
     <!-- <div *ngIf="filteredTenantBasedProperties.length > 0 || filteredRemainingProperties.length > 0 || searchQuery"
@@ -99,42 +74,52 @@
 
     <div class="tab-row">
       <div class="tab-bar" *ngIf="filteredTenantBasedProperties.length > 0 || filteredRemainingProperties.length > 0">
-        <div class="tab active"
-        [ngClass]="{'active': activeTab === 'tenant'}"
-        (click)="setActiveTab('tenant')">
+        <div class="tab active" [ngClass]="{'active': activeTab === 'tenant'}" (click)="setActiveTab('tenant')">
           <i class="fa-solid fa-building"></i>
-          <span>Tenant Properties ({{ tenantBasedSized }})</span>
+          <span>Tenant Properties</span>
+          <span class="badge">{{ tenantBasedSized }}</span>
         </div>
-  
-        <div class="tab" [ngClass]="{'active': activeTab === 'common'}"
-        (click)="setActiveTab('common')">
+
+        <div class="tab" [ngClass]="{'active': activeTab === 'common'}" (click)="setActiveTab('common')">
           <i class="fa-solid fa-layer-group"></i>
-          <span>Non-Tenant Properties ({{ nonTenantBasedSize }})</span>
+          <span>Non-Tenant Properties</span>
+          <span class="badge">{{ nonTenantBasedSize }}</span>
         </div>
       </div>
 
 
-      <div class="dropdown-container" *ngIf="filteredTenantBasedProperties.length > 0 || filteredRemainingProperties.length > 0">
+      <div class="dropdown-container"
+        *ngIf="filteredTenantBasedProperties.length > 0 || filteredRemainingProperties.length > 0">
         <div class="dropdown">
-          <button class="dropdown-toggle1 ps-2 d-flex justify-content-around align-items-center" (click)="toggleDropdown()">
+          <button class="dropdown-toggle1 ps-2 d-flex justify-content-around align-items-center"
+            (click)="toggleDropdown()">
             {{ selectedFilter }}
+            <span class="badge3">{{ getActiveTabCount() }}</span>
             <i class="fa-solid fa-chevron-down" [ngClass]="{'rotated': showDropdown}"></i>
           </button>
           <div class="dropdown-menu" [class.show]="showDropdown">
             <ng-container *ngIf="activeTab === 'tenant'">
               <div class="dropdown-item" (click)="selectFilter('Matching')">
-                <i class="fa-solid fa-check"></i> Matching ({{ tenantPropertySameSize }})
+                <i class="fa-solid fa-check"></i>
+                <span>Matching</span>
+                <span class="badge2">{{ tenantPropertySameSize }}</span>
               </div>
               <div class="dropdown-item" (click)="selectFilter('Non-Matching')">
-                <i class="fa-solid fa-times"></i> Non-Matching ({{ tenantPropertyDifferentSize }})
+                <i class="fa-solid fa-times"></i>
+                <span>Non-Matching</span>
+                <span class="badge2">{{ tenantPropertyDifferentSize }}</span>
               </div>
             </ng-container>
             <ng-container *ngIf="activeTab === 'common'">
               <div class="dropdown-item" (click)="selectFilter('Matching')">
-                <i class="fa-solid fa-check"></i> Matching ({{ nonTenantPropertySameSize }})
+                <i class="fa-solid fa-check"></i>
+                <span>Matching</span>
+                <span class="badge2">{{ nonTenantPropertySameSize }}</span>
               </div>
               <div class="dropdown-item" (click)="selectFilter('Non-Matching')">
-                <i class="fa-solid fa-times"></i> Non-Matching ({{ nonTenantPropertyDifferentSize }})
+                <i class="fa-solid fa-times"></i>
+                <span>Non-Matching</span>
+                <span class="badge2">{{ nonTenantPropertyDifferentSize }}</span>
               </div>
             </ng-container>
           </div>
@@ -142,180 +127,330 @@
       </div>
 
     </div>
-    
+
 
     <div *ngIf="filteredRemainingProperties.length > 0 && activeTab === 'common' && selectedFilter === 'Matching' "
-      class="table-responsive table-container">
-      <table class="table custom-table shadow-sm">
-        <thead>
-          <tr>
-            <th *ngFor="let column of commonPropertiesColumns; let i = index"
-              [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}"
-              class="text-center position-relative">
-              {{ column.name }}
+      class="table-responsive">
+      <div class="table-responsive table-container">
 
-              <div class="resize-handle" (mousedown)="onMouseDown($event, i, 'common')"></div>
-            </th>
-          </tr>
-        </thead>
-        <tbody class="table-body">
-          <tr *ngFor="let entry of filteredRemainingPropertiesSameData">
-            <td class="">{{ entry.propertyKey || '-' }}</td>
-            <td class="">{{ entry.PropertyValue1 !== '' ? entry.PropertyValue1 : '-' }}</td>
-          </tr>
-        </tbody>
-      </table>
+
+        <table class="table custom-table shadow-sm">
+          <thead>
+            <tr>
+              <th *ngFor="let column of commonPropertiesColumns; let i = index"
+                [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}"
+                class="text-center position-relative">
+                {{ column.name }}
+
+                <div class="resize-handle" (mousedown)="onMouseDown($event, i, 'common')"></div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="table-body">
+            <tr *ngFor="let entry of paginatedNonTenantSameProperties">
+              <td class="">{{ entry.propertyKey || '-' }}</td>
+              <td class="">{{ entry.PropertyValue1 !== '' ? entry.PropertyValue1 : '-' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination-container d-flex justify-content-between align-items-center mt-3 mb-3">
+        <div class="total-records">
+          Total Records: <strong>{{nonTenantPropertySameSize}}</strong>
+        </div>
+
+        <div class="pagination-controls d-flex align-items-center">
+          <span class="pagination-nav" [class.disabled]="currentPage === 1" (click)="goToPreviousPage()">
+            <i class="fas fa-angle-double-left"></i>
+          </span>
+          <ng-container *ngFor="let page of pages">
+            <span *ngIf="page !== -1" class="pagination-page" [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+              {{ page }}
+            </span>
+            <span *ngIf="page === -1" class="pagination-dots">...</span>
+          </ng-container>
+          <span class="pagination-nav" [class.disabled]="currentPage === totalPages" (click)="goToNextPage()">
+            <i class="fas fa-angle-double-right"></i>
+          </span>
+        </div>
+
+        <!-- Items Per Page Dropdown -->
+        <div class="items-per-page">
+          <div for="pageSize" class="me-2 total-records">Items per page:</div>
+          <select id="pageSize" class="form-select d-inline-block w-auto" [(ngModel)]="pageSize"
+            (change)="updatePagination()">
+            <option [value]="10">10</option>
+            <option [value]="20">20</option>
+            <option [value]="50">50</option>
+            <option [value]="100">100</option>
+          </select>
+        </div>
+      </div>
     </div>
 
     <div *ngIf="filteredTenantBasedProperties.length > 0 && activeTab === 'tenant' && selectedFilter === 'Matching'"
-      class="table-responsive table-container">
-      <table class="table custom-table shadow-sm">
-        <thead>
-          <tr>
-            <th *ngFor="let column of tenantPropertiesColumn_same; let i = index"
-              [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}"
-              class="text-center position-relative">
-              <span *ngIf="column.name === 'Property Key 1'">
-                {{ selectedTenant1 + " - " + selectedEnv1 + " Key"}}
-              </span>
-              <span *ngIf="column.name === 'Property Key 2'">
-                {{ selectedTenant2 + " - " + selectedEnv2 + " Key"}}
-              </span>
-              <span *ngIf="column.name !== 'Property Key 1' && column.name !== 'Property Key 2'">
-                {{ column.name }}
-              </span>
+      class="table-responsive">
+      <div class="table-responsive table-container">
 
-              <div class="resize-handle" (mousedown)="onMouseDown($event, i, 'tenant_same')"></div>
-            </th>
-          </tr>
-        </thead>
-        <tbody class="table-body">
-          <tr *ngFor="let entry of filteredTenantBasedPropertiesSameData">
-            <td class="">{{ entry.masterKey || '-' }}</td>
-            <!-- <td class="">{{ entry.propertyKey1 !== '' ? entry.propertyKey1 : '-' }}</td>
+
+        <table class="table custom-table shadow-sm">
+          <thead>
+            <tr>
+              <th *ngFor="let column of tenantPropertiesColumn_same; let i = index"
+                [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}"
+                class="text-center position-relative">
+                <span *ngIf="column.name === 'Property Key 1'">
+                  {{ selectedTenant1 + " - " + selectedEnv1 + " Key"}}
+                </span>
+                <span *ngIf="column.name === 'Property Key 2'">
+                  {{ selectedTenant2 + " - " + selectedEnv2 + " Key"}}
+                </span>
+                <span *ngIf="column.name !== 'Property Key 1' && column.name !== 'Property Key 2'">
+                  {{ column.name }}
+                </span>
+
+                <div class="resize-handle" (mousedown)="onMouseDown($event, i, 'tenant_same')"></div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="table-body">
+            <tr *ngFor="let entry of paginatedTenantSameProperties">
+              <td class="">{{ entry.masterKey || '-' }}</td>
+              <!-- <td class="">{{ entry.propertyKey1 !== '' ? entry.propertyKey1 : '-' }}</td>
             <td class="">{{ entry.propertyKey2 !== '' ? entry.propertyKey2 : '-' }}</td> -->
-            <td class="">{{ entry.value1 !== '' ? entry.value1 : '-' }}</td>
+              <td class="">{{ entry.value1 !== '' ? entry.value1 : '-' }}</td>
 
-          </tr>
-        </tbody>
-      </table>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination-container d-flex justify-content-between align-items-center mt-3 mb-3">
+        <div class="total-records">
+          Total Records: <strong>{{tenantPropertySameSize}}</strong>
+        </div>
+
+        <div class="pagination-controls d-flex align-items-center">
+          <span class="pagination-nav" [class.disabled]="currentPage === 1" (click)="goToPreviousPage()">
+            <i class="fas fa-angle-double-left"></i>
+          </span>
+          <ng-container *ngFor="let page of pages">
+            <span *ngIf="page !== -1" class="pagination-page" [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+              {{ page }}
+            </span>
+            <span *ngIf="page === -1" class="pagination-dots">...</span>
+          </ng-container>
+          <span class="pagination-nav" [class.disabled]="currentPage === totalPages" (click)="goToNextPage()">
+            <i class="fas fa-angle-double-right"></i>
+          </span>
+        </div>
+
+        <!-- Items Per Page Dropdown -->
+        <div class="items-per-page">
+          <div for="pageSize" class="me-2 total-records">Items per page:</div>
+          <select id="pageSize" class="form-select d-inline-block w-auto" [(ngModel)]="pageSize"
+            (change)="updatePagination()">
+            <option [value]="10">10</option>
+            <option [value]="20">20</option>
+            <option [value]="50">50</option>
+            <option [value]="100">100</option>
+          </select>
+        </div>
+      </div>
     </div>
 
-    <div *ngIf="filteredRemainingProperties.length > 0 && activeTab === 'common' && selectedFilter === 'Non-Matching' " class="table-responsive table-container">
-      <table class="table custom-table shadow-sm">
-        <thead>
-          <tr>
-            <th *ngFor="let column of commonPropertiesColumns_different; let i = index"
-              [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}"
-              class="text-center position-relative">
-              <span *ngIf="column.name === 'Property Value 1'">
-                {{ selectedTenant1 + " - " + selectedEnv1 }}
-              </span>
-              <span *ngIf="column.name === 'Property Value 2'">
-                {{ selectedTenant2 + " - " + selectedEnv2 }}
-              </span>
-              <span *ngIf="column.name !== 'Property Value 1' && column.name !== 'Property Value 2'">
-                {{ column.name }}
-              </span>
+    <div *ngIf="filteredRemainingProperties.length > 0 && activeTab === 'common' && selectedFilter === 'Non-Matching' "
+      class="table-responsive">
+      <div class="table-container table-responsive">
 
-              <div class="resize-handle" (mousedown)="onMouseDown($event, i, 'common_different')"></div>
-            </th>
-          </tr>
-        </thead>
-        <tbody class="table-body">
-          <tr *ngFor="let entry of filteredRemainingPropertiesDifferentData">
-            <td class="">{{ entry.propertyKey || '-' }}</td>
-            <td class="">{{ entry.PropertyValue1 !== '' ? entry.PropertyValue1 : '-' }}</td>
-            <td class="text-center">
-              <i class="fas fa-pencil-alt action-icon me-2" title="Edit Value 1"
-                (click)="editRemainingDifferentProperty(entry, 'PropertyValue1')" style="color: #28a745;"></i>
-              <i class="fas fa-arrow-circle-right action-icon me-2" title="Copy Value 1 to Tenant 2" (click)="openConfirmationDialog(
+
+        <table class="table custom-table shadow-sm">
+          <thead>
+            <tr>
+              <th *ngFor="let column of commonPropertiesColumns_different; let i = index"
+                [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}"
+                class="text-center position-relative">
+                <span *ngIf="column.name === 'Property Value 1'">
+                  {{ selectedTenant1 + " - " + selectedEnv1 }}
+                </span>
+                <span *ngIf="column.name === 'Property Value 2'">
+                  {{ selectedTenant2 + " - " + selectedEnv2 }}
+                </span>
+                <span *ngIf="column.name !== 'Property Value 1' && column.name !== 'Property Value 2'">
+                  {{ column.name }}
+                </span>
+
+                <div class="resize-handle" (mousedown)="onMouseDown($event, i, 'common_different')"></div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="table-body">
+            <tr *ngFor="let entry of paginatedNonTenantDifferentProperties">
+              <td class="">{{ entry.propertyKey || '-' }}</td>
+              <td class="">{{ entry.PropertyValue1 !== '' ? entry.PropertyValue1 : '-' }}</td>
+              <td class="text-center">
+                <i class="fas fa-pencil-alt action-icon me-2" title="Edit Value 1"
+                  (click)="editRemainingDifferentProperty(entry, 'PropertyValue1')" style="color: #28a745;"></i>
+                <i class="fas fa-arrow-circle-right action-icon me-2" title="Copy Value 1 to Tenant 2" (click)="openConfirmationDialog(
                       selectedTenant2,
                       selectedEnv2,
                       entry.PropertyValue1,
                       entry.propertyKey
                     )" style="color: red;"></i>
-              <i class="fas fa-copy action-icon" title="Copy" (click)="copyToClipboard(entry.PropertyValue1)"
-                style="color: #6c757d;">
-              </i>
-            </td>
-            <td class="">{{entry.PropertyValue2 !== '' ? entry.PropertyValue2 : '-'}}</td>
-            <td class="text-center">
-              <i class="fas fa-pencil-alt action-icon me-2" title="Edit Value 1"
-                (click)="editRemainingDifferentProperty(entry, 'PropertyValue2')" style="color: #28a745;"></i>
-              <i class="fas fa-arrow-circle-left action-icon me-2" title="Copy Value 1 to Tenant 2" (click)="openConfirmationDialog(
+                <i class="fas fa-copy action-icon" title="Copy" (click)="copyToClipboard(entry.PropertyValue1)"
+                  style="color: #6c757d;">
+                </i>
+              </td>
+              <td class="">{{entry.PropertyValue2 !== '' ? entry.PropertyValue2 : '-'}}</td>
+              <td class="text-center">
+                <i class="fas fa-pencil-alt action-icon me-2" title="Edit Value 1"
+                  (click)="editRemainingDifferentProperty(entry, 'PropertyValue2')" style="color: #28a745;"></i>
+                <i class="fas fa-arrow-circle-left action-icon me-2" title="Copy Value 1 to Tenant 2" (click)="openConfirmationDialog(
                       selectedTenant1,
                       selectedEnv1,
                       entry.PropertyValue2,
                       entry.propertyKey
                     )" style="color: red;"></i>
-              <i class="fas fa-copy action-icon" title="Copy" (click)="copyToClipboard(entry.PropertyValue2)"
-                style="color: #6c757d;">
-              </i>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                <i class="fas fa-copy action-icon" title="Copy" (click)="copyToClipboard(entry.PropertyValue2)"
+                  style="color: #6c757d;">
+                </i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination-container d-flex justify-content-between align-items-center mt-3 mb-3">
+        <div class="total-records">
+          Total Records: <strong>{{nonTenantPropertyDifferentSize}}</strong>
+        </div>
+
+        <div class="pagination-controls d-flex align-items-center">
+          <span class="pagination-nav" [class.disabled]="currentPage === 1" (click)="goToPreviousPage()">
+            <i class="fas fa-angle-double-left"></i>
+          </span>
+          <ng-container *ngFor="let page of pages">
+            <span *ngIf="page !== -1" class="pagination-page" [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+              {{ page }}
+            </span>
+            <span *ngIf="page === -1" class="pagination-dots">...</span>
+          </ng-container>
+          <span class="pagination-nav" [class.disabled]="currentPage === totalPages" (click)="goToNextPage()">
+            <i class="fas fa-angle-double-right"></i>
+          </span>
+        </div>
+
+        <!-- Items Per Page Dropdown -->
+        <div class="items-per-page">
+          <div for="pageSize" class="me-2 total-records">Items per page:</div>
+          <select id="pageSize" class="form-select d-inline-block w-auto" [(ngModel)]="pageSize"
+            (change)="updatePagination()">
+            <option [value]="10">10</option>
+            <option [value]="20">20</option>
+            <option [value]="50">50</option>
+            <option [value]="100">100</option>
+          </select>
+        </div>
+      </div>
     </div>
-    
 
-    <div *ngIf="filteredRemainingProperties.length > 0 && activeTab == 'tenant' && selectedFilter == 'Non-Matching' " class="table-responsive table-container">
-      <table class="table custom-table shadow-sm">
-        <thead>
-          <tr>
-            <th *ngFor="let column of differentColumns; let i = index"
-              [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}"
-              class="text-center position-relative">
-              <span *ngIf="column.name === 'Property Value 1'">
-                {{ selectedTenant1 + " - " + selectedEnv1 }}
-              </span>
-              <span *ngIf="column.name === 'Property Value 2'">
-                {{ selectedTenant2 + " - " + selectedEnv2 }}
-              </span>
-              <span *ngIf="column.name !== 'Property Value 1' && column.name !== 'Property Value 2'">
-                {{ column.name }}
-              </span>
 
-              <div class="resize-handle" (mousedown)="onMouseDown($event, i, 'different')"></div>
-            </th>
-          </tr>
-        </thead>
-        <tbody class="table-body">
-          <tr *ngFor="let entry of filteredTenantBasedPropertiesDifferentData">
-            <td class="">{{entry.masterKey || '-'}}</td>
-            <td class="">{{ entry.propertyKey1 || '-' }}</td>
-            <td class="">{{ entry.value1 !== '' ? entry.value1 : '-' }}</td>
-            <td class="text-center">
-              <i class="fas fa-pencil-alt action-icon me-2" title="Edit Value 1"
-                (click)="editProperty(entry, 'value1')" style="color: #28a745;"></i>
-              <i class="fas fa-arrow-circle-right action-icon me-2" title="Copy Value 1 to Tenant 2" (click)="openConfirmationDialog(
+    <div *ngIf="filteredRemainingProperties.length > 0 && activeTab == 'tenant' && selectedFilter == 'Non-Matching' "
+      class="table-responsive">
+      <div class="table-container table-responsive">
+
+
+        <table class="table custom-table shadow-sm">
+          <thead>
+            <tr>
+              <th *ngFor="let column of differentColumns; let i = index"
+                [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}"
+                class="text-center position-relative">
+                <span *ngIf="column.name === 'Property Value 1'">
+                  {{ selectedTenant1 + " - " + selectedEnv1 }}
+                </span>
+                <span *ngIf="column.name === 'Property Value 2'">
+                  {{ selectedTenant2 + " - " + selectedEnv2 }}
+                </span>
+                <span *ngIf="column.name !== 'Property Value 1' && column.name !== 'Property Value 2'">
+                  {{ column.name }}
+                </span>
+
+                <div class="resize-handle" (mousedown)="onMouseDown($event, i, 'different')"></div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="table-body">
+            <tr *ngFor="let entry of paginatedTenantDifferentProperties">
+              <td class="">{{entry.masterKey || '-'}}</td>
+              <td class="">{{ entry.propertyKey1 || '-' }}</td>
+              <td class="">{{ entry.value1 !== '' ? entry.value1 : '-' }}</td>
+              <td class="text-center">
+                <i class="fas fa-pencil-alt action-icon me-2" title="Edit Value 1"
+                  (click)="editProperty(entry, 'value1')" style="color: #28a745;"></i>
+                <i class="fas fa-arrow-circle-right action-icon me-2" title="Copy Value 1 to Tenant 2" (click)="openConfirmationDialog(
                       selectedTenant2,
                       selectedEnv2,
                       entry.value1,
                       entry.propertyKey2
                     )" style="color: red;"></i>
-              <i class="fas fa-copy action-icon" title="Copy" (click)="copyToClipboard(entry.value1)"
-                style="color: #6c757d;">
-              </i>
-            </td>
-            <td class="">{{entry.propertyKey2 || '-'}}</td>
-            <td class="">{{entry.value2 || '-'}}</td>
-            <td class="text-center">
-              <i class="fas fa-pencil-alt action-icon me-2" title="Edit Value 2"
-                (click)="editProperty(entry, 'value2')" style="color: #28a745;"></i>
-              <i class="fas fa-arrow-circle-left action-icon me-2" title="Copy Value 2 to Tenant 1" (click)="openConfirmationDialog(
+                <i class="fas fa-copy action-icon" title="Copy" (click)="copyToClipboard(entry.value1)"
+                  style="color: #6c757d;">
+                </i>
+              </td>
+              <td class="">{{entry.propertyKey2 || '-'}}</td>
+              <td class="">{{entry.value2 || '-'}}</td>
+              <td class="text-center">
+                <i class="fas fa-pencil-alt action-icon me-2" title="Edit Value 2"
+                  (click)="editProperty(entry, 'value2')" style="color: #28a745;"></i>
+                <i class="fas fa-arrow-circle-left action-icon me-2" title="Copy Value 2 to Tenant 1" (click)="openConfirmationDialog(
                       selectedTenant1,
                       selectedEnv1,
                       entry.value2,
                       entry.propertyKey1
                     )" style="color: red;"></i>
-              <i class="fas fa-copy action-icon" title="Copy" (click)="copyToClipboard(entry.value2)"
-                style="color: #6c757d;">
-              </i>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                <i class="fas fa-copy action-icon" title="Copy" (click)="copyToClipboard(entry.value2)"
+                  style="color: #6c757d;">
+                </i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination-container d-flex justify-content-between align-items-center mt-3 mb-3">
+        <div class="total-records">
+          Total Records: <strong>{{tenantPropertyDifferentSize}}</strong>
+        </div>
+
+        <div class="pagination-controls d-flex align-items-center">
+          <span class="pagination-nav" [class.disabled]="currentPage === 1" (click)="goToPreviousPage()">
+            <i class="fas fa-angle-double-left"></i>
+          </span>
+          <ng-container *ngFor="let page of pages">
+            <span *ngIf="page !== -1" class="pagination-page" [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+              {{ page }}
+            </span>
+            <span *ngIf="page === -1" class="pagination-dots">...</span>
+          </ng-container>
+          <span class="pagination-nav" [class.disabled]="currentPage === totalPages" (click)="goToNextPage()">
+            <i class="fas fa-angle-double-right"></i>
+          </span>
+        </div>
+
+        <!-- Items Per Page Dropdown -->
+        <div class="items-per-page">
+          <div for="pageSize" class="me-2 total-records">Items per page:</div>
+          <select id="pageSize" class="form-select d-inline-block w-auto" [(ngModel)]="pageSize"
+            (change)="updatePagination()">
+            <option [value]="10">10</option>
+            <option [value]="20">20</option>
+            <option [value]="50">50</option>
+            <option [value]="100">100</option>
+          </select>
+        </div>
+      </div>
     </div>
 
     <div class="mt-5 mb-4" *ngIf="filteredTenantBasedProperties.length > 0 || filteredRemainingProperties.length > 0">
