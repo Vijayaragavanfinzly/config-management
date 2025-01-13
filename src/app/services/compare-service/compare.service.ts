@@ -38,4 +38,8 @@ export class CompareService {
   getAllEnvironments():Observable<any>{
     return this.http.get(`${this.baseUrl}/env`);
   }
+
+  editInCompare(data:any):Observable<any>{
+    return this.http.put(`${this.baseUrl}/edit`,data);
+  }
 }

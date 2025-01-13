@@ -1,4 +1,4 @@
-.faq-container {
+/* .faq-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
@@ -42,5 +42,131 @@
     padding: 15px;
     background-color: #fff;
     border-top: 1px solid #ddd;
+  }
+   */
+
+   .custom-breadcrumb {
+    background: var(--gray-color);
+    border-left: 5px solid var(--primary-color);
+    font-weight: 500;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  .breadcrumb-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+  
+  .breadcrumb-link:hover {
+    color: #212529;
+  }
+  
+  .breadcrumb-item.active .breadcrumb-link {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+  
+  .breadcrumb i {
+    margin-right: 6px;
+    font-size: 1.25rem;
+  }
+  
+  .breadcrumb.custom-breadcrumb {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .faq-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    /* background: linear-gradient(135deg, #f3f4f6 0%, #e2e8f0 100%); */
+  }
+  
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-around;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 80%);
+    transform: rotate(45deg);
+    z-index: 0;
+  }
+  
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card h3 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    z-index: 1;
+  }
+  
+  .card p {
+    color: #555;
+    font-size: 1rem;
+    line-height: 1.6;
+    z-index: 1;
+  }
+  
+  .card .explore-btn {
+    background-color: #fff;
+    color: #3498db;
+    font-weight: 600;
+    padding: 10px 15px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    z-index: 1;
+    font-weight: 600;
+  }
+  
+  .card .explore-btn:hover {
+    background-color: #ddd;
+    transform: scale(1.05);
+  }
+  
+  .card:nth-child(odd) {
+    background-image: linear-gradient(to right, #d9a7c7 0%, #fffcdc 100%);
+  }
+  
+  .card:nth-child(even) {
+    background-image: linear-gradient(to right, #84fab0 0%, #8fd3f4 100%);
+  }
+  
+  .card p {
+    font-family: "Roboto", sans-serif;
+    font-size: 0.95rem;
+  }
+  
+  h3 {
+    font-family: "Poppins", sans-serif;
+    font-size: 1.4rem;
   }
   

@@ -1,0 +1,55 @@
+<div class="container mt-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb custom-breadcrumb p-3 rounded">
+        <li class="breadcrumb-item active">
+          <a [routerLink]="['/sync']" class="breadcrumb-link active" [routerLinkActive]="['active']">
+            <i class="fas fa-link mr-2"></i> Sync
+          </a>
+        </li>
+      </ol>
+    </nav>
+  </div>
+  
+<div class="sync-page">
+    <!-- Info Panel -->
+     <h2>Data Synchronization</h2>
+    <div class="info-panel">
+      <!-- <h1 class="title">Data Synchronization</h1> -->
+      <p class="description">
+        Synchronize your local database with the latest data from the Config server for seamless performance.
+      </p>
+      <div class="sync-details">
+        <p><strong>Last Sync:</strong> {{ lastSyncDate | date: 'medium' }}</p>
+      </div>
+    </div>
+  
+    <!-- Sync Button -->
+    <div class="actions">
+      <button class="sync-button" (click)="startSync()">
+        <span *ngIf="!isSyncing">Sync Now</span>
+        <span *ngIf="isSyncing">Syncing...</span>
+      </button>
+    </div>
+  
+    <!-- Progress Bar -->
+    <div class="progress-container" *ngIf="isSyncing">
+      <div class="progress-bar">
+        <div class="progress" [style.width.%]="syncProgress"></div>
+      </div>
+      <p class="progress-status">Sync Progress: {{ syncProgress }}%</p>
+    </div>
+  </div>
+  
+
+  <div class="hint-overlay" *ngIf="showOverlayHint">
+    <div class="hint-container">
+      <div class="hint-content">
+        <div class="hint-icon">🔄</div>
+        <div class="hint-text">
+          <strong>Sync Tip:</strong> Sync before comparing to get accurate and up-to-date results!
+        </div>
+      </div>
+      <button class="hint-button" (click)="hideOverlay()">Got It</button>
+    </div>
+  </div>
+  

@@ -429,9 +429,6 @@
                 <li (click)="editEntry()" data-tooltip="Edit this property">
                     <i class="fas fa-edit"></i> Edit
                 </li>
-                <li (click)="swapEntry()" data-tooltip="Swap values between tenants">
-                    <i class="fas fa-exchange-alt"></i> Swap
-                </li>
                 <li (click)="copyEntry()" data-tooltip="Copy the property value">
                     <i class="fas fa-copy"></i> Copy
                 </li>
@@ -484,14 +481,98 @@
         <button class="btn btn-primary btn-try-again" (click)="clearSearch()">Try Again</button>
     </div>
 </div>
+
+
+
+<!--  -->
+<!-- <div *ngIf="filteredPropertiesNotAssociated.length > 0"
+    class="table-responsive">
+    <div class="table-responsive table-container">
+
+
+        <table class="table custom-table shadow-sm">
+            <thead>
+                <tr>
+                    <th *ngFor="let column of notAssociatedColumn; let i = index"
+                        [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}"
+                        class="text-center position-relative">
+                        <span *ngIf="column.name === 'Property Key 1'">
+                            {{ selectedTenant1 + " - " + selectedEnv1 + " Key"}}
+                        </span>
+                        <span *ngIf="column.name === 'Property Key 2'">
+                            {{ selectedTenant2 + " - " + selectedEnv2 + " Key"}}
+                        </span>
+                        <span *ngIf="column.name !== 'Property Key 1' && column.name !== 'Property Key 2'">
+                            {{ column.name }}
+                        </span>
+
+                        <div class="resize-handle" (mousedown)="onMouseDown($event, i, 'notAssociatedColumn')"></div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="table-body">
+                <tr *ngFor="let entry of paginatedPropertiesNotAssociated">
+                    <td class="" [innerHTML]="highlightText(entry.propertykey || '-', searchQuery)"></td>
+                    <td class="" [innerHTML]="highlightText(getFirstTenantValue(entry) || '-', searchQuery)"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination-container d-flex justify-content-between align-items-center mt-3 mb-3">
+        <div class="total-records">
+            Total Records: <strong>{{sizeOfTenantMatching}}</strong>
+        </div>
+
+        <div class="pagination-controls d-flex align-items-center">
+            <span class="pagination-nav" [class.disabled]="currentPage === 1" (click)="goToPreviousPage()">
+                <i class="fas fa-angle-double-left"></i>
+            </span>
+            <ng-container *ngFor="let page of pages">
+                <span *ngIf="page !== -1" class="pagination-page" [class.active]="page === currentPage"
+                    (click)="goToPage(page)">
+                    {{ page }}
+                </span>
+                <span *ngIf="page === -1" class="pagination-dots">...</span>
+            </ng-container>
+            <span class="pagination-nav" [class.disabled]="currentPage === totalPages" (click)="goToNextPage()">
+                <i class="fas fa-angle-double-right"></i>
+            </span>
+        </div>
+
+        <div class="items-per-page">
+            <div for="pageSize" class="me-2 total-records">Items per page:</div>
+            <select id="pageSize" class="form-select d-inline-block w-auto" [(ngModel)]="pageSize"
+                (change)="updatePagination()">
+                <option [value]="10">10</option>
+                <option [value]="20">20</option>
+                <option [value]="50">50</option>
+                <option [value]="100">100</option>
+            </select>
+        </div>
+    </div>
+</div> -->
+
+
 <div class="hint-overlay" *ngIf="showOverlayHint">
     <div class="hint-container">
         <div class="hint-content">
             <div class="hint-icon">💡</div>
             <div class="hint-text">
-                <strong>Tip:</strong> Right-click on table data to Edit, Swap, or Copy!
+                <strong>Tip:</strong> Right-click on table data to Edit or Copy!
             </div>
         </div>
         <button class="hint-button" (click)="hideOverlay()">Got It</button>
     </div>
 </div>
+<div class="hint-overlay" *ngIf="showOverlayHint1">
+    <div class="hint-container">
+      <div class="hint-content">
+        <div class="hint-icon">🔄</div>
+        <div class="hint-text">
+          <strong>Sync Tip:</strong> Sync before comparing to get accurate and up-to-date results!
+        </div>
+      </div>
+      <button class="hint-button" (click)="hideOverlay1()">Got It</button>
+    </div>
+  </div>
+  

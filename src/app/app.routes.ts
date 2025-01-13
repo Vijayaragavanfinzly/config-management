@@ -3,7 +3,6 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { TenantsComponent } from './components/tenants/tenants.component';
 import { EnvironmentsComponent } from './components/environments/environments.component';
 import { EnvironmentDetailsComponent } from './components/environment-details/environment-details.component';
-import { AccountComponent } from './components/account/account.component';
 import { TenantEnvironmentsComponent } from './components/tenant-environments/tenant-environments.component';
 import { TenantEnvironmentPropertiesComponent } from './components/tenant-environment-properties/tenant-environment-properties.component';
 import { CompareComponent } from './components/compare/compare.component';
@@ -15,6 +14,9 @@ import { CompareOnlyEnvComponent } from './components/compare-only-env/compare-o
 import { CompareLiveConfigComponent } from './components/compare-live-config/compare-live-config.component';
 import { CompareConfigDbComponent } from './components/compare-config-db/compare-config-db.component';
 import { FaqComponent } from './components/faq/faq.component';
+import { SyncComponent } from './components/sync/sync.component';
+import { GuideComparisonComponent } from './components/guide-comparison/guide-comparison.component';
+import { GuideSyncComponent } from './components/guide-sync/guide-sync.component';
 
 export const routes: Routes = [
     {
@@ -31,11 +33,7 @@ export const routes: Routes = [
             },
             {
                 path:'compare',
-                component:CompareComponent
-            },
-            {
-                path:'accounts',
-                component:AccountComponent
+                component:CompareConfigDbComponent
             },
             {
                 path:'compare/compareByTenant',
@@ -74,12 +72,20 @@ export const routes: Routes = [
                 component:CompareLiveConfigComponent
             },
             {
-                path:'compare-config',
-                component:CompareConfigDbComponent
-            },
-            {
                 path:'faq',
                 component:FaqComponent
+            },
+            {
+                path:'sync',
+                component:SyncComponent
+            },
+            {
+                path:'comparison-guide',
+                component:GuideComparisonComponent
+            },
+            {
+                path:'sync-guide',
+                component:GuideSyncComponent
             }
         ]
     }

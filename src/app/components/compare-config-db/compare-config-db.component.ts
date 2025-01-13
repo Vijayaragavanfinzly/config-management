@@ -17,6 +17,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SpinnerComponent } from "../miscellaneous/spinner/spinner.component";
 import { ComparisonDialogComponent } from '../miscellaneous/dialogs/comparison-dialog/comparison-dialog.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { EditCompareComponent } from '../miscellaneous/dialogs/edit-compare/edit-compare.component';
 @Component({
   selector: 'app-compare-config-db',
   standalone: true,
@@ -57,10 +58,15 @@ export class CompareConfigDbComponent implements OnInit {
   CommonMatchingProperties: any[] = [];
   CommonNonMatchingProperties: any[] = [];
 
+  propertiesNotAssociated: any[] = [];
+
   filteredCommonMatchingProperties: any[] = [];
   filteredCommonNonMaatchingProperties: any[] = [];
   filteredTenantMatchingProperties: any[] = [];
   filteredTenantNonMatchingProperties: any[] = [];
+  filteredPropertiesNotAssociated: any[] = [];
+
+
 
   tenantBasedKeys: any = [];
   commonBasedKeys: any = [];
@@ -71,12 +77,13 @@ export class CompareConfigDbComponent implements OnInit {
   tenantPropertyDifferentSize: number = 0;
   nonTenantPropertySameSize: number = 0;
   nonTenantPropertyDifferentSize: number = 0;
+  propertiesNotAssociatedSize: number = 0;
 
   sizeOfCommonMatching: number = 0;
   sizeOfCommonNonMatching: number = 0;
   sizeOfTenantMatching: number = 0;
   sizeOfTenantNonMatching: number = 0;
-
+  sizeOfNotAssociated: number = 0;
 
 
   tenantsOfEnv1: string[] = [];
@@ -90,6 +97,7 @@ export class CompareConfigDbComponent implements OnInit {
   paginatedTenantDifferentProperties: any[] = [];
   paginatedNonTenantSameProperties: any[] = [];
   paginatedNonTenantDifferentProperties: any[] = [];
+  paginatedPropertiesNotAssociated: any[] = [];
 
   paginatedSameData: any[] = [];
   paginatedDifferentData: any[] = [];
@@ -114,6 +122,7 @@ export class CompareConfigDbComponent implements OnInit {
   selectedColumn: any;
 
   showOverlayHint = false;
+  showOverlayHint1 = true;
 
   filters = {
     matching: true,
@@ -162,11 +171,17 @@ export class CompareConfigDbComponent implements OnInit {
 
   differentColumns: any = [];
 
+  notAssociatedColumn = [
+    { name: 'Property Key', field: 'masterKey', width: 150 },
+    { name: 'Property Value', field: 'propertyValue1', width: 150 },
+  ]
+
   columnConfigurations: { [key: string]: any[] } = {
     common: this.commonPropertiesColumns,
     common_different: this.commonPropertiesColumns_different,
     tenant_same: this.tenantPropertiesColumn_same,
-    different: this.differentColumns
+    different: this.differentColumns,
+    notAssociatedColumn:this.notAssociatedColumn
   };
 
   private startX: number = 0;
@@ -235,9 +250,13 @@ export class CompareConfigDbComponent implements OnInit {
 
           this.TenantBasedProperties = data.tenantBasedProperties;
           this.CommonProperties = data.commonProperties;
+          this.propertiesNotAssociated = data.tenantNotInEnv1;
+          console.log(this.propertiesNotAssociated);
+          
 
           this.tenantBasedSized = this.TenantBasedProperties.length;
           this.nonTenantBasedSize = this.CommonProperties.length;
+          this.propertiesNotAssociatedSize = this.propertiesNotAssociated.length;
 
           this.CommonMatchingProperties = this.CommonProperties.filter(property => property.isSame === true);
           this.CommonNonMatchingProperties = this.CommonProperties.filter(property => property.isSame === false);
@@ -245,15 +264,19 @@ export class CompareConfigDbComponent implements OnInit {
           this.TenantMatchingProperties = this.TenantBasedProperties.filter(property => property.issame === true);
           this.TenantNonMatchingProperties = this.TenantBasedProperties.filter(property => property.issame === false);
 
+
+
           this.filteredCommonMatchingProperties = [...this.CommonMatchingProperties];
           this.filteredCommonNonMaatchingProperties = [...this.CommonNonMatchingProperties];
           this.filteredTenantMatchingProperties = [...this.TenantMatchingProperties];
           this.filteredTenantNonMatchingProperties = [...this.TenantNonMatchingProperties];
+          this.filteredPropertiesNotAssociated = [...this.propertiesNotAssociated];
 
           this.sizeOfCommonMatching = this.filteredCommonMatchingProperties.length;
           this.sizeOfCommonNonMatching = this.filteredCommonNonMaatchingProperties.length;
           this.sizeOfTenantMatching = this.filteredTenantMatchingProperties.length;
           this.sizeOfTenantNonMatching = this.filteredTenantNonMatchingProperties.length;
+          this.sizeOfNotAssociated = this.filteredPropertiesNotAssociated.length;
 
           // console.log(this.TenantMatchingProperties);
           // console.log(this.TenantNonMatchingProperties);
@@ -305,6 +328,12 @@ export class CompareConfigDbComponent implements OnInit {
             setTimeout(() => this.showOverlayHint = false, 1000);
           }
           console.log('Show Overlay:', this.showOverlayHint);
+
+          // if (this.showOverlayHint) {
+          //   setTimeout(() => {
+          //     this.showOverlayHint = false;
+          //   }, 10000);
+          // }          
 
           this.currentPage = 1;
           this.updatePagination();
@@ -684,18 +713,18 @@ export class CompareConfigDbComponent implements OnInit {
 
   }
 
-  copyToClipboard(text: string): void {
-    navigator.clipboard.writeText(text).then(() => {
-      this.snackBar.open('Property Value Copied to clipoard!', 'Close', {
-        duration: 3000,
-        panelClass: ['custom-toast', 'toast-success'],
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-      });
-    }).catch(err => {
-      console.error('Unable to copy text: ', err);
-    });
-  }
+  // copyToClipboard(text: string): void {
+  //   navigator.clipboard.writeText(text).then(() => {
+  //     this.snackBar.open('Property Value Copied to clipoard!', 'Close', {
+  //       duration: 3000,
+  //       panelClass: ['custom-toast', 'toast-success'],
+  //       horizontalPosition: 'center',
+  //       verticalPosition: 'top',
+  //     });
+  //   }).catch(err => {
+  //     console.error('Unable to copy text: ', err);
+  //   });
+  // }
 
   handleSearchQueryChange(): void {
 
@@ -898,8 +927,58 @@ export class CompareConfigDbComponent implements OnInit {
 
 
   editEntry(): void {
-    console.log('Edit entry:', this.selectedEntry);
-    console.log(this.selectedColumn);
+    const oldValue = this.selectedEntry[this.selectedColumn.name];
+    const dialogData = {
+      propertyKey: this.selectedEntry['propertykey'],
+      tenantEnv: this.selectedColumn.name,
+      value: this.selectedEntry[this.selectedColumn.name],
+    }
+
+    const dialogRef = this.dialog.open(EditCompareComponent,{
+      width: `700px`,
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe(result=>{
+      if(result){
+        console.log(result);
+        const data = {
+          tenantEnv: result.tenantEnv,
+          propertyKey: result.propertykey,
+          newValue: result.value,
+          oldValue: oldValue
+        }
+        console.log(data);
+        
+        this.compareService.editInCompare(data).subscribe({
+          next: (response)=>{
+            if(response.statusCode === 201){
+              console.log(response);
+              this.selectedEntry[this.selectedColumn.name] = data.newValue;
+              this.snackBar.open('Updated Successfully!', 'Close', {
+                duration: 3000,
+                panelClass: ['custom-toast', 'toast-success'],
+                horizontalPosition: 'center',
+                verticalPosition: 'top',
+              });
+            }
+          },
+          error:(err)=>{
+            this.snackBar.open('Update Failed', 'Close', {
+              duration: 3000,
+              panelClass: ['custom-toast', 'toast-error'],
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
+            console.log(err);
+            
+          }
+          
+        })
+      }
+      this.showContextMenu = false;
+    })
+    
 
     this.showContextMenu = false;
   }
@@ -910,12 +989,27 @@ export class CompareConfigDbComponent implements OnInit {
   }
 
   copyEntry(): void {
-    console.log('Copy entry:', this.selectedEntry);
+    // console.log('Copy entry:', this.selectedEntry);
+    const text = this.selectedEntry[this.selectedColumn.name];
+    navigator.clipboard.writeText(text).then(() => {
+      this.snackBar.open('Copied to clipoard!', 'Close', {
+        duration: 3000,
+        panelClass: ['custom-toast', 'toast-success'],
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
+    }).catch(err => {
+      console.error('Unable to copy text: ', err);
+    });
     this.showContextMenu = false;
   }
 
   hideOverlay(): void {
     this.showOverlayHint = false;
+  }
+
+  hideOverlay1(): void {
+    this.showOverlayHint1 = false;
   }
 
 }

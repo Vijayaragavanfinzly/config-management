@@ -16,7 +16,23 @@
   --background-light: #FBF9F1;
   --accent-beige: #E5E1DA;
   --gray-color:#f9f9f9;
+  --accent-color: #38b6ff;
+  --bg-gradient: linear-gradient(135deg, #e8effa, #ffffff);
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --card-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+  --progress-gradient: linear-gradient(90deg, #38b6ff, #4b6cb7);
 }
+
+/* :root {
+  --primary-color: #4b6cb7; 
+  --secondary-color: #182848; 
+  --accent-color: #38b6ff;
+  --bg-gradient: linear-gradient(135deg, #e8effa, #ffffff);
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --card-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+  --progress-gradient: linear-gradient(90deg, #38b6ff, #4b6cb7);
+} */
+
 
 /* Theme 2: Ocean */
 .theme-ocean {

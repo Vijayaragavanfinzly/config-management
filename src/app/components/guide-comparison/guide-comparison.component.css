@@ -1,0 +1,129 @@
+.comparison-details-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+    color: #2c3e50;
+    /* background: linear-gradient(135deg, #ffffff, #f5f7fa); */
+    border-radius: 20px;
+    /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); */
+    overflow: hidden;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 3rem;
+  
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #34495e;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.5rem;
+    }
+  
+    .subtitle {
+      font-size: 1.2rem;
+      color: #7f8c8d;
+      font-weight: 400;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+  }
+  
+  .diagram-section {
+    text-align: center;
+    margin-bottom: 3rem;
+  
+    .flowchart-image {
+      max-width: 90%;
+      height: auto;
+      border-radius: 12px;
+      /* box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); */
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+      &:hover {
+        transform: scale(1.03);
+        /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); */
+      }
+    }
+  }
+  
+  .explanation-section {
+    display: flex;
+    flex-direction: column;
+    /* gap: 2rem; */
+  
+    .step {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+      transition: box-shadow 0.3s ease;
+      margin-bottom: 15px;
+  
+      &:hover {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+  
+      .step-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+  
+        h2 {
+          font-size: 1.2rem;
+          /* font-weight: 600; */
+          color: #2c3e50;
+          border-left: 4px solid #3498db;
+          padding-left: 8px;
+          margin: 0;
+        }
+      }
+  
+      p {
+        font-size: 0.9rem;
+        line-height: 1.4;
+        color: #4d4d4d;
+        margin: 0;
+  
+        code {
+          background-color: #f4f4f9;
+          padding: 3px 6px;
+          border-radius: 4px;
+          font-family: 'Courier New', Courier, monospace;
+        }
+      }
+    }
+  }
+  
+  .footer {
+    text-align: center;
+    margin-top: 20px;
+  
+    .explore-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+  
+      &:hover {
+        background: linear-gradient(135deg, #2c82c9, #246aa3);
+        transform: translateY(-3px);
+      }
+  
+      &:active {
+        transform: translateY(1px);
+      }
+    }
+  }
+  

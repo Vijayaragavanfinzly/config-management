@@ -35,7 +35,7 @@
           </a>
         </li> -->
         <li class="nav-item">
-          <a routerLink="/compare-environments" routerLinkActive="active" class="nav-link">
+          <a routerLink="/compare" routerLinkActive="active" class="nav-link">
             <i class="fas fa-exchange-alt"></i>
             <span *ngIf="!isSidebarCollapsed">&nbsp;Compare</span>
             <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">Compare</small>
@@ -73,7 +73,7 @@
         </li> -->
 
         <li class="nav-item">
-          <a (click)="openSyncDialog()" routerLinkActive="active" class="nav-link">
+          <a routerLink="/sync" routerLinkActive="active" class="nav-link">
             <i class="fas fa-sync"></i>
             <span *ngIf="!isSidebarCollapsed">&nbsp;Sync</span>
             <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">Sync</small>

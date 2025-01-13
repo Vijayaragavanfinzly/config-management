@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AccountComponent } from './account.component';
+import { GuideSyncComponent } from './guide-sync.component';
 
-describe('AccountComponent', () => {
-  let component: AccountComponent;
-  let fixture: ComponentFixture<AccountComponent>;
+describe('GuideSyncComponent', () => {
+  let component: GuideSyncComponent;
+  let fixture: ComponentFixture<GuideSyncComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AccountComponent]
+      imports: [GuideSyncComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AccountComponent);
+    fixture = TestBed.createComponent(GuideSyncComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

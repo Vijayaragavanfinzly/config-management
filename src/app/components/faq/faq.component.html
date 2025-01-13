@@ -1,12 +1,29 @@
-<div class="faq-container">
-    <h1>Frequently Asked Questions</h1>
-    <div class="faq-item" *ngFor="let faq of faqs">
-        <button class="faq-question" (click)="faq.expanded = !faq.expanded">
-            {{ faq.question }}
-            <span class="toggle-icon">{{ faq.expanded ? '-' : '+' }}</span>
-        </button>
-        <div class="faq-answer" *ngIf="faq.expanded">
-            <p [innerHTML]="faq.answer"></p>
-        </div>
+<div class="container mt-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
+        <li class="breadcrumb-item" [routerLinkActive]="['active']">
+          <a [routerLink]="['/environments']" class="breadcrumb-link">
+            <i class="fas fa-link mr-2"></i> Environments
+          </a>
+        </li>
+      </ol>
+    </nav>
+  </div>
+<div class="container faq-container">
+    <div class="card">
+      <h3>How Comparison Works?</h3>
+      <p>
+        Comparison helps you analyze the differences and similarities between options 
+        to make informed decisions.
+      </p>
+      <button class="explore-btn" (click)="navigateTo('comparison-guide')">Explore</button>
     </div>
-</div>
+  
+    <div class="card">
+      <h3>How Sync Works?</h3>
+      <p>
+        Syncing ensures your data stays updated across all devices in real-time.
+      </p>
+      <button class="explore-btn" (click)="navigateTo('sync-guide')">Explore</button>
+    </div>
+  </div>

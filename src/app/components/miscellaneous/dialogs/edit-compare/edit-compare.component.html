@@ -1,0 +1,40 @@
+<div class="dialog-container">
+    <div class="dialog-header">
+        <h2>Edit Configuration</h2>
+    </div>
+    <div class="dialog-content">
+        <form [formGroup]="tenantForm">
+            <div class="form-group">
+                <mat-form-field appearance="outline" class="full-width stylish-input">
+                    <mat-label>Property Key</mat-label>
+                    <input matInput formControlName="propertykey" placeholder="Property Key" readonly />
+                    <mat-error *ngIf="tenantForm.get('propertykey')?.invalid">
+                        Property Key is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <mat-form-field appearance="outline" class="full-width stylish-input">
+                    <mat-label>Environment & Tenant</mat-label>
+                    <input matInput formControlName="tenantEnv" placeholder="Environment & Tenant" readonly />
+                    <mat-error *ngIf="tenantForm.get('tenantEnv')?.invalid">
+                        Environment & Tenant is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <mat-form-field appearance="outline" class="full-width stylish-input">
+                    <mat-label>Property Value</mat-label>
+                    <input matInput formControlName="value" placeholder="Property Value" />
+                    <mat-error *ngIf="tenantForm.get('value')?.invalid">
+                        Property Value is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+    </div>
+    <div class="dialog-actions">
+        <button class="btn cancel" (click)="onCancel()">Cancel</button>
+        <button class="btn add" (click)="save()">Update</button>
+    </div>
+</div>
