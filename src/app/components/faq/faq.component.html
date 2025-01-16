@@ -1,29 +1,152 @@
 <div class="container mt-3">
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
-        <li class="breadcrumb-item" [routerLinkActive]="['active']">
-          <a [routerLink]="['/environments']" class="breadcrumb-link">
-            <i class="fas fa-link mr-2"></i> Environments
-          </a>
-        </li>
-      </ol>
-    </nav>
-  </div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
+      <li class="breadcrumb-item" [routerLinkActive]="['active']">
+        <a [routerLink]="['/faq']" class="breadcrumb-link">
+          <i class="fas fa-link mr-2"></i> FAQ
+        </a>
+      </li>
+    </ol>
+  </nav>
+</div>
+
 <div class="container faq-container">
-    <div class="card">
-      <h3>How Comparison Works?</h3>
-      <p>
-        Comparison helps you analyze the differences and similarities between options 
-        to make informed decisions.
-      </p>
-      <button class="explore-btn" (click)="navigateTo('comparison-guide')">Explore</button>
+  <div class="card gradient-card gradient1">
+    <h3>How Comparison Works?</h3>
+    <p>
+      Comparison helps you analyze the differences and similarities between options to make informed decisions.
+    </p>
+    <button class="explore-btn" (click)="navigateTo('faq/comparison-guide')">Explore</button>
+  </div>
+
+  <div class="card gradient-card gradient2">
+    <h3>How Sync Works?</h3>
+    <p>
+      Syncing ensures your data stays up-to date.
+    </p>
+    <button class="explore-btn" (click)="navigateTo('faq/sync-guide')">Explore</button>
+  </div>
+</div>
+
+
+<div class="container mt-5">
+  <h2 class="faq-title">FAQs</h2>
+  <div class="accordion" id="faqAccordion">
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+          aria-expanded="true" aria-controls="collapseOne">
+          <span class="accordion-icon"><i class="fas fa-question-circle"></i></span> What is Sync?
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+        data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Sync ensures that all data across different environments (like dev, qa) is kept up to date, making sure no
+          discrepancies exist.
+        </div>
+      </div>
     </div>
-  
-    <div class="card">
-      <h3>How Sync Works?</h3>
-      <p>
-        Syncing ensures your data stays updated across all devices in real-time.
-      </p>
-      <button class="explore-btn" (click)="navigateTo('sync-guide')">Explore</button>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingSix">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix"
+          aria-expanded="false" aria-controls="collapseSix">
+          <span class="accordion-icon"><i class="fas fa-question-circle"></i></span> What is the difference between
+          Tenant-Based Property and Common Property?
+        </button>
+      </h2>
+      <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix"
+        data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Tenant-Based Properties are associated with a specific tenant, and their key usually contains a tenant's name.
+          In contrast, Common Properties are shared across all tenants and do not include tenant-specific details.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingSeven">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+          <span class="accordion-icon"><i class="fas fa-question-circle"></i></span> What is the TENANT_ID placeholder?
+        </button>
+      </h2>
+      <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven"
+        data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          The TENANT_ID placeholder is used to represent a tenant when listing all tenants is impractical. Instead of
+          showing specific tenant names, we use TENANT_ID as a generic identifier for any tenant.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingEight">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+          <span class="accordion-icon"><i class="fas fa-question-circle"></i></span> How are Tenant-Based Properties
+          identified?
+        </button>
+      </h2>
+      <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight"
+        data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Tenant-Based Properties are identified by the presence of a tenant name in the property key. If the key
+          includes a tenant's name, it is flagged as Tenant-Based.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingNine">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+          <span class="accordion-icon"><i class="fas fa-question-circle"></i></span> What happens if no tenant is
+          specified in a property key?
+        </button>
+      </h2>
+      <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine"
+        data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          If no tenant is specified in the property key, the property is considered a Common Property and applies to all
+          tenants universally.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingTen">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen"
+          aria-expanded="false" aria-controls="collapseTen">
+          <span class="accordion-icon"><i class="fas fa-question-circle"></i></span> Why is TENANT_ID used instead of
+          tenant names?
+        </button>
+      </h2>
+      <div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen"
+        data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          TENANT_ID is used as a placeholder to simplify operations when there are many tenants. Instead of listing all
+          tenant names individually, the placeholder allows for a streamlined representation.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingEleven">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven">
+          <span class="accordion-icon"><i class="fas fa-question-circle"></i></span> Can a property be both Tenant-Based
+          and Common?
+        </button>
+      </h2>
+      <div id="collapseEleven" class="accordion-collapse collapse" aria-labelledby="headingEleven"
+        data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          No, a property is either Tenant-Based or Common. Tenant-Based Properties contain tenant-specific identifiers,
+          while Common Properties apply universally without tenant-specific details.
+        </div>
+      </div>
     </div>
   </div>
+</div>

@@ -80,11 +80,11 @@ export const routes: Routes = [
                 component:SyncComponent
             },
             {
-                path:'comparison-guide',
+                path:'faq/comparison-guide',
                 component:GuideComparisonComponent
             },
             {
-                path:'sync-guide',
+                path:'faq/sync-guide',
                 component:GuideSyncComponent
             }
         ]

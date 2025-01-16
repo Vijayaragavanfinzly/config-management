@@ -1,51 +1,4 @@
-/* .faq-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-  
-  h1 {
-    text-align: center;
-    color: #333;
-  }
-  
-  .faq-item {
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow: hidden;
-  }
-  
-  .faq-question {
-    width: 100%;
-    padding: 15px;
-    background-color: #f7f7f7;
-    border: none;
-    text-align: left;
-    font-size: 16px;
-    cursor: pointer;
-    position: relative;
-  }
-  
-  .faq-question:hover {
-    background-color: #eaeaea;
-  }
-  
-  .toggle-icon {
-    position: absolute;
-    right: 20px;
-    font-size: 18px;
-  }
-  
-  .faq-answer {
-    padding: 15px;
-    background-color: #fff;
-    border-top: 1px solid #ddd;
-  }
-   */
-
-   .custom-breadcrumb {
+ .custom-breadcrumb {
     background: var(--gray-color);
     border-left: 5px solid var(--primary-color);
     font-weight: 500;
@@ -84,7 +37,6 @@
     flex-wrap: wrap;
     justify-content: center;
     padding: 20px;
-    /* background: linear-gradient(135deg, #f3f4f6 0%, #e2e8f0 100%); */
   }
   
   .card {
@@ -99,7 +51,6 @@
     text-align: left;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   
@@ -121,14 +72,14 @@
   }
   
   .card h3 {
-    color: #2c3e50;
+    color: #fff;
     font-size: 1.5rem;
     margin-bottom: 10px;
     z-index: 1;
   }
   
   .card p {
-    color: #555;
+    color: #eee;
     font-size: 1rem;
     line-height: 1.6;
     z-index: 1;
@@ -153,11 +104,19 @@
   }
   
   .card:nth-child(odd) {
-    background-image: linear-gradient(to right, #d9a7c7 0%, #fffcdc 100%);
+    background: 
+    linear-gradient(135deg, #32CD32, #228B22),
+    url('https://www.transparenttextures.com/patterns/connected.png');
+  background-size: cover;
+  background-blend-mode: overlay;
   }
   
   .card:nth-child(even) {
-    background-image: linear-gradient(to right, #84fab0 0%, #8fd3f4 100%);
+    background: 
+    linear-gradient(135deg, #6a0dad, #9b59b6), 
+    url('https://www.transparenttextures.com/patterns/diagmonds.png');
+  background-size: cover;
+  background-blend-mode: overlay;
   }
   
   .card p {
@@ -170,3 +129,67 @@
     font-size: 1.4rem;
   }
   
+  /*  */
+
+  .faq-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .accordion-button {
+    background-color: #fff;
+    color: #333;
+    font-size: 1.1rem;
+    padding: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .accordion-button:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .accordion-button.collapsed {
+    background-color: #f9f9f9;
+    color: #555;
+    border-color: #ccc;
+  }
+  
+  .accordion-button:focus {
+    box-shadow: none;
+  }
+  
+  .accordion-body {
+    font-size: 1rem;
+    color: #555;
+    background-color: #f8f8f8;
+    padding: 1.25rem;
+    border-top: 1px solid #ddd;
+    border-radius: 0 0 8px 8px;
+  }
+  
+  .accordion-icon {
+    margin-right: 0.5rem;
+    color: #007bff;
+  }
+  
+  .accordion-item {
+    margin-bottom: 1rem;
+  }
+  
+  .accordion-header {
+    background-color: transparent;
+    border: none;
+  }
+  
+  .accordion-item:last-of-type .accordion-body {
+    border-bottom: none;
+  }
+  
+
+/*  */

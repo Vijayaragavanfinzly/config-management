@@ -42,4 +42,15 @@ export class CompareService {
   editInCompare(data:any):Observable<any>{
     return this.http.put(`${this.baseUrl}/edit`,data);
   }
+
+  getLastSyncDate():Observable<any>{
+    return this.http.get(`${this.baseUrl}/syncTime`);
+  }
+
+  getAllSyncDetails():Observable<any>{
+    return this.http.get(`${this.baseUrl}/allSyncDetails`);
+  }
+  syncEnvironment(env:string):Observable<any>{
+    return this.http.post(`${this.baseUrl}/sync/${env}`,null);
+  }
 }

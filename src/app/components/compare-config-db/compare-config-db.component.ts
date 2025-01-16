@@ -59,12 +59,14 @@ export class CompareConfigDbComponent implements OnInit {
   CommonNonMatchingProperties: any[] = [];
 
   propertiesNotAssociated: any[] = [];
+  propertiesNotAssociated2: any[] = [];
 
   filteredCommonMatchingProperties: any[] = [];
   filteredCommonNonMaatchingProperties: any[] = [];
   filteredTenantMatchingProperties: any[] = [];
   filteredTenantNonMatchingProperties: any[] = [];
   filteredPropertiesNotAssociated: any[] = [];
+  filteredPropertiesNotAssociated2: any[] = [];
 
 
 
@@ -78,12 +80,14 @@ export class CompareConfigDbComponent implements OnInit {
   nonTenantPropertySameSize: number = 0;
   nonTenantPropertyDifferentSize: number = 0;
   propertiesNotAssociatedSize: number = 0;
+  propertiesNotAssociatedSize2: number = 0;
 
   sizeOfCommonMatching: number = 0;
   sizeOfCommonNonMatching: number = 0;
   sizeOfTenantMatching: number = 0;
   sizeOfTenantNonMatching: number = 0;
   sizeOfNotAssociated: number = 0;
+  sizeOfNotAssociated2: number = 0;
 
 
   tenantsOfEnv1: string[] = [];
@@ -98,6 +102,7 @@ export class CompareConfigDbComponent implements OnInit {
   paginatedNonTenantSameProperties: any[] = [];
   paginatedNonTenantDifferentProperties: any[] = [];
   paginatedPropertiesNotAssociated: any[] = [];
+  paginatedPropertiesNotAssociated2: any[] = [];
 
   paginatedSameData: any[] = [];
   paginatedDifferentData: any[] = [];
@@ -107,7 +112,11 @@ export class CompareConfigDbComponent implements OnInit {
   currentPage: number = 1;
   pageSize: number = 10;
   totalPages: number = 0;
-  pages: number[] = []
+  pages: number[] = [];
+  currentPage2: number = 1;
+  pageSize2: number = 10;
+  totalPages2: number = 0;
+  pages2: number[] = [];
 
   activeTab: string = 'tenant';
   showFilter: boolean = false;
@@ -117,6 +126,7 @@ export class CompareConfigDbComponent implements OnInit {
   showFilterDropdown: boolean = false;
 
   showContextMenu = false;
+  showContextMenuCopy = false;
   menuPosition = { x: 0, y: 0 };
   selectedEntry: any;
   selectedColumn: any;
@@ -195,6 +205,7 @@ export class CompareConfigDbComponent implements OnInit {
 
   showDropdown: boolean = false;
   selectedFilter: string = 'Matching';
+  lastTable: boolean = false;
 
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
@@ -203,6 +214,7 @@ export class CompareConfigDbComponent implements OnInit {
   selectFilter(option: string) {
     this.selectedFilter = option;
     this.showDropdown = false;
+    console.log(this.selectedFilter);
     this.updatePagination();
     this.currentPage = 1;
   }
@@ -251,12 +263,17 @@ export class CompareConfigDbComponent implements OnInit {
           this.TenantBasedProperties = data.tenantBasedProperties;
           this.CommonProperties = data.commonProperties;
           this.propertiesNotAssociated = data.tenantNotInEnv1;
+          this.propertiesNotAssociated2 = data.tenantNotInEnv2;
+          if(this.propertiesNotAssociated.length > 0){
+            this.lastTable = true;
+          }
           console.log(this.propertiesNotAssociated);
           
 
           this.tenantBasedSized = this.TenantBasedProperties.length;
           this.nonTenantBasedSize = this.CommonProperties.length;
           this.propertiesNotAssociatedSize = this.propertiesNotAssociated.length;
+          this.propertiesNotAssociatedSize2 = this.propertiesNotAssociated2.length;
 
           this.CommonMatchingProperties = this.CommonProperties.filter(property => property.isSame === true);
           this.CommonNonMatchingProperties = this.CommonProperties.filter(property => property.isSame === false);
@@ -271,12 +288,14 @@ export class CompareConfigDbComponent implements OnInit {
           this.filteredTenantMatchingProperties = [...this.TenantMatchingProperties];
           this.filteredTenantNonMatchingProperties = [...this.TenantNonMatchingProperties];
           this.filteredPropertiesNotAssociated = [...this.propertiesNotAssociated];
+          this.filteredPropertiesNotAssociated2 = [...this.propertiesNotAssociated2];
 
           this.sizeOfCommonMatching = this.filteredCommonMatchingProperties.length;
           this.sizeOfCommonNonMatching = this.filteredCommonNonMaatchingProperties.length;
           this.sizeOfTenantMatching = this.filteredTenantMatchingProperties.length;
           this.sizeOfTenantNonMatching = this.filteredTenantNonMatchingProperties.length;
           this.sizeOfNotAssociated = this.filteredPropertiesNotAssociated.length;
+          this.sizeOfNotAssociated2 = this.filteredPropertiesNotAssociated2.length;
 
           // console.log(this.TenantMatchingProperties);
           // console.log(this.TenantNonMatchingProperties);
@@ -309,7 +328,7 @@ export class CompareConfigDbComponent implements OnInit {
                   field: key,
                   width: 300,
                 })),
-              { name: 'Action', field: 'Action', width: 300 },
+              // { name: 'Action', field: 'Action', width: 300 },
             ];
           } else {
             console.log('data.tenants is undefined or invalid.');
@@ -337,6 +356,8 @@ export class CompareConfigDbComponent implements OnInit {
 
           this.currentPage = 1;
           this.updatePagination();
+          this.currentPage2 = 1;
+          this.updatePagination2();
         },
         error: (err) => {
           console.error('Error comparing environments:', err);
@@ -362,6 +383,8 @@ export class CompareConfigDbComponent implements OnInit {
   }
 
   updatePagination() {
+    console.log("calling update pagination");
+    
     if (this.activeTab === 'tenant' && this.selectedFilter === 'Matching') {
       this.totalPages = Math.ceil(this.filteredTenantMatchingProperties.length / this.pageSize);
       if (this.currentPage > this.totalPages) {
@@ -370,7 +393,7 @@ export class CompareConfigDbComponent implements OnInit {
       this.pages = this.getVisiblePages();
       this.paginatedTenantSameProperties = this.getPaginatedData();
     }
-    else if (this.activeTab === 'tenant' && this.selectedFilter !== 'Matching') {
+    else if (this.activeTab === 'tenant' && this.selectedFilter === 'Non-Matching') {
       this.totalPages = Math.ceil(this.filteredTenantNonMatchingProperties.length / this.pageSize);
       if (this.currentPage > this.totalPages) {
         this.currentPage = this.totalPages;
@@ -387,13 +410,59 @@ export class CompareConfigDbComponent implements OnInit {
       this.paginatedSameData = this.getPaginatedData();
       console.log(this.paginatedSameData);
     }
-    else if (this.activeTab === 'common' && this.selectedFilter !== 'Matching') {
+    else if (this.activeTab === 'common' && this.selectedFilter === 'Non-Matching') {
       this.totalPages = Math.ceil(this.filteredCommonNonMaatchingProperties.length / this.pageSize);
       if (this.currentPage > this.totalPages) {
         this.currentPage = this.totalPages;
       }
       this.pages = this.getVisiblePages();
       this.paginatedDifferentData = this.getPaginatedData();
+    }
+    else if(this.activeTab === 'notInEnv1'){
+      this.totalPages = Math.ceil(this.filteredPropertiesNotAssociated.length / this.pageSize);
+      if (this.currentPage > this.totalPages) {
+        this.currentPage = this.totalPages;
+      }
+      this.pages = this.getVisiblePages();
+      this.paginatedPropertiesNotAssociated = this.getPaginatedData();
+    }
+    else if(this.activeTab === 'notInEnv2'){
+      this.totalPages = Math.ceil(this.filteredPropertiesNotAssociated2.length / this.pageSize);
+      if (this.currentPage > this.totalPages) {
+        this.currentPage = this.totalPages;
+      }
+      this.pages = this.getVisiblePages();
+      this.paginatedPropertiesNotAssociated2 = this.getPaginatedData();
+    }
+    
+  }
+
+  updatePagination2(){
+    console.log(this.lastTable);
+    if(this.lastTable === true){
+      
+      this.totalPages2 = Math.ceil(this.filteredPropertiesNotAssociated.length / this.pageSize2);
+      if (this.currentPage2 > this.totalPages2) {
+        this.currentPage2 = this.totalPages2;
+      }
+      this.pages2 = this.getVisiblePages2();
+      this.paginatedPropertiesNotAssociated = this.getPaginatedData2();
+    }
+  }
+
+  getPaginatedData2():any{
+    const startIndex = (this.currentPage2 - 1) * this.pageSize2;
+    let length = 0;
+    if(this.lastTable === true){
+      length = this.filteredPropertiesNotAssociated.length;
+      this.sizeOfNotAssociated = length;
+    }
+    const endIndex = Math.min(parseInt(startIndex.toString()) + parseInt(this.pageSize2.toString()), length);
+
+    console.log(`Start Index: ${startIndex}`);
+    console.log(`End Index: ${endIndex}`);
+    if(this.lastTable === true){
+      return this.filteredPropertiesNotAssociated.slice(startIndex,endIndex);
     }
   }
 
@@ -404,7 +473,7 @@ export class CompareConfigDbComponent implements OnInit {
       length = this.filteredTenantMatchingProperties.length;
       this.sizeOfTenantMatching = length;
     }
-    else if (this.activeTab === 'tenant' && this.selectedFilter !== 'Matching') {
+    else if (this.activeTab === 'tenant' && this.selectedFilter === 'Non-Matching') {
       length = this.filteredTenantNonMatchingProperties.length;
       this.sizeOfTenantNonMatching = length;
     }
@@ -412,9 +481,17 @@ export class CompareConfigDbComponent implements OnInit {
       length = this.filteredCommonMatchingProperties.length;
       this.sizeOfCommonMatching = length;
     }
-    else if (this.activeTab === 'common' && this.selectedFilter !== 'Matching') {
+    else if (this.activeTab === 'common' && this.selectedFilter === 'Non-Matching') {
       length = this.filteredCommonNonMaatchingProperties.length;
       this.sizeOfCommonNonMatching = length;
+    }
+    else if(this.activeTab === 'notInEnv1'){
+      length = this.filteredPropertiesNotAssociated.length;
+      this.sizeOfNotAssociated = length;
+    }
+    else if(this.activeTab === 'notInEnv2'){
+      length = this.filteredPropertiesNotAssociated2.length;
+      this.sizeOfNotAssociated2 = length;
     }
     const endIndex = Math.min(parseInt(startIndex.toString()) + parseInt(this.pageSize.toString()), length);
 
@@ -433,6 +510,13 @@ export class CompareConfigDbComponent implements OnInit {
     else if (this.activeTab === 'common' && this.selectedFilter !== 'Matching') {
       return this.filteredCommonNonMaatchingProperties.slice(startIndex, endIndex);
     }
+    else if(this.activeTab === 'notInEnv1'){
+      return this.filteredPropertiesNotAssociated.slice(startIndex,endIndex);
+    }
+    else if(this.activeTab === 'notInEnv2'){
+      return this.filteredPropertiesNotAssociated2.slice(startIndex,endIndex);
+    }
+    
   }
 
   getFirstTenantValue(entry: any): string {
@@ -490,6 +574,48 @@ export class CompareConfigDbComponent implements OnInit {
     }
   }
 
+  getVisiblePages2(): number[] {
+    const maxPagesToShow = 5;
+    const visiblePages: number[] = [];
+    const startPage = Math.max(1, this.currentPage2 - 2);
+    const endPage = Math.min(this.totalPages2, this.currentPage2 + 2);
+
+    if (startPage > 1) {
+      visiblePages.push(1);
+      if (startPage > 2) visiblePages.push(-1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      visiblePages.push(i);
+    }
+
+    if (endPage < this.totalPages2) {
+      if (endPage < this.totalPages2 - 1) visiblePages.push(-1);
+      visiblePages.push(this.totalPages2);
+    }
+
+    return visiblePages;
+  }
+
+  goToPage2(page: number) {
+    this.currentPage2 = page;
+    this.updatePagination2();
+  }
+
+  goToPreviousPage2() {
+    if (this.currentPage2 > 1) {
+      this.currentPage2--;
+      this.updatePagination2();
+    }
+  }
+
+  goToNextPage2() {
+    if (this.currentPage2 < this.totalPages2) {
+      this.currentPage2++;
+      this.updatePagination2();
+    }
+  }
+
   clearSelections(): void {
     this.selectedTenant1 = '';
     this.selectedTenant2 = '';
@@ -500,10 +626,14 @@ export class CompareConfigDbComponent implements OnInit {
 
     this.filteredDifferentData = [];
     this.filteredSameData = [];
-    this.TenantNonMatchingProperties = [];
-    this.TenantMatchingProperties = [];
-    this.CommonMatchingProperties = [];
-    this.CommonNonMatchingProperties = [];
+    this.filteredCommonMatchingProperties = [];
+    this.filteredCommonNonMaatchingProperties = [];
+    this.filteredTenantMatchingProperties = [];
+    this.filteredTenantNonMatchingProperties = [];
+    this.filteredPropertiesNotAssociated = [];
+    this.tenantsOfEnv1 = [];
+    this.tenantsOfEnv2 = [];
+
 
     this.tenantBasedKeys = [];
     this.commonBasedKeys = [];
@@ -735,6 +865,8 @@ export class CompareConfigDbComponent implements OnInit {
     this.filterResults();
     this.currentPage = 1;
     this.updatePagination();
+    this.currentPage2 = 1;
+    this.updatePagination2();
     this.loading = false;
   }
 
@@ -745,6 +877,8 @@ export class CompareConfigDbComponent implements OnInit {
     this.filteredCommonNonMaatchingProperties = this.CommonProperties.filter(entry => entry.isSame === false);
     this.currentPage = 1;
     this.updatePagination();
+    this.currentPage2 = 1;
+    this.updatePagination2();
     this.loading = false;
     return;
   }
@@ -761,6 +895,8 @@ export class CompareConfigDbComponent implements OnInit {
       this.filteredCommonNonMaatchingProperties = this.CommonProperties.filter(entry => entry.isSame === false);
       this.currentPage = 1;
       this.updatePagination();
+      this.currentPage2 = 1;
+      this.updatePagination2();
       this.loading = false;
       return;
     }
@@ -894,8 +1030,9 @@ export class CompareConfigDbComponent implements OnInit {
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
-    this.updatePagination();
     this.currentPage = 1;
+    this.updatePagination();
+    
   }
 
   highlightText(text: string, query: string): any {
@@ -916,12 +1053,28 @@ export class CompareConfigDbComponent implements OnInit {
     this.showContextMenu = true;
   }
 
+  onRightClickForCopy(event: MouseEvent, entry:any, column:any):void{
+    event.preventDefault();
+
+    this.selectedEntry = entry;
+    this.selectedColumn = column;
+    console.log(entry);
+    console.log(column);
+    
+    
+
+    this.menuPosition = { x: event.clientX, y: event.clientY };
+
+    this.showContextMenuCopy = true;
+  }
+
   @HostListener('document:mousedown', ['$event'])
   onClickOutside(event: MouseEvent): void {
     const target = event.target as HTMLElement;
 
     if (target && !target.closest('.context-menu')) {
       this.showContextMenu = false;
+      this.showContextMenuCopy = false;
     }
   }
 
@@ -1003,6 +1156,25 @@ export class CompareConfigDbComponent implements OnInit {
     });
     this.showContextMenu = false;
   }
+  copyEntry2(): void {
+    const text = this.selectedEntry[this.selectedColumn];
+    navigator.clipboard.writeText(text).then(() => {
+      this.snackBar.open('Copied to clipoard!', 'Close', {
+        duration: 3000,
+        panelClass: ['custom-toast', 'toast-success'],
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
+    }).catch(err => {
+      console.error('Unable to copy text: ', err);
+    });
+    this.showContextMenu = false;
+  }
+
+  objectEntries(obj: any): { key: string; value: any }[] {
+    return Object.entries(obj).map(([key, value]) => ({ key, value }));
+}
+
 
   hideOverlay(): void {
     this.showOverlayHint = false;

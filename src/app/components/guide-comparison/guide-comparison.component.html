@@ -1,55 +1,126 @@
+<div class="container mt-3">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
+      <li class="breadcrumb-item">
+        <a [routerLink]="['/faq']" class="breadcrumb-link" matTooltip="Navigate to FAQ Page">
+          <i class="fas fa-link mr-2"></i> FAQ
+        </a>
+      </li>
+      <li class="breadcrumb-item active">
+        <a [routerLink]="['/faq/comparison-guide']" [routerLinkActive]="['active']" class="breadcrumb-link" matTooltip="" matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip">
+          {{ 'Comparison Guide' | uppercase }}
+        </a>
+      </li>
+    </ol>
+  </nav>
+</div>
 <div class="comparison-details-container">
-    <div class="header">
-      <h1>How Comparison Works</h1>
-      <p class="subtitle">
-        A step-by-step breakdown of how the comparison process functions in our application.
+  <div class="header">
+    <h1>How Comparison Works</h1>
+    <p class="subtitle">
+      A step-by-step breakdown of how the comparison process functions in our application.
+    </p>
+  </div>
+
+  <div class="diagram-section">
+    <img src="assets/comparison.png" alt="Comparison Flowchart" class="flowchart-image" />
+  </div>
+
+  <div class="explanation-section">
+    <div class="step">
+      <div class="step-header">
+        <h2>Step 1: Select Environments</h2>
+      </div>
+      <p>
+        Begin by selecting two environments to compare. These environments can represent different versions or instances
+        of your configurations.
       </p>
     </div>
-  
-    <div class="diagram-section">
-      <img src="assets/comparison-flow.png" alt="Comparison Flowchart" class="flowchart-image" />
+
+    <div class="step">
+      <div class="step-header">
+        <h2>Step 2: Fetch Properties</h2>
+      </div>
+      <p>
+        The system retrieves all properties from the selected environments. Properties are categorized into
+        <b>Tenant-Based Properties</b> and <b>Common Properties</b>.
+      </p>
     </div>
-  
-    <div class="explanation-section">
-      <div class="step">
-        <div class="step-header">
-          <h2>Step 1: Select Environments</h2>
-        </div>
-        <p>
-          Begin by selecting two environments to compare. These environments can represent different versions or instances of your configurations.
-        </p>
+
+    <div class="step">
+      <div class="step-header">
+        <h2>Step 3: Categorize Properties</h2>
       </div>
-  
-      <div class="step">
-        <div class="step-header">
-          <h2>Step 2: Fetch Properties</h2>
-        </div>
-        <p>
-          The system retrieves all properties from the selected environments. Properties are categorized into <b>Tenant-Based Properties</b> and <b>Common Properties</b>.
-        </p>
-      </div>
-  
-      <div class="step">
-        <div class="step-header">
-          <h2>Step 3: Categorize Properties</h2>
-        </div>
-        <p>
-          Properties are grouped based on the presence of tenant-related keywords. If a property contains any active tenant from <code>bankos.tenants</code>, it is categorized as a <b>Tenant-Based Property</b>. Otherwise, it is placed under <b>Common Properties</b>.
-        </p>
-      </div>
-  
-      <div class="step">
-        <div class="step-header">
-          <h2>Step 4: Perform Comparison</h2>
-        </div>
-        <p>
-          The grouped properties from both environments are compared. Matching and non-matching properties are identified for both <b>Tenant-Based</b> and <b>Common Properties</b>.
-        </p>
-      </div>
+      <p>
+        Properties are grouped based on the presence of tenant-related keywords. If a property contains any active
+        tenant from <code>bankos.tenants</code>, it is categorized as a <b>Tenant-Based Property</b>. Otherwise, it is
+        placed under <b>Common Properties</b>.
+      </p>
     </div>
-  
-    <div class="footer">
-      <button class="explore-btn" (click)="navigateBack()">Go Back</button>
+
+    <div class="step">
+      <div class="step-header">
+        <h2>Step 4: Perform Comparison</h2>
+      </div>
+      <p>
+        The grouped properties from both environments are compared. Matching and non-matching properties are identified
+        for both <b>Tenant-Based</b> and <b>Common Properties</b>.
+      </p>
     </div>
   </div>
-  
+
+  <!-- <div class="footer">
+      <button class="explore-btn" (click)="navigateBack()">Go Back</button>
+    </div> -->
+</div>
+
+<div class="modern-code-editor">
+  <header>
+    <h1>Mock Comparator</h1>
+    <p>Input tenant and property data below, then run to see categorized results.</p>
+  </header>
+
+  <main>
+    <section class="editor">
+      <h2>bankos.tenants</h2>
+      <div class="code-container">
+        <textarea
+          [(ngModel)]="tenantsInput"
+          class="code-area"
+          placeholder="Enter tenants, separated by commas (e.g., 1stsb, mcb, ...)"
+        ></textarea>
+      </div>
+    </section>
+
+    <section class="editor">
+      <h2>Property Keys</h2>
+      <div class="code-container">
+        <textarea
+          [(ngModel)]="propertiesInput"
+          class="code-area"
+          placeholder="Enter property keys, one per line..."
+        ></textarea>
+      </div>
+    </section>
+
+    <button class="run-btn" (click)="executeComparison()">Execute Comparison</button>
+
+    <section class="output">
+      <h2>Output</h2>
+      <div class="output-grid">
+        <div class="output-column">
+          <h3>Tenant-Based Properties</h3>
+          <div class="output-box">
+            {{ tenantBasedProperties.join('\n') || 'No tenant-based properties found.' }}
+          </div>
+        </div>
+        <div class="output-column">
+          <h3>Common Properties</h3>
+          <div class="output-box">
+            {{ commonProperties.join('\n') || 'No common properties found.' }}
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

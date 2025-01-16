@@ -20,5 +20,7 @@ export class ExportService {
     return this.http.post(`${this.baseUrl}/exportSelectedProperties/${tenant}/${environment}`, selectedIds , { responseType: 'blob' });
   }
 
-
+  exportUpdateQueryForAll():Observable<any>{
+      return this.http.get(`${this.baseUrl}/exportsql`, { responseType: 'blob' });
+  }
 }

@@ -89,6 +89,18 @@
             <span>Common Properties</span>
             <span class="badge">{{ nonTenantBasedSize }}</span>
         </div>
+
+        <div class="tab" [ngClass]="{'active': activeTab === 'notInEnv1'}" (click)="setActiveTab('notInEnv1')">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Tenant Not In {{selectedEnv1}}</span>
+            <span class="badge">{{ propertiesNotAssociatedSize }}</span>
+        </div>
+
+        <div class="tab" [ngClass]="{'active': activeTab === 'notInEnv2'}" (click)="setActiveTab('notInEnv2')">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Tenant Not In {{selectedEnv2}}</span>
+            <span class="badge">{{ propertiesNotAssociatedSize2 }}</span>
+        </div>
     </div>
 
 
@@ -266,6 +278,17 @@
                 </tr>
             </tbody>
         </table>
+        <div *ngIf="showContextMenuCopy" class="context-menu" [style.left.px]="menuPosition.x"
+            [style.top.px]="menuPosition.y">
+            <ul>
+                <!-- <li (click)="editEntry()" data-tooltip="Edit this property">
+                    <i class="fas fa-edit"></i> Edit
+                </li> -->
+                <li (click)="copyEntry2()" data-tooltip="Copy the property value">
+                    <i class="fas fa-copy"></i> Copy
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="pagination-container d-flex justify-content-between align-items-center mt-3 mb-3">
         <div class="total-records">
@@ -328,13 +351,24 @@
             </thead>
             <tbody class="table-body">
                 <tr *ngFor="let entry of paginatedTenantSameProperties">
-                    <td class="" [innerHTML]="highlightText(entry.propertykey || '-', searchQuery)"></td>
+                    <td class="" (contextmenu)="onRightClickForCopy($event, entry, 'propertykey')"  [innerHTML]="highlightText(entry.propertykey || '-', searchQuery)"></td>
                     <!-- <td class="">{{ entry.propertyKey1 !== '' ? entry.propertyKey1 : '-' }}</td>
                   <td class="">{{ entry.propertyKey2 !== '' ? entry.propertyKey2 : '-' }}</td> -->
-                    <td class="" [innerHTML]="highlightText(getFirstTenantValue(entry) || '-', searchQuery)"></td>
+                    <td class="" (contextmenu)="onRightClickForCopy($event, entry, 'propertykey')"  [innerHTML]="highlightText(getFirstTenantValue(entry) || '-', searchQuery)"></td>
                 </tr>
             </tbody>
         </table>
+        <div *ngIf="showContextMenuCopy" class="context-menu" [style.left.px]="menuPosition.x"
+            [style.top.px]="menuPosition.y">
+            <ul>
+                <!-- <li (click)="editEntry()" data-tooltip="Edit this property">
+                    <i class="fas fa-edit"></i> Edit
+                </li> -->
+                <li (click)="copyEntry2()" data-tooltip="Copy the property value">
+                    <i class="fas fa-copy"></i> Copy
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="pagination-container d-flex justify-content-between align-items-center mt-3 mb-3">
         <div class="total-records">
@@ -397,8 +431,8 @@
             </thead>
             <tbody class="table-body">
                 <tr *ngFor="let entry of paginatedTenantDifferentProperties">
-                    <td class="" [innerHTML]="highlightText(entry.propertykey || '-', searchQuery)"></td>
-                    <td *ngFor="let column of differentColumns.slice(1, -1); let i = index" [ngClass]="{
+                    <td class="" (contextmenu)="onRightClickForCopy($event, entry, 'propertykey')" [innerHTML]="highlightText(entry.propertykey || '-', searchQuery)"></td>
+                    <td *ngFor="let column of differentColumns.slice(1); let i = index" [ngClass]="{
         'env1-column': column.group === 'env1',
         'env2-column': column.group === 'env2',
         'not-available': entry[column.field] === 'not available',
@@ -417,9 +451,9 @@
                         </span>
                     </td>
 
-                    <td class="text-center ellipse-btn">
+                    <!-- <td class="text-center ellipse-btn">
                         <i class="fas fa-ellipsis-h" title="Action" (click)="openDialog(entry)"></i>
-                    </td>
+                    </td> -->
                 </tr>
             </tbody>
         </table>
@@ -430,6 +464,17 @@
                     <i class="fas fa-edit"></i> Edit
                 </li>
                 <li (click)="copyEntry()" data-tooltip="Copy the property value">
+                    <i class="fas fa-copy"></i> Copy
+                </li>
+            </ul>
+        </div>
+        <div *ngIf="showContextMenuCopy" class="context-menu" [style.left.px]="menuPosition.x"
+            [style.top.px]="menuPosition.y">
+            <ul>
+                <!-- <li (click)="editEntry()" data-tooltip="Edit this property">
+                    <i class="fas fa-edit"></i> Edit
+                </li> -->
+                <li (click)="copyEntry2()" data-tooltip="Copy the property value">
                     <i class="fas fa-copy"></i> Copy
                 </li>
             </ul>
@@ -484,8 +529,8 @@
 
 
 
-<!--  -->
-<!-- <div *ngIf="filteredPropertiesNotAssociated.length > 0"
+<!--===============================DATA UNKNOWN CATEGORY TABLE STARTS HERE=============================================================-->
+<div *ngIf="filteredPropertiesNotAssociated.length > 0 && activeTab === 'notInEnv1'"
     class="table-responsive">
     <div class="table-responsive table-container">
 
@@ -511,30 +556,41 @@
                 </tr>
             </thead>
             <tbody class="table-body">
-                <tr *ngFor="let entry of paginatedPropertiesNotAssociated">
+                <!-- <tr *ngFor="let entry of paginatedPropertiesNotAssociated">
                     <td class="" [innerHTML]="highlightText(entry.propertykey || '-', searchQuery)"></td>
                     <td class="" [innerHTML]="highlightText(getFirstTenantValue(entry) || '-', searchQuery)"></td>
+                </tr> -->
+                <tr *ngFor="let entry of paginatedPropertiesNotAssociated">
+                    <ng-container *ngFor="let kv of objectEntries(entry)">
+                        <td>
+                            <span [innerHTML]="highlightText(kv.key || '-', searchQuery)"></span>
+                        </td>
+                        <td>
+                            <span [innerHTML]="highlightText(kv.value || '-', searchQuery)"></span>
+                        </td>
+                    </ng-container>
                 </tr>
+                
             </tbody>
         </table>
     </div>
     <div class="pagination-container d-flex justify-content-between align-items-center mt-3 mb-3">
         <div class="total-records">
-            Total Records: <strong>{{sizeOfTenantMatching}}</strong>
+            Total Records: <strong>{{sizeOfNotAssociated}}</strong>
         </div>
 
         <div class="pagination-controls d-flex align-items-center">
-            <span class="pagination-nav" [class.disabled]="currentPage === 1" (click)="goToPreviousPage()">
+            <span class="pagination-nav" [class.disabled]="currentPage2 === 1" (click)="goToPreviousPage()">
                 <i class="fas fa-angle-double-left"></i>
             </span>
-            <ng-container *ngFor="let page of pages">
-                <span *ngIf="page !== -1" class="pagination-page" [class.active]="page === currentPage"
+            <ng-container *ngFor="let page of pages2">
+                <span *ngIf="page !== -1" class="pagination-page" [class.active]="page === currentPage2"
                     (click)="goToPage(page)">
                     {{ page }}
                 </span>
                 <span *ngIf="page === -1" class="pagination-dots">...</span>
             </ng-container>
-            <span class="pagination-nav" [class.disabled]="currentPage === totalPages" (click)="goToNextPage()">
+            <span class="pagination-nav" [class.disabled]="currentPage2 === totalPages2" (click)="goToNextPage()">
                 <i class="fas fa-angle-double-right"></i>
             </span>
         </div>
@@ -550,7 +606,89 @@
             </select>
         </div>
     </div>
-</div> -->
+</div>
+
+<!-- ================================================DATA UNKNOWN CATEGORY TABLE ENDS HERE======================================================== -->
+
+<div *ngIf="filteredPropertiesNotAssociated2.length > 0 && activeTab === 'notInEnv2'"
+    class="table-responsive">
+    <div class="table-responsive table-container">
+
+
+        <table class="table custom-table shadow-sm">
+            <thead>
+                <tr>
+                    <th *ngFor="let column of notAssociatedColumn; let i = index"
+                        [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}"
+                        class="text-center position-relative">
+                        <span *ngIf="column.name === 'Property Key 1'">
+                            {{ selectedTenant1 + " - " + selectedEnv1 + " Key"}}
+                        </span>
+                        <span *ngIf="column.name === 'Property Key 2'">
+                            {{ selectedTenant2 + " - " + selectedEnv2 + " Key"}}
+                        </span>
+                        <span *ngIf="column.name !== 'Property Key 1' && column.name !== 'Property Key 2'">
+                            {{ column.name }}
+                        </span>
+
+                        <div class="resize-handle" (mousedown)="onMouseDown($event, i, 'notAssociatedColumn')"></div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="table-body">
+                <!-- <tr *ngFor="let entry of paginatedPropertiesNotAssociated">
+                    <td class="" [innerHTML]="highlightText(entry.propertykey || '-', searchQuery)"></td>
+                    <td class="" [innerHTML]="highlightText(getFirstTenantValue(entry) || '-', searchQuery)"></td>
+                </tr> -->
+                <tr *ngFor="let entry of paginatedPropertiesNotAssociated2">
+                    <ng-container *ngFor="let kv of objectEntries(entry)">
+                        <td>
+                            <span [innerHTML]="highlightText(kv.key || '-', searchQuery)"></span>
+                        </td>
+                        <td>
+                            <span [innerHTML]="highlightText(kv.value || '-', searchQuery)"></span>
+                        </td>
+                    </ng-container>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination-container d-flex justify-content-between align-items-center mt-3 mb-3">
+        <div class="total-records">
+            Total Records: <strong>{{sizeOfNotAssociated2}}</strong>
+        </div>
+
+        <div class="pagination-controls d-flex align-items-center">
+            <span class="pagination-nav" [class.disabled]="currentPage2 === 1" (click)="goToPreviousPage()">
+                <i class="fas fa-angle-double-left"></i>
+            </span>
+            <ng-container *ngFor="let page of pages2">
+                <span *ngIf="page !== -1" class="pagination-page" [class.active]="page === currentPage2"
+                    (click)="goToPage(page)">
+                    {{ page }}
+                </span>
+                <span *ngIf="page === -1" class="pagination-dots">...</span>
+            </ng-container>
+            <span class="pagination-nav" [class.disabled]="currentPage2 === totalPages2" (click)="goToNextPage()">
+                <i class="fas fa-angle-double-right"></i>
+            </span>
+        </div>
+
+        <div class="items-per-page">
+            <div for="pageSize" class="me-2 total-records">Items per page:</div>
+            <select id="pageSize" class="form-select d-inline-block w-auto" [(ngModel)]="pageSize"
+                (change)="updatePagination()">
+                <option [value]="10">10</option>
+                <option [value]="20">20</option>
+                <option [value]="50">50</option>
+                <option [value]="100">100</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- ===================================================================================================================================== -->
 
 
 <div class="hint-overlay" *ngIf="showOverlayHint">

@@ -1,14 +1,79 @@
-<div class="details-container">
-    <h2>How Sync Works?</h2>
-    <p>
-      Syncing ensures your data stays updated across all devices. It works by securely 
-      transmitting data changes to a central server and updating all connected devices.
+<div class="container mt-3">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
+      <li class="breadcrumb-item">
+        <a [routerLink]="['/faq']" class="breadcrumb-link" matTooltip="Navigate to FAQ Page">
+          <i class="fas fa-link mr-2"></i> FAQ
+        </a>
+      </li>
+      <li class="breadcrumb-item active">
+        <a [routerLink]="['/faq/sync-guide']" [routerLinkActive]="['active']" class="breadcrumb-link" matTooltip=""
+          matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip">
+          {{ 'Sync Guide' | uppercase }}
+        </a>
+      </li>
+    </ol>
+  </nav>
+</div>
+<div class="comparison-details-container">
+  <div class="header">
+    <h1>How Sync Works</h1>
+    <p class="subtitle">
+      A step-by-step breakdown of how the Sync process functions in our application.
     </p>
-    <ul>
-      <li>Log in to your account.</li>
-      <li>Connect to a stable internet connection.</li>
-      <li>Enable 'Sync' in settings.</li>
-      <li>Your data updates automatically when changes are made.</li>
-    </ul>
   </div>
-  
+
+  <div class="diagram-section">
+    <img src="assets/sync.png" alt="Comparison Flowchart" class="flowchart-image" />
+  </div>
+
+  <div class="explanation-section">
+    <div class="step">
+      <div class="step-header">
+        <h2>Step 1: Start Sync Process</h2>
+      </div>
+      <p> The sync process begins when the user clicks the <b>Sync</b> button in the application. This initiates the
+        retrieval of data from multiple environments. </p>
+    </div>
+    <div class="step">
+      <div class="step-header">
+        <h2>Step 2: Fetch Data from Config Servers</h2>
+      </div>
+      <p> API calls are made to the following config servers: </p>
+      <ul>
+        <li><b>dev</b></li>
+        <li><b>dev2</b></li>
+        <li><b>qa</b></li>
+        <li><b>qa2</b></li>
+      </ul>
+      <p> Properties are retrieved from their respective environment tables. </p>
+    </div>
+    <div class="step">
+      <div class="step-header">
+        <h2>Step 3: Process Properties</h2>
+      </div>
+      <p> Each property fetched from the servers is processed individually. The system determines if the property is
+        <b>tenant-based</b> by matching it with active tenants from <code>bankos.tenants</code>. </p>
+      <p> <b>If tenant-based:</b> The tenant name is assigned to the property. </p>
+      <p> The processed properties are transformed and prepared for storage. </p>
+    </div>
+    <div class="step">
+      <div class="step-header">
+        <h2>Step 4: Store Processed Data in Local DB</h2>
+      </div>
+      <p> All validated and processed properties are stored in the local database under a unified structure called
+        <b>Processed Properties</b>. This includes both tenant-based and other properties. </p>
+    </div>
+    <div class="step">
+      <div class="step-header">
+        <h2>Step 5: End Sync Process</h2>
+      </div>
+      <p> The sync process is completed. All fetched and processed properties are now available in the local database
+        for further comparison and operations. </p>
+    </div>
+  </div>
+
+  <!-- <div class="footer">
+      <button class="explore-btn" (click)="navigateBack()">Go Back</button>
+    </div> -->
+</div>
