@@ -23,4 +23,12 @@ export class ExportService {
   exportUpdateQueryForAll():Observable<any>{
       return this.http.get(`${this.baseUrl}/exportsql`, { responseType: 'blob' });
   }
+
+  exportSingleUpdateQuery(env:string):Observable<any>{
+    return this.http.get(`${this.baseUrl}/export/${env}`, {responseType: 'blob'});
+  }
+
+  exportInsertQueryForNewTenant(tenant:string,env:string):Observable<any>{
+    return this.http.get(`${this.baseUrl}/clone/sqlfile/${tenant}/${env}`,{responseType: 'blob'});
+  }
 }

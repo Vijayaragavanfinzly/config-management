@@ -32,7 +32,7 @@
       placeholder="Search by Environment ..."
     />
   </div>
-  <button
+  <!-- <button
     class="btn add-btn me-4 d-flex align-items-center"
     [disabled]="loading"
     (click)="addNewEnvironmentForTenant()"
@@ -42,7 +42,7 @@
     matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip"
   >
     <i class="fas fa-plus"></i> <span class="ms-2">Add New Environment</span>
-  </button>
+  </button> -->
 </div>
 <div *ngIf="!loading && searchKeyword && filteredEnvironments.length === 0" class="no-results">
   <div class="no-results-content">
@@ -54,7 +54,7 @@
     <button class="btn btn-primary btn-try-again" (click)="clearSearch()">Try Again</button>
   </div>
 </div>
-<div *ngIf="!loading && !searchKeyword && filteredEnvironments.length === 0" class="empty-state">
+<!-- <div *ngIf="!loading && !searchKeyword && filteredEnvironments.length === 0" class="empty-state">
   <div class="empty-state-content">
     <div class="icon-wrapper">
       <i class="fas fa-folder-open"></i>
@@ -67,7 +67,7 @@
       <i class="fas fa-plus"></i> Add New Environment
     </button>
   </div>
-</div>
+</div> -->
 
 
 <!-- Show environments if available -->

@@ -34,8 +34,8 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   tenant: string = '';
   environment: string = '';
   properties: any[] = [];
-  filteredProperties: Property[] = [];
-  paginatedProperties: Property[] = [];
+  filteredProperties: any[] = [];
+  paginatedProperties: any[] = [];
   searchKeyword: string = '';
   loading: Boolean = false;
   selectedIds: string[] = [];
@@ -51,7 +51,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   columns = [
     { name: 'Property Key', field: 'propertyKey', width: 300 },
     { name: 'Property Value', field: 'PropertyValue', width: 300 },
-    {name: 'Release Version', field:'releaseVersion', width:150},
+    // {name: 'Release Version', field:'releaseVersion', width:150},
     { name: 'Actions', field: 'actions', width: 150 },
   ];
 
@@ -108,12 +108,14 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     this.loading = true;
     this.propertyService.getTenantProperties(this.tenant, this.environment).subscribe({
       next: (data: any) => {
+        console.log(data);
+        
         this.properties = data.data;
         console.log(this.properties);
         this.filteredProperties = [...this.properties];
         this.propertySize = this.filteredProperties.length;
         this.currentPage = 1;
-        this.release = this.properties[0].release;
+        // this.release = this.properties[0].release;
         this.updatePagination();
         console.log("Loaded properties for " + this.tenant + " " + this.environment, this.properties);
         console.log(this.filteredProperties);
@@ -327,16 +329,26 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     dialogConfig.maxHeight = '580px';
     dialogConfig.maxWidth = '900px';
     dialogConfig.data = {
-      tenant: this.tenant,
-      environment: this.environment,
-      propertyKey: '',
-      propertyValue: '',
+      application: this.applications,
+      configId:'',
+      env: this.environment,
+      fieldGroup: this.fieldGroups,
       id: null,
-      applications: this.applications,
-      fieldGroups: this.fieldGroups,
-      target: this.targets,
-      type: this.types,
-      release: this.release
+      isEdit:'',
+      label:'',
+      profile:'',
+      propKey: '',
+      propertyType:'',
+      secret:'',
+      tenant: this.tenant,
+      tenantEnvId:'',
+      value: '',
+      
+      
+      
+      // target: this.targets,
+      // type: this.types,
+      // release: this.release
     };
 
     // Open the dialog with the configuration
@@ -346,15 +358,16 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
       console.log(result);
       if (result) {
         const payload = {
-          environment: this.environment,
+          env: this.environment,
           tenant: this.tenant,
-          propertyKey: result.propertyKey.trim(),
-          propertyValue: result.propertyValue.trim(),
+          propKey: result.propKey.trim(),
+          value: result.value.trim(),
           application: result.application,
-          field_group: result.fieldGroup,
+          fieldGroup: result.fieldGroup,
+          profile:this.environment,
+          propertyType:result.propertyType,
+          secret:null,
           target: result.target,
-          type: result.type,
-          release:result.release
         };
         this.propertyService.addProperty(payload).subscribe({
           next: (response) => {
@@ -409,8 +422,8 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
       id: property.id,
       applications: this.applications,
       fieldGroups: this.fieldGroups,
-      targets: this.targets,
-      types: this.types,
+      // targets: this.targets,
+      // types: this.types,
       application: property.application,
       fieldGroup: property.fieldGroup,
       type: property.type,
@@ -571,7 +584,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   
     this.filteredProperties = this.properties.filter(property => {
       const matchesKeyword =
-        keyword ? (property.propertyKey + property.propertyValue).toLowerCase().includes(keyword.toLowerCase()) : true;
+        keyword ? (property.propKey + property.value).toLowerCase().includes(keyword.toLowerCase()) : true;
       const matchesApplication = application ? property.application === application : true;
       const matchesFieldGroup = fieldGroup ? property.fieldGroup === fieldGroup : true;
       const matchesType = type ? property.type === type : true;

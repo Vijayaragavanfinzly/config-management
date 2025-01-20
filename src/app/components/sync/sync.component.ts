@@ -25,6 +25,13 @@ export class SyncComponent implements OnInit {
   constructor(private dialog: MatDialog, private compareService: CompareService, private snackBar: MatSnackBar,private exportService:ExportService) { }
 
   ngOnInit(): void {
+    
+    this.getLastSyncDate();
+    this.getAllSyncDetails();
+    this.showOverlay();
+   }
+
+   getLastSyncDate(){
     this.compareService.getLastSyncDate().subscribe({
       next:(data)=>{
         console.log(data);
@@ -38,6 +45,9 @@ export class SyncComponent implements OnInit {
         
       }
     });
+   }
+
+   getAllSyncDetails(){
     this.compareService.getAllSyncDetails().subscribe({
       next:(data)=>{
         if(data.statusCode == 200){
@@ -89,6 +99,7 @@ export class SyncComponent implements OnInit {
             verticalPosition: 'top',
           });
         }
+        this.getAllSyncDetails();
       },
       error: (err) => {
         this.snackBar.open('Sync process failed', 'Close', {
@@ -115,6 +126,7 @@ export class SyncComponent implements OnInit {
             horizontalPosition: 'center',
             verticalPosition: 'top',
           });
+          this.getAllSyncDetails();
         }
       },
       error:(err)=>{
@@ -154,6 +166,45 @@ export class SyncComponent implements OnInit {
       complete: () => {
       },
     })
+  }
+
+  exportSingleUpdateQuery(env:string){
+    this.exportService.exportSingleUpdateQuery(env).subscribe({
+      next: (blob) => {
+        console.log(blob);
+        
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `update_query_properties.sql`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.snackBar.open('Exported Successfully!', 'Close', {
+          duration: 3000,
+          panelClass: ['custom-toast', 'toast-success'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      },
+      error: (err) => {
+        console.error("Error exporting properties:", err);
+        this.snackBar.open('Export failed.', 'Close', {
+          duration: 3000,
+          panelClass: ['custom-toast', 'toast-error'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      },
+      complete: () => {
+      },
+    });
+  }
+
+  showOverlay(): void {
+    this.showOverlayHint = true; 
+    setTimeout(() => {
+      this.hideOverlay(); 
+    }, 5000); 
   }
 
   hideOverlay(): void {

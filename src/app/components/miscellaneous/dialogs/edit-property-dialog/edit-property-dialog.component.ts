@@ -33,20 +33,20 @@ export class PropertyDialogComponent {
     private dialogRef: MatDialogRef<PropertyDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      propertyKey: string;
-      propertyValue: string;
-      id: number;
-      tenant: string;
-      environment: string;
-      fieldGroups: string[];
-      targets: string[];
-      types: string[];
-      applications: string[];
-      application: string;
-      fieldGroup: string;
-      type: string;
-      target: string;
-      release:string
+      propertyKey?: string;
+      propertyValue?: string;
+      id?: number;
+      tenant?: string;
+      environment?: string;
+      fieldGroups?: string[];
+      targets?: string[];
+      types?: string[];
+      applications?: string[];
+      application?: string;
+      fieldGroup?: string;
+      type?: string;
+      target?: string;
+      release?:string
     }
   ) {
     this.propertyForm = this.fb.group({

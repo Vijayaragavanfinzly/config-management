@@ -1,3 +1,19 @@
+<div class=" mt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['/compare']" class="breadcrumb-link">
+                    COMPARE
+                </a>
+            </li>
+            <li class="breadcrumb-item active">
+                <a [routerLink]="['/compare/compareByTenant']" [routerLinkActive]="['active']" class="breadcrumb-link">
+                    COMPARE BY ENVIRONMENT
+                </a>
+            </li>
+        </ol>
+    </nav>
+</div>
 <div class="">
     <div class="compare-container">
         <div class="compare-cards">
@@ -79,33 +95,34 @@
     <div class="tab-bar"
         *ngIf="filteredCommonMatchingProperties.length > 0 || filteredCommonNonMaatchingProperties.length > 0 || filteredTenantMatchingProperties.length > 0 || filteredTenantNonMatchingProperties.length > 0">
         <div class="tab active" [ngClass]="{'active': activeTab === 'tenant'}" (click)="setActiveTab('tenant')">
-            <i class="fa-solid fa-building"></i>
+            <i class="fa-solid fa-puzzle-piece"></i>
             <span>Tenant Properties</span>
             <span class="badge">{{ tenantBasedSized }}</span>
         </div>
 
         <div class="tab" [ngClass]="{'active': activeTab === 'common'}" (click)="setActiveTab('common')">
-            <i class="fa-solid fa-layer-group"></i>
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
             <span>Common Properties</span>
             <span class="badge">{{ nonTenantBasedSize }}</span>
         </div>
 
         <div class="tab" [ngClass]="{'active': activeTab === 'notInEnv1'}" (click)="setActiveTab('notInEnv1')">
-            <i class="fa-solid fa-layer-group"></i>
-            <span>Tenant Not In {{selectedEnv1}}</span>
+            <i class="fa-solid fa-circle-nodes"></i>
+            <span>InActive {{selectedEnv1 | uppercase}}</span>
             <span class="badge">{{ propertiesNotAssociatedSize }}</span>
         </div>
 
         <div class="tab" [ngClass]="{'active': activeTab === 'notInEnv2'}" (click)="setActiveTab('notInEnv2')">
-            <i class="fa-solid fa-layer-group"></i>
-            <span>Tenant Not In {{selectedEnv2}}</span>
+            <i class="fa-solid fa-circle-nodes"></i>
+            <span>InActive {{selectedEnv2 | uppercase}}</span>
             <span class="badge">{{ propertiesNotAssociatedSize2 }}</span>
         </div>
     </div>
 
 
     <div class="dropdown-container"
-        *ngIf="filteredCommonMatchingProperties.length > 0 || filteredCommonNonMaatchingProperties.length > 0 || filteredTenantMatchingProperties.length > 0 || filteredTenantNonMatchingProperties.length > 0">
+        *ngIf="filteredCommonMatchingProperties.length > 0 || filteredCommonNonMaatchingProperties.length > 0 || filteredTenantMatchingProperties.length > 0 || filteredTenantNonMatchingProperties.length > 0"
+        [ngClass]="{'makeNotVisibleDrapDown':(activeTab === 'notInEnv1' || activeTab === 'notInEnv2')}">
         <div class="dropdown">
             <button class="dropdown-toggle1 ps-2 d-flex justify-content-around align-items-center"
                 (click)="toggleDropdown()">
@@ -164,15 +181,25 @@
             </thead>
             <tbody class="table-body">
                 <tr *ngFor="let entry of paginatedSameData">
-                    <td class="" [matTooltip]="entry.propertyKey" matTooltipShowDelay="300" matTooltipPosition="above"
-                        [innerHTML]="highlightText(entry.propertyKey || '-', searchQuery)">
+                    <td class=""
+                        [innerHTML]="highlightText(entry.propertyKey || '-', searchQuery)" (contextmenu)="onRightClickForCopy($event, entry, 'propertyKey')">
                     </td>
-                    <td class="" [matTooltip]="entry.PropertyValue1" matTooltipShowDelay="300"
-                        matTooltipPosition="above" matTooltipClass="custom-tooltip"
-                        [innerHTML]="highlightText(entry.env1Value !== '' ? entry.env1Value : '-', searchQuery)"></td>
+                    <td class=""
+                        [innerHTML]="highlightText(entry.env1Value !== '' ? entry.env1Value : '-', searchQuery)" (contextmenu)="onRightClickForCopy($event, entry, 'env1Value')"></td>
                 </tr>
             </tbody>
         </table>
+        <div *ngIf="showContextMenuCopy" class="context-menu" [style.left.px]="menuPosition.x"
+            [style.top.px]="menuPosition.y">
+            <ul>
+                <!-- <li (click)="editEntry()" data-tooltip="Edit this property">
+                    <i class="fas fa-edit"></i> Edit
+                </li> -->
+                <li (click)="copyEntry2()" data-tooltip="Copy the property value">
+                    <i class="fas fa-copy"></i> Copy
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="pagination-container d-flex justify-content-between align-items-center mt-3 mb-3">
         <div class="total-records">
@@ -238,13 +265,21 @@
             </thead>
             <tbody class="table-body">
                 <tr *ngFor="let entry of paginatedDifferentData">
-                    <td class="" [matTooltip]="entry.propertyKey" matTooltipShowDelay="300" matTooltipPosition="above"
-                        matTooltipClass="custom-tooltip"
-                        [innerHTML]="highlightText(entry.propertyKey || '-', searchQuery)">
+                    <td class=""
+                        [innerHTML]="highlightText(entry.propertyKey || '-', searchQuery)" 
+                        (contextmenu)="onRightClickForCopy($event, entry, 'propertyKey')">
                     </td>
-                    <td class="" [matTooltip]="entry.PropertyValue1" matTooltipShowDelay="300"
-                        matTooltipPosition="above" matTooltipClass="custom-tooltip"
-                        [innerHTML]="highlightText(entry.env1Value || '-', searchQuery)"></td>
+                    <td class="" [ngClass]="{'not-available':entry.env1Value === 'not available',
+                            'devops-input': entry.env1Value=== 'DEVOPS_INPUT',
+                            'ops-input': entry.env1Value === 'OPS_INPUT'
+                         }" (contextmenu)="onRightClick($event, entry, 'env1Value')">
+
+                        <span [ngClass]="{
+                        'not-available-inside':entry.env1Value === 'not available',
+                        'devops-input-inside': entry.env1Value== 'DEVOPS_INPUT',
+            'ops-input-inside': entry.env1Value === 'OPS_INPUT'
+                    }" [innerHTML]="highlightText(entry.env1Value === 'not available' ? 'MISSING_KEY' : entry.env1Value || '-', searchQuery)"></span>
+                    </td>
                     <td class="text-center">
                         <i class="fas fa-pencil-alt action-icon me-2" title="Edit Value 1"
                             (click)="editProperty(entry, 'env_value1')" style="color: #28a745;"></i>
@@ -267,9 +302,22 @@
                                     style="color: #6c757d;">
                                 </i> -->
                     </td>
-                    <td class="" [matTooltip]="entry.PropertyValue2" matTooltipShowDelay="300"
+                    <!-- <td class="" [matTooltip]="entry.PropertyValue2" matTooltipShowDelay="300"
                         matTooltipPosition="above" matTooltipClass="custom-tooltip"
-                        [innerHTML]="highlightText(entry.env2Value || '-', searchQuery)"></td>
+                        [innerHTML]="highlightText(entry.env2Value || '-', searchQuery)"></td> -->
+                    <td class=""
+                        [ngClass]="{'not-available':entry.env2Value === 'not available' ,
+                            'devops-input': entry.env2Value=== 'DEVOPS_INPUT',
+                            'ops-input': entry.env2Value === 'OPS_INPUT'
+                        }"
+                        (contextmenu)="onRightClick($event, entry, 'env2Value')">
+
+                        <span [ngClass]="{
+                        'not-available-inside':entry.env2Value === 'not available',
+                        'devops-input-inside': entry.env2Value === 'DEVOPS_INPUT',
+            'ops-input-inside': entry.env2Value === 'OPS_INPUT'
+                    }" [innerHTML]="highlightText(entry.env2Value === 'not available' ? 'MISSING_KEY' : entry.env2Value || '-', searchQuery)"></span>
+                    </td>
                     <!-- <td class="text-center">
                                 <i class="fas fa-copy action-icon" title="Copy"
                                     (click)="copyToClipboard(entry.value_env2)" style="color: #6c757d;">
@@ -278,6 +326,17 @@
                 </tr>
             </tbody>
         </table>
+        <div *ngIf="showContextMenu" class="context-menu" [style.left.px]="menuPosition.x"
+            [style.top.px]="menuPosition.y">
+            <ul>
+                <li (click)="editEntry()" data-tooltip="Edit this property">
+                    <i class="fas fa-edit"></i> Edit
+                </li>
+                <li (click)="copyEntry()" data-tooltip="Copy the property value">
+                    <i class="fas fa-copy"></i> Copy
+                </li>
+            </ul>
+        </div>
         <div *ngIf="showContextMenuCopy" class="context-menu" [style.left.px]="menuPosition.x"
             [style.top.px]="menuPosition.y">
             <ul>
@@ -351,10 +410,12 @@
             </thead>
             <tbody class="table-body">
                 <tr *ngFor="let entry of paginatedTenantSameProperties">
-                    <td class="" (contextmenu)="onRightClickForCopy($event, entry, 'propertykey')"  [innerHTML]="highlightText(entry.propertykey || '-', searchQuery)"></td>
+                    <td class="" (contextmenu)="onRightClickForCopy($event, entry, 'propertykey')"
+                        [innerHTML]="highlightText(entry.propertykey || '-', searchQuery)"></td>
                     <!-- <td class="">{{ entry.propertyKey1 !== '' ? entry.propertyKey1 : '-' }}</td>
                   <td class="">{{ entry.propertyKey2 !== '' ? entry.propertyKey2 : '-' }}</td> -->
-                    <td class="" (contextmenu)="onRightClickForCopy($event, entry, 'propertykey')"  [innerHTML]="highlightText(getFirstTenantValue(entry) || '-', searchQuery)"></td>
+                    <td class="" (contextmenu)="onRightClickForCopy($event, entry, 'propertykey')"
+                        [innerHTML]="highlightText(getFirstTenantValue(entry) || '-', searchQuery)"></td>
                 </tr>
             </tbody>
         </table>
@@ -404,6 +465,18 @@
     </div>
 </div>
 
+<ng-template #noData
+    *ngIf="(CommonProperties.length > 0 || TenantBasedProperties.length > 0) && filteredTenantMatchingProperties.length == 0">
+    <div class="no-data-container">
+        <div class="no-data-card">
+            <i class="fas fa-database no-data-icon"></i>
+            <h2>No Data Available</h2>
+            <p>We couldn’t find any matching properties for your selection.</p>
+            <button class="btn btn-primary refresh-btn" (click)="reloadData()">Refresh</button>
+        </div>
+    </div>
+</ng-template>
+
 <div *ngIf="filteredTenantNonMatchingProperties.length > 0 && activeTab == 'tenant' && selectedFilter == 'Non-Matching' "
     class="table-responsive">
     <div class="table-container table-responsive">
@@ -431,7 +504,8 @@
             </thead>
             <tbody class="table-body">
                 <tr *ngFor="let entry of paginatedTenantDifferentProperties">
-                    <td class="" (contextmenu)="onRightClickForCopy($event, entry, 'propertykey')" [innerHTML]="highlightText(entry.propertykey || '-', searchQuery)"></td>
+                    <td class="" (contextmenu)="onRightClickForCopy($event, entry, 'propertykey')"
+                        [innerHTML]="highlightText(entry.propertykey || '-', searchQuery)"></td>
                     <td *ngFor="let column of differentColumns.slice(1); let i = index" [ngClass]="{
         'env1-column': column.group === 'env1',
         'env2-column': column.group === 'env2',
@@ -530,8 +604,7 @@
 
 
 <!--===============================DATA UNKNOWN CATEGORY TABLE STARTS HERE=============================================================-->
-<div *ngIf="filteredPropertiesNotAssociated.length > 0 && activeTab === 'notInEnv1'"
-    class="table-responsive">
+<div *ngIf="filteredPropertiesNotAssociated.length > 0 && activeTab === 'notInEnv1'" class="table-responsive">
     <div class="table-responsive table-container">
 
 
@@ -570,7 +643,7 @@
                         </td>
                     </ng-container>
                 </tr>
-                
+
             </tbody>
         </table>
     </div>
@@ -583,8 +656,8 @@
             <span class="pagination-nav" [class.disabled]="currentPage2 === 1" (click)="goToPreviousPage()">
                 <i class="fas fa-angle-double-left"></i>
             </span>
-            <ng-container *ngFor="let page of pages2">
-                <span *ngIf="page !== -1" class="pagination-page" [class.active]="page === currentPage2"
+            <ng-container *ngFor="let page of pages">
+                <span *ngIf="page !== -1" class="pagination-page" [class.active]="page === currentPage"
                     (click)="goToPage(page)">
                     {{ page }}
                 </span>
@@ -610,8 +683,7 @@
 
 <!-- ================================================DATA UNKNOWN CATEGORY TABLE ENDS HERE======================================================== -->
 
-<div *ngIf="filteredPropertiesNotAssociated2.length > 0 && activeTab === 'notInEnv2'"
-    class="table-responsive">
+<div *ngIf="filteredPropertiesNotAssociated2.length > 0 && activeTab === 'notInEnv2'" class="table-responsive">
     <div class="table-responsive table-container">
 
 
@@ -650,7 +722,7 @@
                         </td>
                     </ng-container>
                 </tr>
-                
+
             </tbody>
         </table>
     </div>
@@ -663,8 +735,8 @@
             <span class="pagination-nav" [class.disabled]="currentPage2 === 1" (click)="goToPreviousPage()">
                 <i class="fas fa-angle-double-left"></i>
             </span>
-            <ng-container *ngFor="let page of pages2">
-                <span *ngIf="page !== -1" class="pagination-page" [class.active]="page === currentPage2"
+            <ng-container *ngFor="let page of pages">
+                <span *ngIf="page !== -1" class="pagination-page" [class.active]="page === currentPage"
                     (click)="goToPage(page)">
                     {{ page }}
                 </span>
@@ -704,13 +776,12 @@
 </div>
 <div class="hint-overlay" *ngIf="showOverlayHint1">
     <div class="hint-container">
-      <div class="hint-content">
-        <div class="hint-icon">🔄</div>
-        <div class="hint-text">
-          <strong>Sync Tip:</strong> Sync before comparing to get accurate and up-to-date results!
+        <div class="hint-content">
+            <div class="hint-icon">🔄</div>
+            <div class="hint-text">
+                <strong>Sync Tip:</strong> Sync before comparing to get accurate and up-to-date results!
+            </div>
         </div>
-      </div>
-      <button class="hint-button" (click)="hideOverlay1()">Got It</button>
+        <button class="hint-button" (click)="hideOverlay1()">Got It</button>
     </div>
-  </div>
-  
+</div>

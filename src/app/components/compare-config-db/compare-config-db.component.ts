@@ -30,6 +30,7 @@ export class CompareConfigDbComponent implements OnInit {
   searchControl = new FormControl('');
   searchInput = new FormControl('');
 
+  originalEnvironments: string[] = [];
   environments: string[] = [];
   selectedEnv1: string = '';
   selectedEnv2: string = '';
@@ -219,21 +220,38 @@ export class CompareConfigDbComponent implements OnInit {
     this.currentPage = 1;
   }
 
-  constructor(private tenantService: TenantService, private compareService: CompareService, private dialog: MatDialog, private propertyService: PropertyService, private snackBar: MatSnackBar, private renderer: Renderer2, private sanitizer: DomSanitizer) { }
-
-
+  constructor(private tenantService: TenantService, private compareService: CompareService, private dialog: MatDialog, private propertyService: PropertyService, private snackBar: MatSnackBar, private renderer: Renderer2, private sanitizer: DomSanitizer) { 
+    this.setupSearchFiltering();
+  }
 
 
   ngOnInit() {
     this.getAllEnvironments();
+    this.showOverlay();
+  }
+
+  setupSearchFiltering() {
+    this.searchInput.valueChanges
+      .pipe(
+        debounceTime(300),
+        map(query => query || '') // Replace null with an empty string
+      )
+      .subscribe((query: string) => {
+        this.environments = this.filterEnvironment(query, this.originalEnvironments);
+      });
+  }
+
+  filterEnvironment(query: string, environments: string[]): string[] {
+    if (!query) return environments;
+    return environments.filter(env => env.toLowerCase().includes(query.toLowerCase()));
   }
 
 
-  getAllEnvironments(): void {
+  getAllEnvironments() {
     this.compareService.getAllEnvironments().subscribe({
       next: (data) => {
-        this.environments = data.data;
-
+        this.originalEnvironments = data.data;
+        this.environments = [...this.originalEnvironments];
       },
       error: (err) => {
         console.log("Error Fetching Environments");
@@ -323,11 +341,20 @@ export class CompareConfigDbComponent implements OnInit {
               { name: 'Property Key', field: 'propertyKey', width: 300 },
               ...tenantKeys
                 .filter((key) => key !== 'propertykey' && key !== 'issame') // Filter out unwanted keys
-                .map((key) => ({
-                  name: key,
-                  field: key,
-                  width: 300,
-                })),
+                .map((key) => {
+                  const group = key.includes('selectedEnv1')
+                    ? 'env1'
+                    : key.includes('selectedEnv2')
+                    ? 'env2'
+                    : null;
+            
+                  return {
+                    name: key,
+                    field: key,
+                    width: 300,
+                    ...(group ? { group } : {}),
+                  };
+                }),
               // { name: 'Action', field: 'Action', width: 300 },
             ];
           } else {
@@ -356,8 +383,6 @@ export class CompareConfigDbComponent implements OnInit {
 
           this.currentPage = 1;
           this.updatePagination();
-          this.currentPage2 = 1;
-          this.updatePagination2();
         },
         error: (err) => {
           console.error('Error comparing environments:', err);
@@ -437,37 +462,12 @@ export class CompareConfigDbComponent implements OnInit {
     
   }
 
-  updatePagination2(){
-    console.log(this.lastTable);
-    if(this.lastTable === true){
-      
-      this.totalPages2 = Math.ceil(this.filteredPropertiesNotAssociated.length / this.pageSize2);
-      if (this.currentPage2 > this.totalPages2) {
-        this.currentPage2 = this.totalPages2;
-      }
-      this.pages2 = this.getVisiblePages2();
-      this.paginatedPropertiesNotAssociated = this.getPaginatedData2();
-    }
-  }
-
-  getPaginatedData2():any{
-    const startIndex = (this.currentPage2 - 1) * this.pageSize2;
-    let length = 0;
-    if(this.lastTable === true){
-      length = this.filteredPropertiesNotAssociated.length;
-      this.sizeOfNotAssociated = length;
-    }
-    const endIndex = Math.min(parseInt(startIndex.toString()) + parseInt(this.pageSize2.toString()), length);
-
-    console.log(`Start Index: ${startIndex}`);
-    console.log(`End Index: ${endIndex}`);
-    if(this.lastTable === true){
-      return this.filteredPropertiesNotAssociated.slice(startIndex,endIndex);
-    }
-  }
 
   getPaginatedData(): any {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
+    if (this.currentPage < 1) {
+      this.currentPage = 1;
+    }
+    const startIndex = Math.max((this.currentPage - 1) * this.pageSize, 0);
     let length = 0;
     if (this.activeTab === 'tenant' && this.selectedFilter === 'Matching') {
       length = this.filteredTenantMatchingProperties.length;
@@ -493,8 +493,8 @@ export class CompareConfigDbComponent implements OnInit {
       length = this.filteredPropertiesNotAssociated2.length;
       this.sizeOfNotAssociated2 = length;
     }
-    const endIndex = Math.min(parseInt(startIndex.toString()) + parseInt(this.pageSize.toString()), length);
-
+    const endIndex = Math.min(startIndex + this.pageSize, length);
+    
     console.log(`Start Index: ${startIndex}`);
     console.log(`End Index: ${endIndex}`);
 
@@ -595,25 +595,6 @@ export class CompareConfigDbComponent implements OnInit {
     }
 
     return visiblePages;
-  }
-
-  goToPage2(page: number) {
-    this.currentPage2 = page;
-    this.updatePagination2();
-  }
-
-  goToPreviousPage2() {
-    if (this.currentPage2 > 1) {
-      this.currentPage2--;
-      this.updatePagination2();
-    }
-  }
-
-  goToNextPage2() {
-    if (this.currentPage2 < this.totalPages2) {
-      this.currentPage2++;
-      this.updatePagination2();
-    }
   }
 
   clearSelections(): void {
@@ -865,8 +846,6 @@ export class CompareConfigDbComponent implements OnInit {
     this.filterResults();
     this.currentPage = 1;
     this.updatePagination();
-    this.currentPage2 = 1;
-    this.updatePagination2();
     this.loading = false;
   }
 
@@ -877,8 +856,6 @@ export class CompareConfigDbComponent implements OnInit {
     this.filteredCommonNonMaatchingProperties = this.CommonProperties.filter(entry => entry.isSame === false);
     this.currentPage = 1;
     this.updatePagination();
-    this.currentPage2 = 1;
-    this.updatePagination2();
     this.loading = false;
     return;
   }
@@ -895,8 +872,6 @@ export class CompareConfigDbComponent implements OnInit {
       this.filteredCommonNonMaatchingProperties = this.CommonProperties.filter(entry => entry.isSame === false);
       this.currentPage = 1;
       this.updatePagination();
-      this.currentPage2 = 1;
-      this.updatePagination2();
       this.loading = false;
       return;
     }
@@ -974,7 +949,9 @@ export class CompareConfigDbComponent implements OnInit {
   }
 
 
-
+  reloadData(){
+    
+  }
 
 
   onMouseDown(event: MouseEvent, columnIndex: number, tableType: string) {
@@ -1054,6 +1031,8 @@ export class CompareConfigDbComponent implements OnInit {
   }
 
   onRightClickForCopy(event: MouseEvent, entry:any, column:any):void{
+    console.log("Right clicked for copy");
+    
     event.preventDefault();
 
     this.selectedEntry = entry;
@@ -1168,14 +1147,19 @@ export class CompareConfigDbComponent implements OnInit {
     }).catch(err => {
       console.error('Unable to copy text: ', err);
     });
-    this.showContextMenu = false;
+    this.showContextMenuCopy = false;
   }
 
   objectEntries(obj: any): { key: string; value: any }[] {
     return Object.entries(obj).map(([key, value]) => ({ key, value }));
 }
 
-
+showOverlay(): void {
+  this.showOverlayHint1 = true;
+  setTimeout(() => {
+    this.hideOverlay1(); // Automatically hide after 10 seconds
+  }, 8000); // 10000 milliseconds = 10 seconds
+}
   hideOverlay(): void {
     this.showOverlayHint = false;
   }

@@ -6,6 +6,7 @@ import { TenantService } from '../../services/tenant-service/tenant.service';
 import { CloneService } from '../../services/clone-service/clone.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PropertyService } from '../../services/property-service/property.service';
+import { ExportService } from '../../services/export-service/export.service';
 
 @Component({
   selector: 'app-clone',
@@ -40,7 +41,7 @@ export class CloneComponent {
   private readonly MIN_COLUMN_WIDTH = 100;
 
 
-  constructor(private tenantService:TenantService,private cloneService:CloneService,private snackBar: MatSnackBar,private renderer:Renderer2,private propertService:PropertyService){
+  constructor(private tenantService:TenantService,private cloneService:CloneService,private snackBar: MatSnackBar,private renderer:Renderer2,private propertService:PropertyService,private exportService:ExportService){
 
   }
 
@@ -110,7 +111,7 @@ export class CloneComponent {
     this.loading = true;
   
     // Clone tenants
-    this.cloneService.cloneTenants(this.manualTenant.toLowerCase(), this.manualEnv.toLowerCase(), this.selectedTenant, this.selectedEnv).subscribe({
+    this.cloneService.cloneTenants(this.manualTenant.toLowerCase(), this.manualEnv.toLowerCase(), this.selectedTenant.toLowerCase(), this.selectedEnv.toLowerCase()).subscribe({
       next: (data) => {
         console.log(data);
         console.log(data.statusCode);
@@ -123,19 +124,35 @@ export class CloneComponent {
             verticalPosition: 'top',
           });
           console.log("cloning");
-          
-          this.propertService.getTenantProperties(this.manualTenant, this.manualEnv).subscribe({
-            next: (data: any) => {
-              this.clonedProperties = data.data;
-              console.log(this.clonedProperties);
+          this.exportService.exportInsertQueryForNewTenant(this.manualTenant.toLowerCase(),this.manualEnv.toLowerCase()).subscribe({
+            next: (blob) => {
+              console.log(blob);
+              
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `insert_properties.sql`;
+              a.click();
+              window.URL.revokeObjectURL(url);
+              this.snackBar.open('Exported Successfully!', 'Close', {
+                duration: 3000,
+                panelClass: ['custom-toast', 'toast-success'],
+                horizontalPosition: 'center',
+                verticalPosition: 'top',
+              });
             },
             error: (err) => {
-              console.error("Error fetching properties for tenant:", err);
+              console.error("Error exporting properties:", err);
+              this.snackBar.open('Export failed.', 'Close', {
+                duration: 3000,
+                panelClass: ['custom-toast', 'toast-error'],
+                horizontalPosition: 'center',
+                verticalPosition: 'top',
+              });
             },
             complete: () => {
-              this.loading = false; // Ensure loading is reset
-            }
-          });
+            },
+          })
         } else {
           this.snackBar.open('Unexpected response from server', 'Close', {
             duration: 3000,

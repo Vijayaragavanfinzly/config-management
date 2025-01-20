@@ -35,6 +35,13 @@
           </a>
         </li> -->
         <li class="nav-item">
+          <a routerLink="/sync" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-sync"></i>
+            <span *ngIf="!isSidebarCollapsed">&nbsp;Sync</span>
+            <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">Sync</small>
+          </a>
+        </li>
+        <li class="nav-item">
           <a routerLink="/compare" routerLinkActive="active" class="nav-link">
             <i class="fas fa-exchange-alt"></i>
             <span *ngIf="!isSidebarCollapsed">&nbsp;Compare</span>
@@ -72,13 +79,7 @@
           </a>
         </li> -->
 
-        <li class="nav-item">
-          <a routerLink="/sync" routerLinkActive="active" class="nav-link">
-            <i class="fas fa-sync"></i>
-            <span *ngIf="!isSidebarCollapsed">&nbsp;Sync</span>
-            <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">Sync</small>
-          </a>
-        </li>
+        
 
         <li class="nav-item">
           <a routerLink="/faq" routerLinkActive="active" class="nav-link">

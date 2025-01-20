@@ -12,11 +12,9 @@
 
 <!-- Sync All Environments Button -->
 <div class="container environment-container d-flex justify-content-end align-items-center">
-  <button class="sync-all-button" (click)="callSyncApi()"  [matTooltip]="'Fetch All config server data & dump it in local DB'" matTooltipShowDelay="300" matTooltipPosition="above">
+  <button class="sync-all-button" (click)="callSyncApi()"  [matTooltip]="'Fetch All config server data & dump it in Configuration DB'" matTooltipShowDelay="300" matTooltipPosition="above">
+    <i class="fas fa-sync me-2"></i>
     Sync All Environments
-  </button>
-  <button class="export-button" (click)="exportUpdateQuery()"  [matTooltip]="'Export All the Updated Configurations'" matTooltipShowDelay="300" matTooltipPosition="above">
-    Export Update Query
   </button>
 </div>
 <!-- <div class="container environment-container d-flex justify-content-end align-items-center mt-3">
@@ -28,9 +26,11 @@
   <div class="environment-card" *ngFor="let data of syncData">
     <div class="card-header">
       <h3>{{ data.environmentName | uppercase }}</h3>
-      <button class="sync-button" (click)="syncEnvironment(data.environmentName)">
-        Sync
-      </button>
+      <div>
+        <i class="fa-solid fa-download sync-icon me-2" (click)="exportSingleUpdateQuery(data.environmentName)"></i>
+        <i class="fas fa-sync sync-icon" (click)="syncEnvironment(data.environmentName)" [matTooltip]="'Click to Sync Environment'" matTooltipShowDelay="300" matTooltipPosition="above"></i>
+      </div>
+      
     </div>
     <div class="card-body">
       <div class="sync-info">

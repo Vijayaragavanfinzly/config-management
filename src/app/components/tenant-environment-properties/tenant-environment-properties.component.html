@@ -111,12 +111,12 @@
               <label for="property-{{ property.id }}"></label>
             </td>
             <!-- {{ (currentPage - 1) * pageSize + i + 1 }}. &nbsp; -->
-            <td class="property-cell" [matTooltip]="property.propertyKey" matTooltipShowDelay="300"
-              matTooltipPosition="above" matTooltipClass="custom-tooltip">{{ property.propertyKey }}</td>
+            <td class="property-cell" [matTooltip]="property.propKey" matTooltipShowDelay="300"
+              matTooltipPosition="above" matTooltipClass="custom-tooltip">{{ property.propKey }}</td>
             <td [matTooltip]="property.propertyValue" matTooltipShowDelay="300" matTooltipPosition="above"
-              matTooltipClass="custom-tooltip">{{ property.propertyValue }}</td>
-            <td class="text-center" [matTooltip]="property.release" matTooltipShowDelay="300" matTooltipPosition="above"
-              matTooltipClass="custom-tooltip">{{property.release}}</td>
+              matTooltipClass="custom-tooltip">{{ property.value }}</td>
+            <!-- <td class="text-center" [matTooltip]="property.release" matTooltipShowDelay="300" matTooltipPosition="above"
+              matTooltipClass="custom-tooltip">{{property.release}}</td> -->
             <td class="text-center">
               <i class="fas fa-edit edit ms-3" [matTooltip]="'Edit'" matTooltipShowDelay="300"
                 matTooltipPosition="above" matTooltipClass="custom-tooltip" (click)="editProperty(property)"></i>

@@ -118,9 +118,12 @@
   align-items: center;
   margin-bottom: 20px;
 }
-
+.sync-icon{
+  color: var(--primary-color);
+  cursor: pointer;
+}
 .sync-all-button {
-  background-color: #28a745;
+  background-color: var(--primary-color);
   color: white;
   padding: 12px 22px;
   font-size: 16px;
@@ -133,7 +136,7 @@
 }
 
 .sync-all-button:hover {
-  background-color: #218838;
+  background-color: var(--secondary-color);
   transform: translateY(-2px);
 }
 
@@ -251,6 +254,7 @@
   background-color: #f8f9fa;
   border-radius: 8px;
   display: inline-block;
+  margin: auto;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -261,8 +265,8 @@
 }
 
 .last-synced-time:hover {
-  background-color: var(--primary-color);
-  color: white;
+  background-color: #e5e9ed;
+  /* color: white; */
   cursor: pointer;
 }
 

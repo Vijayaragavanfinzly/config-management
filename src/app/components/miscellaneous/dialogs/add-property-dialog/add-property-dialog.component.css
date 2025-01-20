@@ -1,4 +1,4 @@
-.dialog-container {
+/* .dialog-container {
   width: 100%;
   margin: auto;
   background: #f7f8fa;
@@ -6,7 +6,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 30px;
   animation: fadeIn 0.3s ease-in-out;
-}
+} */
 
 .dialog-container h2 {
   text-align: center;
@@ -19,7 +19,7 @@
   padding-bottom: 10px;
 }
 
-.dialog-container .form-row {
+/* .dialog-container .form-row {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
@@ -30,7 +30,27 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
+}  */
+
+.dialog-container {
+  padding: 20px;
 }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.input-field {
+  width: 100%;
+}
+
+.mat-form-field {
+  background-color: #ffffff;
+  border-radius: 10px;
+}
+
 
 .dialog-container label {
   font-family: 'Roboto', sans-serif;
@@ -43,18 +63,23 @@
 .dialog-container input,
 .dialog-container .ng-select {
   width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  font-size: 1.1rem;
+  /* padding: 12px; */
+  /* border-radius: 12px; */
+  /* border: 1px solid #ddd; */
+  /* font-size: 1.1rem; */
   color: #333;
   transition: all 0.3s ease-in-out;
+}
+
+.dialog-container input{
+  outline: none;
+  border: none;
 }
 
 .dialog-container input:focus,
 .dialog-container .ng-select:focus {
   border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+  /* box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); */
   outline: none;
 }
 
@@ -139,3 +164,11 @@
   color: #007bff;
 }
 
+.full-width {
+  width: 100%;
+}
+
+.stylish-input mat-form-field {
+  background-color: #ffffff;
+  border-radius: 10px;
+}

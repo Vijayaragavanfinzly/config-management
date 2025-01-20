@@ -33,7 +33,7 @@ export const routes: Routes = [
             },
             {
                 path:'compare',
-                component:CompareConfigDbComponent
+                component:CompareComponent
             },
             {
                 path:'compare/compareByTenant',
@@ -41,7 +41,7 @@ export const routes: Routes = [
             },
             {
                 path:'compare/compareByEnvironment',
-                component:CompareByEnvironmentComponent
+                component:CompareConfigDbComponent
             },
             {
                 path: 'environments/environment',
