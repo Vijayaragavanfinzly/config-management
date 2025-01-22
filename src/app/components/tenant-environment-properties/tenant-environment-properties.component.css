@@ -274,6 +274,21 @@ table.custom-table tbody tr:nth-child(odd) td{
 .export-btn i {
   margin-right: 10px;
 }
+
+.delete-btn{
+  background-color: red;
+  color: #fff;
+  width: 120px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+.delete-btn:hover{
+  background-color: rgb(237, 79, 79);
+}
 .edit {
   color: #0f60b7;
   cursor: pointer;

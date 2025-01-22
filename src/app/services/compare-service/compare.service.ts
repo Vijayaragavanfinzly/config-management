@@ -43,6 +43,10 @@ export class CompareService {
     return this.http.put(`${this.baseUrl}/edit`,data);
   }
 
+  editInCommonCompare(data:any):Observable<any>{
+    return this.http.put(`${this.baseUrl}/edit/common-property`,data);
+  }
+
   getLastSyncDate():Observable<any>{
     return this.http.get(`${this.baseUrl}/syncTime`);
   }

@@ -12,25 +12,27 @@ import { MatOptionModule } from '@angular/material/core';
 
 
 @Component({
-  selector: 'app-property-dialog',
+  selector: 'edit-property-compare',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatInputModule, MatDialogModule,
       MatFormFieldModule,NgSelectComponent,FormsModule,MatOptionModule,MatSelectModule,NgxMatSelectSearchModule],
-  templateUrl: './edit-property-dialog.component.html',
-  styleUrl: './edit-property-dialog.component.css',
+  templateUrl: './edit-property-compare.component.html',
+  styleUrl: './edit-property-compare.component.css',
 })
-export class PropertyDialogComponent {
+export class EditPropertyCompareComponent {
   propertyForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<PropertyDialogComponent>,
+    private dialogRef: MatDialogRef<EditPropertyCompareComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       application ?: string; configId?:string; env?:string; fieldGroup?: string,target?:string[],type?:string[],id?:string;
       isEdit?:string;label?:string;profile?:string;propKey?:string;propertyType?:string;secret?:string;tenant?:string;tenantEnvId?:string;value?:string;applications?:string[];fieldGroups:string[];
     }
   ) {
+    console.log(data);
+    
     this.propertyForm = this.fb.group({
       // environment: [{ value: data.environment, disabled: true }, Validators.required],
       // tenant: [{ value: data.tenant, disabled: true }, Validators.required],
@@ -45,7 +47,7 @@ export class PropertyDialogComponent {
       // 
       env: [{ value: data.env, disabled: true }, Validators.required],
       tenant: [{ value: data.tenant, disabled: true }, Validators.required],
-      propKey: [data.propKey, Validators.required],
+      propKey: [{value: data.propKey,disabled:true}, Validators.required],
       value: [data.value, Validators.required],
       application:[data.application,Validators.required],
       fieldGroup:[data.fieldGroup,Validators.required],

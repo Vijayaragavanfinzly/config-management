@@ -28,4 +28,12 @@ export class PropertyService {
   deleteProperty(id:string):Observable<any>{
     return this.http.delete(`${this.baseUrl}/properties/${id}`);
   }
+
+  deleteMulitpleProperty(ids: string[]): Observable<any> {
+    const payload = { ids };
+    const options = {
+      body: payload,
+    };
+    return this.http.delete(`${this.baseUrl}/properties`, options);
+  }
 }

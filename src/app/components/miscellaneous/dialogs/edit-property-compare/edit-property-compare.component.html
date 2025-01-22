@@ -1,0 +1,94 @@
+<div class="dialog-container">
+    <div class="dialog-header">
+      <h2>Edit Property</h2>
+    </div>
+    <div class="dialog-content pb-3">
+      <form [formGroup]="propertyForm" (ngSubmit)="onSave()" class="form-grid">
+        <!-- First Row -->
+        <mat-form-field appearance="outline" class="input-field">
+          <mat-label>Environment</mat-label>
+          <input matInput formControlName="env" placeholder="Eg. DEV" [disabled]="true" />
+          <mat-error *ngIf="propertyForm.get('env')?.hasError('required')">
+            Environment is required.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="input-field">
+          <mat-label>Tenant</mat-label>
+          <input matInput formControlName="tenant" [disabled]="true" />
+          <mat-error *ngIf="propertyForm.get('tenant')?.hasError('required')">
+            Tenant is required.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="input-field">
+          <mat-label>Application</mat-label>
+          <mat-select formControlName="application">
+            <mat-option>
+              <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
+                noEntriesFoundLabel="No options found"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let app of data.applications" [value]="app">
+              {{ app }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="propertyForm.get('application')?.hasError('required')">
+            Application is required.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="input-field">
+          <mat-label>Field Group</mat-label>
+          <mat-select formControlName="fieldGroup">
+            <mat-option>
+              <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
+                noEntriesFoundLabel="No options found"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let field of data.fieldGroups" [value]="field">
+              {{ field }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="propertyForm.get('fieldGroup')?.hasError('required')">
+            Field Group is required.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="input-field">
+          <mat-label>Property Key</mat-label>
+          <input matInput formControlName="propKey" />
+          <mat-error *ngIf="propertyForm.get('propKey')?.hasError('required')">
+            Property Key is required.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="input-field">
+          <mat-label>Value</mat-label>
+          <input matInput formControlName="value" />
+          <mat-error *ngIf="propertyForm.get('value')?.hasError('required')">
+            Value is required.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="input-field">
+          <mat-label>Property Type</mat-label>
+          <input matInput formControlName="propertyType" />
+          <mat-error *ngIf="propertyForm.get('propertyType')?.hasError('required')">
+            Property Type is required.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="input-field">
+          <mat-label>Label</mat-label>
+          <input matInput formControlName="label" />
+          <mat-error *ngIf="propertyForm.get('label')?.hasError('required')">
+            Label is required.
+          </mat-error>
+        </mat-form-field>
+      </form>
+    </div>
+    <div class="dialog-actions mt-4">
+      <button class="btn btn-primary save" (click)="onSave()" [disabled]="propertyForm.invalid">Save</button>
+      <button class="btn btn-secondary cancel" (click)="onCancel()">Cancel</button>
+    </div>
+  </div>
+  

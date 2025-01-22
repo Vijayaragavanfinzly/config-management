@@ -319,6 +319,62 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     });
   }
 
+  deleteSelectedProperties(){
+    this.propertyService.deleteMulitpleProperty(this.selectedIds).subscribe({
+      next:(response)=>{
+        console.log(response);
+        this.snackBar.open('Deleted Successfully', 'Close', {
+          duration: 3000,
+          panelClass: ['custom-toast', 'toast-success'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+        this.loadPropertiesForTenants();
+        this.selectedIds = []
+      },
+      error:(err)=>{
+        console.log(err);
+        this.snackBar.open('Error Occured in Delete', 'Close', {
+          duration: 3000,
+          panelClass: ['custom-toast', 'toast-error'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      }
+    })
+  }
+
+  exportAllData(){
+    this.exportService.exportAllDataForSpecific(this.tenant,this.environment).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${this.tenant}_${this.environment}_properties.sql`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.snackBar.open('Configuration Exported Successfully!', 'Close', {
+          duration: 3000,
+          panelClass: ['custom-toast', 'toast-success'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      },
+      error: (err) => {
+        console.error("Error exporting properties:", err);
+        this.snackBar.open('Export failed.', 'Close', {
+          duration: 3000,
+          panelClass: ['custom-toast', 'toast-error'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      },
+      complete: () => {
+        
+      },
+    })
+  }
+
 
   addProperty() {
     const dialogConfig = new MatDialogConfig();
@@ -407,6 +463,8 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   }
 
   editProperty(property: any) {
+    console.log(property);
+    
     const dialogConfig = new MatDialogConfig();
 
     
@@ -415,20 +473,24 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     dialogConfig.maxHeight = '580px';
     dialogConfig.maxWidth = '900px';
     dialogConfig.data = {
-      tenant: this.tenant,
-      environment: this.environment,
-      propertyKey: property.propertyKey,
-      propertyValue: property.propertyValue,
-      id: property.id,
+      // 
       applications: this.applications,
-      fieldGroups: this.fieldGroups,
-      // targets: this.targets,
-      // types: this.types,
       application: property.application,
+      configId:property.configId,
+      env: this.environment,
       fieldGroup: property.fieldGroup,
-      type: property.type,
-      target: property.target,
-      release : property.release,
+      fieldGroups: this.fieldGroups,
+      id: property.id,
+      isEdit:property.isEdit,
+      label:property.label,
+      profile:property.profile,
+      propKey: property.propKey,
+      propertyType:property.propertyType,
+      secret:property.secret,
+      tenant: this.tenant,
+      tenantEnvId:property.tenantEnvId,
+      value: property.value,
+      
     };
 
     const dialogRef = this.dialog.open(PropertyDialogComponent, dialogConfig);
@@ -437,7 +499,23 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log(result);
-        this.propertyService.updateProperty(result).subscribe({
+        const payload = {
+          id:property.id,
+          isEdit:true,
+          configId:property.configId,
+          env: this.environment,
+          tenant: this.tenant,
+          propKey: result.propKey.trim(),
+          value: result.value.trim(),
+          application: result.application,
+          fieldGroup: result.fieldGroup,
+          profile:this.environment,
+          propertyType:result.propertyType,
+          secret:property.secret,
+          label:result.label,
+          tenantEnvId:property.tenantEnvId,
+        };
+        this.propertyService.updateProperty(payload).subscribe({
           next: (response) => {
             if (response.statusCode == 201) {
               this.snackBar.open('Configuration updated Successfully!', 'Close', {

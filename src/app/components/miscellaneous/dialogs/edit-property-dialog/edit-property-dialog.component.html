@@ -3,108 +3,91 @@
     <h2>Edit Property</h2>
   </div>
   <div class="dialog-content pb-3">
-    <form [formGroup]="propertyForm" class="property-form">
+    <form [formGroup]="propertyForm" (ngSubmit)="onSave()" class="form-grid">
       <!-- First Row -->
-      <div class="form-row">
-        <div class="form-group">
-          <label for="type" class="form-label">Type</label>
-          <ng-select
-            [items]="data.types"
-            bindLabel="name"
-            [searchable]="true"
-            formControlName="type"
-            placeholder="Select a Type"
-            class="stylish-dropdown"
-          ></ng-select>
-          <div *ngIf="propertyForm.get('type')?.touched && propertyForm.get('type')?.invalid" class="error-text">
-            Type is required
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label for="target" class="form-label">Target</label>
-          <ng-select
-            [items]="data.targets"
-            bindLabel="name"
-            [searchable]="true"
-            formControlName="target"
-            placeholder="Select a Target"
-            class="stylish-dropdown"
-          ></ng-select>
-          <div *ngIf="propertyForm.get('target')?.touched && propertyForm.get('target')?.invalid" class="error-text">
-            Target is required
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label for="application" class="form-label">Application</label>
-          <ng-select
-            [items]="data.applications"
-            bindLabel="name"
-            [searchable]="true"
-            formControlName="application"
-            placeholder="Select an Application"
-            class="stylish-dropdown"
-          ></ng-select>
-          <div *ngIf="propertyForm.get('application')?.touched && propertyForm.get('application')?.invalid" class="error-text">
-            Application is required
-          </div>
-        </div>
+      <mat-form-field appearance="outline" class="input-field">
+        <mat-label>Environment</mat-label>
+        <input matInput formControlName="env" placeholder="Eg. DEV" [disabled]="true" />
+        <mat-error *ngIf="propertyForm.get('env')?.hasError('required')">
+          Environment is required.
+        </mat-error>
+      </mat-form-field>
 
-        <div class="form-group">
-          <label for="fieldGroup" class="form-label">Field Group</label>
-          <ng-select
-            [items]="data.fieldGroups"
-            bindLabel="name"
-            [searchable]="true"
-            formControlName="fieldGroup"
-            placeholder="Select a Field Group"
-            class="stylish-dropdown"
-          ></ng-select>
-          <div *ngIf="propertyForm.get('fieldGroup')?.touched && propertyForm.get('fieldGroup')?.invalid" class="error-text">
-            Field Group is required
-          </div>
-        </div>
-      </div>
+      <mat-form-field appearance="outline" class="input-field">
+        <mat-label>Tenant</mat-label>
+        <input matInput formControlName="tenant" [disabled]="true" />
+        <mat-error *ngIf="propertyForm.get('tenant')?.hasError('required')">
+          Tenant is required.
+        </mat-error>
+      </mat-form-field>
 
-      <!-- Second Row -->
-      <div class="form-row">
-        <div class="form-group">
-          <label for="environment" class="form-label">Environment Name</label>
-          <input id="environment" type="text" formControlName="environment" readonly class="form-input" />
-          <div *ngIf="propertyForm.get('environment')?.invalid" class="error-text">Environment is required</div>
-        </div>
-        <div class="form-group">
-          <label for="tenant" class="form-label">Tenant Name</label>
-          <input id="tenant" type="text" formControlName="tenant" readonly class="form-input" />
-          <div *ngIf="propertyForm.get('tenant')?.invalid" class="error-text">Tenant is required</div>
-        </div>
-        <div class="form-group">
-          <label for="propertyKey" class="form-label">Property Key</label>
-          <input id="propertyKey" type="text" formControlName="propertyKey" class="form-input" />
-          <div *ngIf="propertyForm.get('propertyKey')?.touched && propertyForm.get('propertyKey')?.invalid" class="error-text">
-            Property Key is required
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="propertyValue" class="form-label">Property Value</label>
-          <input id="propertyValue" type="text" formControlName="propertyValue" class="form-input" />
-          <div *ngIf="propertyForm.get('propertyValue')?.touched && propertyForm.get('propertyValue')?.invalid" class="error-text">
-            Property Value is required
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="release" class="form-label">Release</label>
-          <input id="release" type="text" formControlName="release" class="form-input" />
-          <div *ngIf="propertyForm.get('release')?.touched && propertyForm.get('release')?.invalid" class="error-text">
-            Release is required
-          </div>
-        </div>
-      </div>
+      <mat-form-field appearance="outline" class="input-field">
+        <mat-label>Application</mat-label>
+        <mat-select formControlName="application">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
+              noEntriesFoundLabel="No options found"></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let app of data.applications" [value]="app">
+            {{ app }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="propertyForm.get('application')?.hasError('required')">
+          Application is required.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field">
+        <mat-label>Field Group</mat-label>
+        <mat-select formControlName="fieldGroup">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
+              noEntriesFoundLabel="No options found"></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let field of data.fieldGroups" [value]="field">
+            {{ field }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="propertyForm.get('fieldGroup')?.hasError('required')">
+          Field Group is required.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field">
+        <mat-label>Property Key</mat-label>
+        <input matInput formControlName="propKey" />
+        <mat-error *ngIf="propertyForm.get('propKey')?.hasError('required')">
+          Property Key is required.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field">
+        <mat-label>Value</mat-label>
+        <input matInput formControlName="value" />
+        <mat-error *ngIf="propertyForm.get('value')?.hasError('required')">
+          Value is required.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field">
+        <mat-label>Property Type</mat-label>
+        <input matInput formControlName="propertyType" />
+        <mat-error *ngIf="propertyForm.get('propertyType')?.hasError('required')">
+          Property Type is required.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field">
+        <mat-label>Label</mat-label>
+        <input matInput formControlName="label" />
+        <mat-error *ngIf="propertyForm.get('label')?.hasError('required')">
+          Label is required.
+        </mat-error>
+      </mat-form-field>
     </form>
   </div>
   <div class="dialog-actions mt-4">
-    <button class="btn btn-primary save" (click)="save()" [disabled]="propertyForm.invalid">Save</button>
-    <button class="btn btn-secondary cancel" (click)="close()">Cancel</button>
+    <button class="btn btn-primary save" (click)="onSave()" [disabled]="propertyForm.invalid">Save</button>
+    <button class="btn btn-secondary cancel" (click)="onCancel()">Cancel</button>
   </div>
 </div>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { SyncDialogComponent } from '../miscellaneous/dialogs/sync-dialog/sync-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CompareService } from '../../services/compare-service/compare.service';
@@ -11,7 +11,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 @Component({
   selector: 'app-sync',
   standalone: true,
-  imports: [CommonModule, RouterModule,MatTooltipModule],
+  imports: [CommonModule, RouterModule, MatTooltipModule],
   templateUrl: './sync.component.html',
   styleUrl: './sync.component.css'
 })
@@ -22,48 +22,54 @@ export class SyncComponent implements OnInit {
   syncData: any[] = [];
   showOverlayHint: boolean = true;
   lastSyncTime: string = '';
-  constructor(private dialog: MatDialog, private compareService: CompareService, private snackBar: MatSnackBar,private exportService:ExportService) { }
+  showHint: boolean = false;
+
+  constructor(private dialog: MatDialog, private compareService: CompareService, private snackBar: MatSnackBar, private exportService: ExportService,private router: Router) { }
 
   ngOnInit(): void {
-    
+
     this.getLastSyncDate();
     this.getAllSyncDetails();
     this.showOverlay();
-   }
+    this.showHint = true;
+    setTimeout(() => {
+      this.showHint = false;
+    }, 10000); // 10 seconds
+  }
 
-   getLastSyncDate(){
+  getLastSyncDate() {
     this.compareService.getLastSyncDate().subscribe({
-      next:(data)=>{
+      next: (data) => {
         console.log(data);
-        
-        if(data.statusCode == 200){
+
+        if (data.statusCode == 200) {
           this.lastSyncTime = data.data
         }
       },
-      error:(err)=>{
+      error: (err) => {
         console.log(err);
-        
+
       }
     });
-   }
+  }
 
-   getAllSyncDetails(){
+  getAllSyncDetails() {
     this.compareService.getAllSyncDetails().subscribe({
-      next:(data)=>{
-        if(data.statusCode == 200){
+      next: (data) => {
+        if (data.statusCode == 200) {
           this.syncData = data.data;
           console.log(this.syncData);
-          
+
         }
       },
-      error:(err)=>{
+      error: (err) => {
         console.log(err);
-        
+
       }
     })
-   }
+  }
 
-   isRecentSync(lastSyncedTime: string): boolean {
+  isRecentSync(lastSyncedTime: string): boolean {
     const lastSync = new Date(lastSyncedTime);
     const currentTime = new Date();
     const differenceInHours = (currentTime.getTime() - lastSync.getTime()) / (1000 * 3600);
@@ -115,32 +121,40 @@ export class SyncComponent implements OnInit {
     //   error: err => alert('Sync failed: ' + err.message)
     // });
   }
-  syncEnvironment(env:string){
-    this.compareService.syncEnvironment(env).subscribe({
-      next:(res)=>{
-        console.log(res);
-        if(res.statusCode == 200){
-          this.snackBar.open(`Sync Done Successfull! for ${env}`, 'Close', {
-            duration: 3000,
-            panelClass: ['custom-toast', 'toast-success'],
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          });
-          this.getAllSyncDetails();
-        }
-      },
-      error:(err)=>{
-        console.log(err);
-        
+  syncEnvironment(env: string) {
+    const dialogRef = this.dialog.open(SyncDialogComponent, {
+      width: '600px',
+    });
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.compareService.syncEnvironment(env).subscribe({
+          next: (res) => {
+            console.log(res);
+            if (res.statusCode == 200) {
+              this.snackBar.open(`Sync Done Successfull! for ${env}`, 'Close', {
+                duration: 3000,
+                panelClass: ['custom-toast', 'toast-success'],
+                horizontalPosition: 'center',
+                verticalPosition: 'top',
+              });
+              this.getAllSyncDetails();
+            }
+          },
+          error: (err) => {
+            console.log(err);
+
+          }
+        })
       }
-    })
+    });
+
   }
 
-  exportUpdateQuery(){
+  exportUpdateQuery() {
     this.exportService.exportUpdateQueryForAll().subscribe({
       next: (blob) => {
         console.log(blob);
-        
+
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -168,11 +182,11 @@ export class SyncComponent implements OnInit {
     })
   }
 
-  exportSingleUpdateQuery(env:string){
+  exportSingleUpdateQuery(env: string) {
     this.exportService.exportSingleUpdateQuery(env).subscribe({
       next: (blob) => {
         console.log(blob);
-        
+
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -201,13 +215,11 @@ export class SyncComponent implements OnInit {
   }
 
   showOverlay(): void {
-    this.showOverlayHint = true; 
-    setTimeout(() => {
-      this.hideOverlay(); 
-    }, 5000); 
+    this.showOverlayHint = true;
   }
 
   hideOverlay(): void {
+    this.router.navigate(['faq/sync-guide']);
     this.showOverlayHint = false;
   }
 

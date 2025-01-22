@@ -75,10 +75,15 @@
       matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip">
       <i class="fas fa-plus"></i> Add
     </button>
-    <button class="btn btn-sm action-btn ms-2 add-btn export-btn" (click)="exportProperties()" [disabled]="loading"
+    <button class="btn btn-sm action-btn ms-2 add-btn export-btn" (click)="exportAllData()" [disabled]="loading"
       aria-label="Export Properties" role="button" [matTooltip]="'Click to export selected properties as SQL INSERT query'" matTooltipShowDelay="300"
       matTooltipPosition="above" matTooltipClass="custom-tooltip">
       <i class="fas fa-file-export"></i> Export
+    </button>
+    <button *ngIf="selectedIds.length > 0" class="btn btn-sm action-btn ms-2 add-btn export-btn delete-btn" (click)="deleteSelectedProperties()" [disabled]="loading"
+      aria-label="Export Properties" role="button" [matTooltip]="'Click to export selected properties as SQL DELETE query'" matTooltipShowDelay="300"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip">
+      <i class="fas fa-trash-alt"></i> Delete
     </button>
   </div>
 </div>
@@ -111,10 +116,8 @@
               <label for="property-{{ property.id }}"></label>
             </td>
             <!-- {{ (currentPage - 1) * pageSize + i + 1 }}. &nbsp; -->
-            <td class="property-cell" [matTooltip]="property.propKey" matTooltipShowDelay="300"
-              matTooltipPosition="above" matTooltipClass="custom-tooltip">{{ property.propKey }}</td>
-            <td [matTooltip]="property.propertyValue" matTooltipShowDelay="300" matTooltipPosition="above"
-              matTooltipClass="custom-tooltip">{{ property.value }}</td>
+            <td class="property-cell">{{ property.propKey }}</td>
+            <td >{{ property.value }}</td>
             <!-- <td class="text-center" [matTooltip]="property.release" matTooltipShowDelay="300" matTooltipPosition="above"
               matTooltipClass="custom-tooltip">{{property.release}}</td> -->
             <td class="text-center">

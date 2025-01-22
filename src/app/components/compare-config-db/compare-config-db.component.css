@@ -1637,7 +1637,7 @@ table.custom-table tbody tr td .ops-input-inside {
   }
 }
 
-
+/* 
 .no-data-container {
   display: flex;
   justify-content: center;
@@ -1674,7 +1674,60 @@ table.custom-table tbody tr td .ops-input-inside {
   font-size: 1rem;
   color: #666;
   margin-bottom: 20px;
+} */
+
+.no-data-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+  background-color: #f4f5f7;
 }
+
+.no-data-card {
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 40px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.no-data-icon {
+  font-size: 60px;
+  color: #4a90e2;
+  margin-bottom: 20px;
+}
+
+.no-data-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.no-data-message {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.floating-icon {
+  animation: float 3s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% {
+      transform: translateY(0);
+  }
+  50% {
+      transform: translateY(-10px);
+  }
+}
+
 
 .refresh-btn {
   font-size: 1rem;
@@ -1697,4 +1750,65 @@ table.custom-table tbody tr td .ops-input-inside {
 .makeNotVisibleDrapDown{
   display: none;
   
+}
+
+/*  */
+
+.no-properties2-container {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 50px;
+  padding: 20px;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.no-properties2-container i {
+  font-size: 70px;
+  color: #6c63ff;
+  margin-bottom: 20px;
+  animation: float 2.5s infinite ease-in-out;
+}
+
+.no-properties2-container h4 {
+  font-weight: bold;
+  font-size: 24px;
+  color: #343a40;
+  margin-top: 10px;
+}
+
+.no-properties2-container p.no-data-text {
+  color: #6c757d;
+  font-size: 16px;
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.info-icon {
+  font-size: 16px;
+  color: var(--primary-color);
+  cursor: pointer;
+}
+
+.info-icon:hover {
+  color: var(--secondary-color);
 }

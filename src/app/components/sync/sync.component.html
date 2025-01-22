@@ -27,7 +27,7 @@
     <div class="card-header">
       <h3>{{ data.environmentName | uppercase }}</h3>
       <div>
-        <i class="fa-solid fa-download sync-icon me-2" (click)="exportSingleUpdateQuery(data.environmentName)"></i>
+        <i class="fas fa-download sync-icon me-2" (click)="exportSingleUpdateQuery(data.environmentName)" [matTooltip]="'Click to Export '" matTooltipShowDelay="300" matTooltipPosition="above"></i>
         <i class="fas fa-sync sync-icon" (click)="syncEnvironment(data.environmentName)" [matTooltip]="'Click to Sync Environment'" matTooltipShowDelay="300" matTooltipPosition="above"></i>
       </div>
       
@@ -47,11 +47,13 @@
 <div class="hint-overlay" *ngIf="showOverlayHint">
   <div class="hint-container">
     <div class="hint-content">
-      <div class="hint-icon">🔄</div>
+      <div class="hint-icon">💡</div>
       <div class="hint-text">
-        <strong>Sync Tip:</strong> Sync before comparing to get accurate and up-to-date results!
+        <strong>Info:</strong> Sync ensures your data is up-to-date by fetching the latest changes!
       </div>
     </div>
-    <button class="hint-button" (click)="hideOverlay()">Got It</button>
+    <button class="hint-button" (click)="hideOverlay()">Learn More</button>
   </div>
 </div>
+
+
