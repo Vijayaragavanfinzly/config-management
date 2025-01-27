@@ -32,7 +32,7 @@ export class CompareService {
   }
 
   sync():Observable<any>{
-    return this.http.post(`${this.baseUrl}/save`, {}, { responseType: 'text' as 'json' });
+    return this.http.post(`${this.baseUrl}/sync`, {}, { responseType: 'text' as 'json' });
   }
 
   getAllEnvironments():Observable<any>{
@@ -47,6 +47,10 @@ export class CompareService {
     return this.http.put(`${this.baseUrl}/edit/common-property`,data);
   }
 
+  getAllConfigData(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/fetch/property`, data);
+  }
+  
   getLastSyncDate():Observable<any>{
     return this.http.get(`${this.baseUrl}/syncTime`);
   }
@@ -57,4 +61,9 @@ export class CompareService {
   syncEnvironment(env:string):Observable<any>{
     return this.http.post(`${this.baseUrl}/sync/${env}`,null);
   }
+
+  getDelta(selectedTenant1:string,selectedEnv1:string,selectedTenant2:string,selectedEnv2:string):Observable<any>{
+    return this.http.get(`${this.baseUrl}/missing-key/${selectedTenant1}/${selectedEnv1}/${selectedTenant2}/${selectedEnv2}`);
+  }
+
 }

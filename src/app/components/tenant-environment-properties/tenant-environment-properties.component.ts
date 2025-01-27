@@ -21,11 +21,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { ExportConfirmationComponent } from '../miscellaneous/dialogs/export-confirmation/export-confirmation.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SuccessSnackbarComponent } from '../miscellaneous/snackbar/success-snackbar/success-snackbar.component';
+import { ErrorSnackbarComponent } from '../miscellaneous/snackbar/error-snackbar/error-snackbar.component';
 
 @Component({
   selector: 'app-tenant-environment-properties',
   standalone: true,
-  imports: [RouterModule, SpinnerComponent, CommonModule, MatDialogModule, MatButtonModule, FormsModule,MatSidenavModule,MatIconModule,MatInputModule,MatSelectModule,NgSelectComponent,MatTooltipModule],
+  imports: [RouterModule, SpinnerComponent, CommonModule, MatDialogModule, MatButtonModule, FormsModule, MatSidenavModule, MatIconModule, MatInputModule, MatSelectModule, NgSelectComponent, MatTooltipModule],
   templateUrl: './tenant-environment-properties.component.html',
   styleUrl: './tenant-environment-properties.component.css'
 })
@@ -41,7 +43,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   selectedIds: string[] = [];
   isAllSelected: boolean = false;
 
-  propertySize:number = 0;
+  propertySize: number = 0;
 
   currentPage: number = 1;
   pageSize: number = 10;
@@ -71,12 +73,12 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     type: '',
     target: '',
   }
-  release:string = '';
+  release: string = '';
   isDrawerOpen = false;
 
-  fieldGroups:string[] = ['Global', 'Application', 'Customer']
-  targets:string[] = ['config_server', 'parameter_store']
-  types:string[] = ['environment', 'tenant', 'client_adapter']
+  fieldGroups: string[] = ['Global', 'Application', 'Customer']
+  targets: string[] = ['config_server', 'parameter_store']
+  types: string[] = ['environment', 'tenant', 'client_adapter']
 
   applications: string[] = [];
 
@@ -96,20 +98,20 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     })
   }
 
-  @HostListener('window:keydown',['$event'])
-    handleKeyoardToggle(event: KeyboardEvent){
-      if(event.key === 'Escape'){
-        event.preventDefault();
-        this.isDrawerOpen = false;
-      }
+  @HostListener('window:keydown', ['$event'])
+  handleKeyoardToggle(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.isDrawerOpen = false;
     }
+  }
 
   loadPropertiesForTenants() {
     this.loading = true;
     this.propertyService.getTenantProperties(this.tenant, this.environment).subscribe({
       next: (data: any) => {
         console.log(data);
-        
+
         this.properties = data.data;
         console.log(this.properties);
         this.filteredProperties = [...this.properties];
@@ -266,18 +268,24 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
         a.download = `${this.tenant}_${this.environment}_properties.sql`;
         a.click();
         window.URL.revokeObjectURL(url);
-        this.snackBar.open('Exported Successfully!', 'Close', {
+        this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+          data: {
+            message: `Exported Successfully !`,
+            icon: 'check-circle'
+          },
           duration: 3000,
-          panelClass: ['custom-toast', 'toast-success'],
           horizontalPosition: 'center',
           verticalPosition: 'top',
         });
       },
       error: (err) => {
         console.error("Error exporting properties:", err);
-        this.snackBar.open('Export failed.', 'Close', {
+        this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+          data: {
+            message: `Export Failed`,
+            icon: 'check-circle'
+          },
           duration: 3000,
-          panelClass: ['custom-toast', 'toast-error'],
           horizontalPosition: 'center',
           verticalPosition: 'top',
         });
@@ -288,7 +296,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   }
 
   exportSelectedProperties(): void {
-    
+
     this.exportService.exportSelectedProperties(this.tenant, this.environment, this.selectedIds).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
@@ -297,46 +305,58 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
         a.download = `${this.tenant}_${this.environment}_properties.sql`;
         a.click();
         window.URL.revokeObjectURL(url);
-        this.snackBar.open('Configuration Exported Successfully!', 'Close', {
+        this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+          data: {
+            message: `Properties Exported Successfully !`,
+            icon: 'check-circle'
+          },
           duration: 3000,
-          panelClass: ['custom-toast', 'toast-success'],
           horizontalPosition: 'center',
           verticalPosition: 'top',
         });
       },
       error: (err) => {
         console.error("Error exporting properties:", err);
-        this.snackBar.open('Export failed.', 'Close', {
+        this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+          data: {
+            message: `Export Failed`,
+            icon: 'check-circle'
+          },
           duration: 3000,
-          panelClass: ['custom-toast', 'toast-error'],
           horizontalPosition: 'center',
           verticalPosition: 'top',
         });
       },
       complete: () => {
-        
+
       },
     });
   }
 
-  deleteSelectedProperties(){
+  deleteSelectedProperties() {
     this.propertyService.deleteMulitpleProperty(this.selectedIds).subscribe({
-      next:(response)=>{
+      next: (response) => {
         console.log(response);
-        this.snackBar.open('Deleted Successfully', 'Close', {
+        this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+          data: {
+            message: `Deleted Successfully !`,
+            icon: 'check-circle'
+          },
           duration: 3000,
-          panelClass: ['custom-toast', 'toast-success'],
           horizontalPosition: 'center',
           verticalPosition: 'top',
         });
         this.loadPropertiesForTenants();
         this.selectedIds = []
       },
-      error:(err)=>{
+      error: (err) => {
         console.log(err);
-        this.snackBar.open('Error Occured in Delete', 'Close', {
+        this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+          data: {
+            message: `Error Occured in Delete`,
+            icon: 'check-circle'
+          },
           duration: 3000,
-          panelClass: ['custom-toast', 'toast-error'],
           horizontalPosition: 'center',
           verticalPosition: 'top',
         });
@@ -344,34 +364,64 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     })
   }
 
-  exportAllData(){
-    this.exportService.exportAllDataForSpecific(this.tenant,this.environment).subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${this.tenant}_${this.environment}_properties.sql`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-        this.snackBar.open('Configuration Exported Successfully!', 'Close', {
-          duration: 3000,
-          panelClass: ['custom-toast', 'toast-success'],
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
-      },
-      error: (err) => {
-        console.error("Error exporting properties:", err);
-        this.snackBar.open('Export failed.', 'Close', {
-          duration: 3000,
-          panelClass: ['custom-toast', 'toast-error'],
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
-      },
-      complete: () => {
-        
-      },
+  exportAllData() {
+    this.exportService.exportAllDataForSpecific(this.tenant, this.environment).subscribe({
+      next: (res) => {
+        console.log(res);
+
+        if (res.statusCode == 200 && res.message == 'success') {
+          console.log("Hello World!");
+
+          this.exportService.exportingAllSpecificData(this.tenant, this.environment).subscribe({
+
+
+            next: (blob) => {
+              console.log("Hello Wolrd 2");
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `${this.tenant}_${this.environment}_properties.sql`;
+              a.click();
+              window.URL.revokeObjectURL(url);
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `Configuration Exported Successfully !`,
+                  icon: 'check-circle'
+                },
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'top',
+              });
+            },
+            error: (err) => {
+              console.error("Error exporting properties:", err);
+              this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+                data: {
+                  message: `Export Failed.`,
+                  icon: 'check-circle'
+                },
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'top',
+              });
+            },
+            complete: () => {
+
+            },
+          })
+        }
+        else {
+          this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+            data: {
+              message: `You cannot export because no edit, delete, or add operations have been performed.`,
+              icon: 'check-circle'
+            },
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          });
+        }
+      }
     })
   }
 
@@ -386,28 +436,28 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
     dialogConfig.maxWidth = '900px';
     dialogConfig.data = {
       application: this.applications,
-      configId:'',
+      configId: '',
       env: this.environment,
       fieldGroup: this.fieldGroups,
       id: null,
-      isEdit:'',
-      label:'',
-      profile:'',
+      isEdit: '',
+      label: '',
+      profile: '',
       propKey: '',
-      propertyType:'',
-      secret:'',
+      propertyType: '',
+      secret: '',
       tenant: this.tenant,
-      tenantEnvId:'',
+      tenantEnvId: '',
       value: '',
-      
-      
-      
+      lastUpdatedBy: ''
+
+
+
       // target: this.targets,
       // type: this.types,
       // release: this.release
     };
 
-    // Open the dialog with the configuration
     const dialogRef = this.dialog.open(AddPropertyDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -420,28 +470,35 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
           value: result.value.trim(),
           application: result.application,
           fieldGroup: result.fieldGroup,
-          profile:this.environment,
-          propertyType:result.propertyType,
-          secret:null,
+          profile: this.environment,
+          lastUpdatedBy: result.propertyType,
+          secret: null,
           target: result.target,
+          label: result.label
         };
         this.propertyService.addProperty(payload).subscribe({
           next: (response) => {
             console.log(response);
             if (response.statusCode === 200) {
               console.log("Property added successfully");
-              this.snackBar.open('Configuration added Successfully!', 'Close', {
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `Configuration added Successfully !`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-success'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
               this.loadPropertiesForTenants();
               this.clearSearch();
             } else {
-              this.snackBar.open(response.message, 'Close', {
+              this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+                data: {
+                  message: `${response.message}`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-error'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
@@ -449,9 +506,12 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
           },
           error: (err) => {
             console.log(err);
-            this.snackBar.open('Failed to create the configuration. Please try again.', 'Close', {
+            this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+              data: {
+                message: `Failed to create the configuration. Please try again.`,
+                icon: 'check-circle'
+              },
               duration: 3000,
-              panelClass: ['custom-toast', 'toast-error'],
               horizontalPosition: 'center',
               verticalPosition: 'top',
             });
@@ -464,10 +524,10 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
 
   editProperty(property: any) {
     console.log(property);
-    
+
     const dialogConfig = new MatDialogConfig();
 
-    
+
     dialogConfig.minWidth = '800px'; // Customize the width of the dialog
     dialogConfig.minHeight = '400px';
     dialogConfig.maxHeight = '580px';
@@ -476,21 +536,21 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
       // 
       applications: this.applications,
       application: property.application,
-      configId:property.configId,
+      configId: property.configId,
       env: this.environment,
       fieldGroup: property.fieldGroup,
       fieldGroups: this.fieldGroups,
       id: property.id,
-      isEdit:property.isEdit,
-      label:property.label,
-      profile:property.profile,
+      isEdit: property.isEdit,
+      label: property.label,
+      profile: property.profile,
       propKey: property.propKey,
-      propertyType:property.propertyType,
-      secret:property.secret,
+      propertyType: property.propertyType,
+      secret: property.secret,
       tenant: this.tenant,
-      tenantEnvId:property.tenantEnvId,
+      tenantEnvId: property.tenantEnvId,
       value: property.value,
-      
+      lastUpdatedBy: property.lastUpdatedBy,
     };
 
     const dialogRef = this.dialog.open(PropertyDialogComponent, dialogConfig);
@@ -500,27 +560,32 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
       if (result) {
         console.log(result);
         const payload = {
-          id:property.id,
-          isEdit:true,
-          configId:property.configId,
+          id: property.id,
+          isEdit: true,
+          configId: property.configId,
           env: this.environment,
           tenant: this.tenant,
           propKey: result.propKey.trim(),
           value: result.value.trim(),
           application: result.application,
           fieldGroup: result.fieldGroup,
-          profile:this.environment,
-          propertyType:result.propertyType,
-          secret:property.secret,
-          label:result.label,
-          tenantEnvId:property.tenantEnvId,
+          profile: this.environment,
+          propertyType: result.propertyType,
+          secret: property.secret,
+          label: result.label,
+          tenantEnvId: property.tenantEnvId,
+          lastUpdatedBy: result.lastUpdatedBy,
+
         };
         this.propertyService.updateProperty(payload).subscribe({
           next: (response) => {
             if (response.statusCode == 201) {
-              this.snackBar.open('Configuration updated Successfully!', 'Close', {
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `Configuration Updated Successfully !`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-success'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
@@ -530,9 +595,12 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
               this.clearSearch();
             }
             else {
-              this.snackBar.open(response.message, 'Close', {
+              this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+                data: {
+                  message: `${response.message}`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-error'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
@@ -540,6 +608,15 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error updating property:', err);
+            this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+              data: {
+                message: `${err}`,
+                icon: 'check-circle'
+              },
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
           }
         })
       }
@@ -555,9 +632,12 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
         this.propertyService.deleteProperty(id).subscribe({
           next: (res) => {
             if (res.statusCode == 200) {
-              this.snackBar.open('Configuration deleted Successfully!', 'Close', {
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `Configuration Deleted Successfully !`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-success'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
@@ -567,9 +647,12 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
               this.clearSearch();
             }
             else {
-              this.snackBar.open(res.message, 'Close', {
+              this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+                data: {
+                  message: `${res.message}`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-error'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
@@ -578,6 +661,15 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error deleting property:', err);
+            this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+              data: {
+                message: `${err}`,
+                icon: 'check-circle'
+              },
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
           }
         })
       } else {
@@ -659,7 +751,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
 
   applyAdvancedSearch(): void {
     const { keyword, application, fieldGroup, type, target } = this.advancedSearch;
-  
+
     this.filteredProperties = this.properties.filter(property => {
       const matchesKeyword =
         keyword ? (property.propKey + property.value).toLowerCase().includes(keyword.toLowerCase()) : true;
@@ -667,17 +759,17 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
       const matchesFieldGroup = fieldGroup ? property.fieldGroup === fieldGroup : true;
       const matchesType = type ? property.type === type : true;
       const matchesTarget = target ? property.target === target : true;
-  
+
       return matchesKeyword && matchesApplication && matchesFieldGroup && matchesType && matchesTarget;
     });
 
     this.propertySize = this.filteredProperties.length;
-  
+
     this.currentPage = 1;
     this.updatePagination();
     this.toggleDrawer();
   }
-  
+
   resetSearch(): void {
     this.advancedSearch = {
       keyword: '',

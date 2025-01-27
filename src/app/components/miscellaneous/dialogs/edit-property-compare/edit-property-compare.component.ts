@@ -28,7 +28,9 @@ export class EditPropertyCompareComponent {
     @Inject(MAT_DIALOG_DATA)
     public data: {
       application ?: string; configId?:string; env?:string; fieldGroup?: string,target?:string[],type?:string[],id?:string;
-      isEdit?:string;label?:string;profile?:string;propKey?:string;propertyType?:string;secret?:string;tenant?:string;tenantEnvId?:string;value?:string;applications?:string[];fieldGroups:string[];
+      isEdit?:string;isAdd?:string;isDelete?:string;label?:string;profile?:string;propKey?:string;propertyType?:string;secret?:string;tenant?:string;tenantEnvId?:string;value?:string;applications?:string[];fieldGroups:string[];
+      lastUpdatedBy?:string;
+
     }
   ) {
     console.log(data);
@@ -51,7 +53,7 @@ export class EditPropertyCompareComponent {
       value: [data.value, Validators.required],
       application:[data.application,Validators.required],
       fieldGroup:[data.fieldGroup,Validators.required],
-      propertyType:[data.propertyType,Validators.required],
+      lastUpdatedBy:[data.lastUpdatedBy,Validators.required],
       label:[data.label,Validators.required],
     });
   }

@@ -70,10 +70,10 @@
         </mat-form-field>
   
         <mat-form-field appearance="outline" class="input-field">
-          <mat-label>Property Type</mat-label>
-          <input matInput formControlName="propertyType" />
-          <mat-error *ngIf="propertyForm.get('propertyType')?.hasError('required')">
-            Property Type is required.
+          <mat-label>Release</mat-label>
+          <input matInput formControlName="lastUpdatedBy" />
+          <mat-error *ngIf="propertyForm.get('lastUpdatedBy')?.hasError('required')">
+            Release is required.
           </mat-error>
         </mat-form-field>
   

@@ -12,6 +12,10 @@
           COMPARE BY TENANTS
         </a>
       </li>
+      <div class="hint-icon ms-auto" (click)="toggleInfoSidebar()" matTooltip="Info" matTooltipShowDelay="300"
+        matTooltipPosition="above" matTooltipClass="custom-tooltip">
+        <i class="fas fa-info-circle"></i>
+      </div>
     </ol>
   </nav>
 </div>
@@ -86,61 +90,7 @@
           <span class="badge">{{ nonMatchingPropertySize }}</span>
         </div>
       </div>
-
-
-      <!-- <div class="dropdown-container"
-        *ngIf="filteredMatchingProperties.length > 0 || filteredNonMatchingProperties.length > 0">
-        <div class="dropdown">
-          <button class="dropdown-toggle1 ps-2 d-flex justify-content-around align-items-center"
-            (click)="toggleDropdown()">
-            {{ selectedFilter }}
-            <span class="badge3">{{ getActiveTabCount() }}</span>
-            <i class="fa-solid fa-chevron-down" [ngClass]="{'rotated': showDropdown}"></i>
-          </button>
-          <div class="dropdown-menu" [class.show]="showDropdown">
-            <ng-container *ngIf="activeTab === 'tenant'">
-              <div class="dropdown-item" (click)="selectFilter('Matching')">
-                <i class="fa-solid fa-check"></i>
-                <span>Matching</span>
-                <span class="badge2">{{ tenantPropertySameSize }}</span>
-              </div>
-              <div class="dropdown-item" (click)="selectFilter('Non-Matching')">
-                <i class="fa-solid fa-times"></i>
-                <span>Non-Matching</span>
-                <span class="badge2">{{ tenantPropertyDifferentSize }}</span>
-              </div>
-            </ng-container>
-            <ng-container *ngIf="activeTab === 'common'">
-              <div class="dropdown-item" (click)="selectFilter('Matching')">
-                <i class="fa-solid fa-check"></i>
-                <span>Matching</span>
-                <span class="badge2">{{ nonTenantPropertySameSize }}</span>
-              </div>
-              <div class="dropdown-item" (click)="selectFilter('Non-Matching')">
-                <i class="fa-solid fa-times"></i>
-                <span>Non-Matching</span>
-                <span class="badge2">{{ nonTenantPropertyDifferentSize }}</span>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-      </div> -->
-
     </div>
-
-    <div
-      *ngIf="!loading && searchQuery && filterMatchingProperties.length === 0 && filteredNonMatchingProperties.length === 0"
-      class="no-results">
-      <div class="no-results-content text-center">
-        <i class="fas fa-search fa-3x"></i>
-        <h4 class="mt-3">No Results Found</h4>
-        <p class="text-muted">
-          We couldn’t find anything matching "<span class="highlight">{{ searchQuery }}</span>".
-        </p>
-        <button class="btn btn-primary btn-try-again" (click)="clearSearch()">Try Again</button>
-      </div>
-    </div>
-
 
     <div *ngIf="filteredMatchingProperties.length > 0 && activeTab === 'tenant' && selectedFilter === 'Matching'"
       class="table-responsive">
@@ -174,7 +124,7 @@
               <td class="" [ngClass]="{'not-available':entry[tenantEnv1] === 'not available',
               'devops-input': entry[tenantEnv1] === 'DEVOPS_INPUT',
               'ops-input': entry[tenantEnv1] === 'OPS_INPUT'
-           }" (contextmenu)="onRightClickForCopy($event, entry, tenantEnv1)" >
+           }" (contextmenu)="onRightClickForCopy($event, entry, tenantEnv1)">
 
                 <span [ngClass]="{
                   'not-available-inside':entry[tenantEnv1] === 'not available',
@@ -188,17 +138,17 @@
           </tbody>
         </table>
         <div *ngIf="showContextMenuCopy" class="context-menu" [style.left.px]="menuPosition.x"
-        [style.top.px]="menuPosition.y">
-        <ul>
-          <li (click)="copyEntry2()" data-tooltip="Copy the property value">
-            <i class="fas fa-copy"></i> Copy
-          </li>
-        </ul>
-      </div>
+          [style.top.px]="menuPosition.y">
+          <ul>
+            <li (click)="copyEntry2()" data-tooltip="Copy the property value">
+              <i class="fas fa-copy"></i> Copy
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="pagination-container d-flex justify-content-between align-items-center mt-3 mb-3">
         <div class="total-records">
-          Total Records: <strong>{{matchingPropertySize}}</strong>
+          Total Records: <strong>{{matchingPropertySize2}}</strong>
         </div>
 
         <div class="pagination-controls d-flex align-items-center">
@@ -262,17 +212,15 @@
               <td (contextmenu)="onRightClickForCopy($event, entry, 'propertyKey')"
                 [innerHTML]="highlightText(entry.propertyKey || '-', searchQuery)"></td>
 
-              <td class="" (contextmenu)="onRightClick($event, entry, tenantEnv1, envTenant1)" [ngClass]="{'not-available':entry[tenantEnv1] === 'not available',
+              <td class="" (contextmenu)="entry[tenantEnv1] === 'not available' ? onRightClickAdd($event,entry,tenantEnv1,envTenant1) : onRightClick($event, entry, tenantEnv1, envTenant1)" [ngClass]="{'not-available':entry[tenantEnv1] === 'not available',
               'devops-input': entry[tenantEnv1] === 'DEVOPS_INPUT',
               'ops-input': entry[tenantEnv1] === 'OPS_INPUT',
-              'unknown-input':entry[tenantEnv1] === 'UNKNOWN'
            }">
 
                 <span [ngClass]="{
   'not-available-inside':entry[tenantEnv1] === 'not available',
   'devops-input-inside': entry[tenantEnv1]== 'DEVOPS_INPUT',
 'ops-input-inside': entry[tenantEnv1] === 'OPS_INPUT',
-'unknown-input-inside':entry[tenantEnv1] === 'UNKNOWN'
 }" [innerHTML]="highlightText(entry[tenantEnv1] === 'not available' ? 'MISSING_KEY' : entry[tenantEnv1] || '-', searchQuery)"></span>
               </td>
 
@@ -290,16 +238,14 @@
                       entry[tenantEnv1]
                     )" style="color: red;"></i>
               </td>
-              <td class="" (contextmenu)="onRightClick($event, entry, tenantEnv2,envTenant2)" [ngClass]="{'not-available':entry[tenantEnv2] === 'not available',
+              <td class="" (contextmenu)="entry[tenantEnv2] === 'not available' ? onRightClickAdd($event,entry,tenantEnv2,envTenant2) : onRightClick($event, entry, tenantEnv2,envTenant2)" [ngClass]="{'not-available':entry[tenantEnv2] === 'not available',
               'devops-input': entry[tenantEnv2] === 'DEVOPS_INPUT',
               'ops-input': entry[tenantEnv2] === 'OPS_INPUT',
-              'unknown-input':entry[tenantEnv2] === 'UNKNOWN'
            }">
                 <span [ngClass]="{
                   'not-available-inside':entry[tenantEnv2] === 'not available',
                   'devops-input-inside': entry[tenantEnv2]== 'DEVOPS_INPUT',
       'ops-input-inside': entry[tenantEnv2] === 'OPS_INPUT',
-      'unknown-input-inside':entry[tenantEnv2] === 'UNKNOWN'
               }"
                   [innerHTML]="highlightText(entry[tenantEnv2] === 'not available' ? 'MISSING_KEY' : entry[tenantEnv2] || '-', searchQuery)"></span>
               </td>
@@ -320,18 +266,23 @@
         <div *ngIf="showContextMenuCopy" class="context-menu" [style.left.px]="menuPosition.x"
           [style.top.px]="menuPosition.y">
           <ul>
-            <!-- <li (click)="editEntry()" data-tooltip="Edit this property">
-                    <i class="fas fa-edit"></i> Edit
-                </li> -->
             <li (click)="copyEntry2()" data-tooltip="Copy the property value">
               <i class="fas fa-copy"></i> Copy
             </li>
           </ul>
         </div>
+        <div *ngIf="showContextMenuAdd" class="context-menu" [style.left.px]="menuPosition.x"
+            [style.top.px]="menuPosition.y">
+            <ul>
+                <li (click)="addProperty2()" data-tooltip="Edit this property">
+                    <i class="fas fa-edit"></i> Add
+                </li>
+            </ul>
+        </div>
       </div>
       <div class="pagination-container d-flex justify-content-between align-items-center mt-3 mb-3">
         <div class="total-records">
-          Total Records: <strong>{{nonMatchingPropertySize}}</strong>
+          Total Records: <strong>{{nonMatchingPropertySize2}}</strong>
         </div>
 
         <div class="pagination-controls d-flex align-items-center">
@@ -375,5 +326,51 @@
       </div>
     </div> -->
 
+  </div>
+</div>
+
+<div
+  *ngIf="!loading && searchQuery && filterMatchingProperties.length === 0 && filteredNonMatchingProperties.length === 0"
+  class="no-results">
+  <div class="no-results-content text-center">
+    <i class="fas fa-search fa-3x"></i>
+    <h4 class="mt-3">No Results Found</h4>
+    <p class="text-muted">
+      We couldn’t find anything matching "<span class="highlight">{{ searchQuery }}</span>".
+    </p>
+    <button class="btn btn-primary btn-try-again" (click)="clearSearch()">Try Again</button>
+  </div>
+</div>
+
+
+<div class="backdrop" *ngIf="showSidebar" (click)="toggleInfoSidebar()">
+</div>
+
+
+<div class="sidebar-container" [class.open]="showSidebar">
+  <div class="sidebar-header">
+    <h4 class="sidebar-title">Page Tips & Info</h4>
+    <i class="fas fa-times close-icon" (click)="toggleInfoSidebar()"></i>
+  </div>
+  <div class="sidebar-body">
+    <div class="sidebar-tip">
+      <i class="fas fa-search tip-icon"></i>
+      <p><strong>Tip:</strong> Use the Compare by Tenant tool to categorize properties as matching or non-matching by tenant. <a href="/faq/comparison-guide" class="learn-more-link" target="_blank" rel="noopener noreferrer">Learn More</a></p>
+    </div>
+
+    <div class="sidebar-tip">
+      <i class="fas fa-check-circle tip-icon"></i>
+      <p><strong>Matching vs. Non-Matching Properties:</strong> Matching properties have identical values; non-matching ones require action. <a href="/comparison-options" class="learn-more-link">Learn More</a></p>
+    </div>
+
+    <div class="sidebar-tip">
+      <i class="fas fa-tools tip-icon"></i>
+      <p><strong>Non-Matching Property Actions:</strong> Edit, transfer, or copy non-matching properties to align with others. <a href="/property-actions" class="learn-more-link">Learn More</a></p>
+    </div>
+
+    <div class="sidebar-tip">
+      <i class="fas fa-id-badge tip-icon"></i>
+      <p><strong>Tenant Placeholder:</strong> Tenant details are displayed via a placeholder, hiding all tenant data at once. <a href="/tenant-placeholder-info" class="learn-more-link">Learn More</a></p>
+    </div>
   </div>
 </div>

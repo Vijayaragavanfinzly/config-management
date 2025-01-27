@@ -2,17 +2,22 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
       <li class="breadcrumb-item">
-        <a [routerLink]="['/tenants']" class="breadcrumb-link" matTooltip="Navigate to Tenant Page" matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip">
+        <a [routerLink]="['/properties']" class="breadcrumb-link" matTooltip="Navigate to Tenant Page"
+          matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip">
           <i class="fas fa-link mr-2"></i> TENANTS
         </a>
       </li>
       <li class="breadcrumb-item">
-        <a [routerLink]="['/tenants', tenant]" [routerLinkActive]="['active']" class="breadcrumb-link" matTooltip="Navigate to Environment Page" matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip">
+        <a [routerLink]="['/properties', tenant]" [routerLinkActive]="['active']" class="breadcrumb-link"
+          matTooltip="Navigate to Environment Page" matTooltipShowDelay="300" matTooltipPosition="above"
+          matTooltipClass="custom-tooltip">
           {{ tenant | uppercase}}
         </a>
       </li>
       <li class="breadcrumb-item active">
-        <a [routerLink]="['/tenants', tenant, environment]" [routerLinkActive]="['active']" class="breadcrumb-link" matTooltip="All properties associated with the selected environment are accessible here." matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip">
+        <a [routerLink]="['/properties', tenant, environment]" [routerLinkActive]="['active']" class="breadcrumb-link"
+          matTooltip="All properties associated with the selected environment are accessible here."
+          matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip">
           {{ environment | uppercase}}
         </a>
       </li>
@@ -23,7 +28,8 @@
 <div *ngIf="!loading && filteredProperties.length > 0" class="container mt-5 search-bar">
   <div class="d-flex justify-content-between align-items-center">
     <div class="drawer-container">
-      <i class="fas fa-search advanced-search-icon ms-4" (click)="toggleDrawer()" matTooltip="Advanced Search" matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+      <i class="fas fa-search advanced-search-icon ms-4" (click)="toggleDrawer()" matTooltip="Advanced Search"
+        matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip"
         aria-label="Advanced Search" role="button"></i>
       <div class="drawer" [class.open]="isDrawerOpen">
         <div class="drawer-header">
@@ -70,18 +76,21 @@
   </div>
   <div class="drawer-backdrop" *ngIf="isDrawerOpen" (click)="toggleDrawer()"></div>
   <div class="action-buttons d-flex align-items-center">
-    <button class="btn btn-sm action-btn add-btn" (click)="addProperty()" [disabled]="loading"
-      aria-label="Add New Environment" role="button" [matTooltip]="'Click to create new Properties / Configurations'"
-      matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip">
+    <button *ngIf="selectedIds.length == 0" class="btn btn-sm action-btn add-btn" (click)="addProperty()"
+      [disabled]="loading" aria-label="Add New Environment" role="button"
+      [matTooltip]="'Click to create new Properties / Configurations'" matTooltipShowDelay="300"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip">
       <i class="fas fa-plus"></i> Add
     </button>
-    <button class="btn btn-sm action-btn ms-2 add-btn export-btn" (click)="exportAllData()" [disabled]="loading"
-      aria-label="Export Properties" role="button" [matTooltip]="'Click to export selected properties as SQL INSERT query'" matTooltipShowDelay="300"
+    <button *ngIf="selectedIds.length == 0" class="btn btn-sm action-btn ms-2 add-btn export-btn"
+      (click)="exportAllData()" [disabled]="loading" aria-label="Export Properties" role="button"
+      [matTooltip]="'Click to export selected properties as SQL INSERT query'" matTooltipShowDelay="300"
       matTooltipPosition="above" matTooltipClass="custom-tooltip">
       <i class="fas fa-file-export"></i> Export
     </button>
-    <button *ngIf="selectedIds.length > 0" class="btn btn-sm action-btn ms-2 add-btn export-btn delete-btn" (click)="deleteSelectedProperties()" [disabled]="loading"
-      aria-label="Export Properties" role="button" [matTooltip]="'Click to export selected properties as SQL DELETE query'" matTooltipShowDelay="300"
+    <button *ngIf="selectedIds.length > 0" class="btn btn-sm action-btn ms-2 add-btn export-btn delete-btn"
+      (click)="deleteSelectedProperties()" [disabled]="loading" aria-label="Export Properties" role="button"
+      [matTooltip]="'Click to export selected properties as SQL DELETE query'" matTooltipShowDelay="300"
       matTooltipPosition="above" matTooltipClass="custom-tooltip">
       <i class="fas fa-trash-alt"></i> Delete
     </button>
@@ -99,7 +108,8 @@
           <tr>
             <th class="text-center" style="width: 50px;">
               <input type="checkbox" id="select-all" (change)="handleSelectAll($event)" [checked]="isAllSelected" />
-              <label for="select-all" [matTooltip]="'Select/Deselect All For Export'" matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip"></label>
+              <label for="select-all" [matTooltip]="'Select/Deselect All For Export'" matTooltipShowDelay="300"
+                matTooltipPosition="above" matTooltipClass="custom-tooltip"></label>
             </th>
             <th *ngFor="let column of columns; let i = index"
               [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}" class="text-center">
@@ -117,7 +127,7 @@
             </td>
             <!-- {{ (currentPage - 1) * pageSize + i + 1 }}. &nbsp; -->
             <td class="property-cell">{{ property.propKey }}</td>
-            <td >{{ property.value }}</td>
+            <td>{{ property.value }}</td>
             <!-- <td class="text-center" [matTooltip]="property.release" matTooltipShowDelay="300" matTooltipPosition="above"
               matTooltipClass="custom-tooltip">{{property.release}}</td> -->
             <td class="text-center">
@@ -125,8 +135,6 @@
                 matTooltipPosition="above" matTooltipClass="custom-tooltip" (click)="editProperty(property)"></i>
               <i class="fas fa-trash-alt delete ms-3" [matTooltip]="'Delete'" matTooltipShowDelay="300"
                 matTooltipPosition="above" matTooltipClass="custom-tooltip" (click)="deleteProperty(property.id)"></i>
-              <i class="fas fa-info-circle audit ms-3" [matTooltip]="'Audit'" matTooltipShowDelay="300"
-                matTooltipPosition="above" matTooltipClass="custom-tooltip"></i>
 
             </td>
           </tr>

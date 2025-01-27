@@ -20,9 +20,9 @@ export class ExportService {
     return this.http.post(`${this.baseUrl}/exportSelectedProperties/${tenant}/${environment}`, selectedIds , { responseType: 'blob' });
   }
 
-  exportUpdateQueryForAll():Observable<any>{
-      return this.http.get(`${this.baseUrl}/exportsql`, { responseType: 'blob' });
-  }
+  // exportUpdateQueryForAll():Observable<any>{
+  //     return this.http.get(`${this.baseUrl}/exportsql`, { responseType: 'blob' });
+  // }
 
   exportSingleUpdateQuery(env:string):Observable<any>{
     return this.http.get(`${this.baseUrl}/export/${env}`, {responseType: 'blob'});
@@ -33,6 +33,15 @@ export class ExportService {
   }
 
   exportAllDataForSpecific(tenant:string,env:string):Observable<any>{
-    return this.http.get(`${this.baseUrl}/export/property/${tenant}/${env}`,{responseType:'blob'});
+    return this.http.get(`${this.baseUrl}/export/property/${tenant}/${env}`);
+  }
+  exportingAllSpecificData(tenant:string,env:string):Observable<any>{
+    return this.http.get(`${this.baseUrl}/generate/property/${tenant}/${env}`,{responseType:'blob'});
+  }
+  isAnyDataModifiedForEnv(environment:string):Observable<any>{
+    return this.http.get(`${this.baseUrl}/export/${environment}`);
+  }
+  exportSpecifiedEnv(environment:string):Observable<any>{
+    return this.http.get(`${this.baseUrl}/generate/${environment}`,{responseType:'blob'});
   }
 }

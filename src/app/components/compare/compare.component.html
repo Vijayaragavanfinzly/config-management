@@ -1,9 +1,9 @@
 <div class="container mt-3">
   <nav aria-label="breadcrumb">
-    <ol class="breadcrumb custom-breadcrumb p-3 rounded">
-      <li class="breadcrumb-item active">
-        <a [routerLink]="['/compare']" class="breadcrumb-link active" [routerLinkActive]="['active']">
-          <i class="fas fa-link mr-2"></i> COMPARE
+    <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
+      <li class="breadcrumb-item" [routerLinkActive]="['active']">
+        <a [routerLink]="['/compare']" class="breadcrumb-link">
+           COMPARE
         </a>
       </li>
     </ol>
@@ -12,32 +12,43 @@
 
 <div class="container mt-5">
   <div class="row justify-content-center">
-
-    <div class="col-md-5 m-3">
-      <div class="card compare-card tenant-card shadow-lg">
-        <div class="card-body text-center p-5">
-          <div class="icon-container mb-4">
-            <i class="fas fa-users fa-3x"></i>
+    <div class="col-md-4 col-sm-12 mb-4">
+      <div class="card minimal-card">
+        <div class="card-body text-center">
+          <div class="icon-container mb-3">
+            <i class="fas fa-users fa-2x"></i>
           </div>
-          <h4 class="font-weight-bold mb-3">Compare by Tenants</h4>
-          <p class="card-text mb-4">Choose two tenants and their respective environments to compare configurations and properties.</p>
-          <a [routerLink]="'/compare/compareByTenant'" class="btn btn-primary w-100">Tenant Comparison</a>
+          <h5 class="card-title">Compare by Tenants</h5>
+          <p class="card-text">Select two tenants to compare configurations and properties.</p>
+          <a [routerLink]="'/compare/compareByTenant'" class="btn btn-primary">Tenant Comparison</a>
         </div>
       </div>
     </div>
 
-    <div class="col-md-5 m-3">
-      <div class="card compare-card environment-card shadow-lg">
-        <div class="card-body text-center p-5">
-          <div class="icon-container mb-4">
-            <i class="fas fa-cogs fa-3x"></i>
+    <div class="col-md-4 col-sm-12 mb-4">
+      <div class="card minimal-card">
+        <div class="card-body text-center">
+          <div class="icon-container mb-3">
+            <i class="fas fa-cogs fa-2x"></i>
           </div>
-          <h4 class="font-weight-bold mb-3">Compare by Environments</h4>
-          <p class="card-text mb-4">Choose two environments to compare configurations and properties.</p>
-          <a [routerLink]="'/compare/compareByEnvironment'" class="btn btn-primary w-100">Environment Comparison</a>
+          <h5 class="card-title">Compare by Environments</h5>
+          <p class="card-text">Choose two environments to compare their configurations and properties.</p>
+          <a [routerLink]="'/compare/compareByEnvironment'" class="btn btn-primary">Environment Comparison</a>
         </div>
       </div>
     </div>
 
+    <div class="col-md-4 col-sm-12 mb-4">
+      <div class="card minimal-card">
+        <div class="card-body text-center">
+          <div class="icon-container mb-3">
+            <i class="fas fa-search fa-2x"></i>
+          </div>
+          <h5 class="card-title">Find Missing Keys</h5>
+          <p class="card-text">Identify missing keys in tenant environments to improve configuration consistency.</p>
+          <a [routerLink]="'/compare/findDelta'" class="btn btn-primary">Find Delta</a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

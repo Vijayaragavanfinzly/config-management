@@ -25,6 +25,7 @@ export class AddPropertyCompareComponent implements OnInit{
       private dialogRef: MatDialogRef<AddPropertyCompareComponent>,
       @Inject(MAT_DIALOG_DATA) public data: { application ?: string[]; configId?:string; env?:string; fieldGroup?: string[],target?:string[],type?:string[],id?:string;
         isEdit?:string;label?:string;profile?:string;propKey?:string;propertyType?:string;secret?:string;tenant?:string;tenantEnvId?:string;value?:string;
+        lastUpdatedBy?:string;
        }
     ) {
       this.propertyForm = this.fb.group({
@@ -34,8 +35,8 @@ export class AddPropertyCompareComponent implements OnInit{
         value: ['', Validators.required],
         application:['',Validators.required],
         fieldGroup:['',Validators.required],
-        propertyType:['',Validators.required],
         label:['',Validators.required],
+        lastUpdatedBy:['',Validators.required],
       });
     }
   

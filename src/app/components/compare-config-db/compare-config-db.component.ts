@@ -12,17 +12,16 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PropertyService } from '../../services/property-service/property.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmCopyPropertyDialogComponent } from '../miscellaneous/dialogs/confirm-copy-property-dialog/confirm-copy-property-dialog.component';
-import { UpdateComparePropertyDialogComponent } from '../miscellaneous/dialogs/update-compare-property-dialog/update-compare-property-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SpinnerComponent } from "../miscellaneous/spinner/spinner.component";
 import { ComparisonDialogComponent } from '../miscellaneous/dialogs/comparison-dialog/comparison-dialog.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { EditCompareComponent } from '../miscellaneous/dialogs/edit-compare/edit-compare.component';
 import { ApplicationService } from '../../services/application-service/application.service';
-import { AddPropertyDialogComponent } from '../miscellaneous/dialogs/add-property-dialog/add-property-dialog.component';
 import { AddPropertyCompareComponent } from '../miscellaneous/dialogs/add-property-compare/add-property-compare.component';
-import { PropertyDialogComponent } from '../miscellaneous/dialogs/edit-property-dialog/edit-property-dialog.component';
 import { EditPropertyCompareComponent } from '../miscellaneous/dialogs/edit-property-compare/edit-property-compare.component';
+import { SuccessSnackbarComponent } from '../miscellaneous/snackbar/success-snackbar/success-snackbar.component';
+import { ErrorSnackbarComponent } from '../miscellaneous/snackbar/error-snackbar/error-snackbar.component';
 @Component({
   selector: 'app-compare-config-db',
   standalone: true,
@@ -126,6 +125,7 @@ export class CompareConfigDbComponent implements OnInit {
 
   activeTab: string = 'common';
   showFilter: boolean = false;
+  previousQuery: string = '';
   searchQuery: string = '';
   showSearchBar: boolean = false;
 
@@ -301,9 +301,12 @@ export class CompareConfigDbComponent implements OnInit {
     if (this.selectedEnv1 && this.selectedEnv2) {
       console.log('Comparing environments:', this.selectedEnv1, this.selectedEnv2);
       if (this.selectedEnv1 === this.selectedEnv2) {
-        this.snackBar.open('Both Environments cannot be same', 'Close', {
+        this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+          data: {
+            message: `Both Environments cannot be same`,
+            icon: 'check-circle'
+          },
           duration: 3000,
-          panelClass: ['custom-toast', 'toast-error'],
           horizontalPosition: 'center',
           verticalPosition: 'top',
         });
@@ -416,20 +419,17 @@ export class CompareConfigDbComponent implements OnInit {
           }
           console.log('Show Overlay:', this.showOverlayHint);
 
-          // if (this.showOverlayHint) {
-          //   setTimeout(() => {
-          //     this.showOverlayHint = false;
-          //   }, 10000);
-          // }          
-
           this.currentPage = 1;
           this.updatePagination();
         },
         error: (err) => {
           console.error('Error comparing environments:', err);
-          this.snackBar.open('Error while comparing environments', 'Close', {
+          this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+            data: {
+              message: `${err}`,
+              icon: 'check-circle'
+            },
             duration: 3000,
-            panelClass: ['custom-toast', 'toast-error'],
             horizontalPosition: 'center',
             verticalPosition: 'top',
           });
@@ -439,9 +439,12 @@ export class CompareConfigDbComponent implements OnInit {
         }
       });
     } else {
-      this.snackBar.open('Please fill all the required fields.', 'Close', {
+      this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+        data: {
+          message: `Please fill all the required fields.`,
+          icon: 'check-circle'
+        },
         duration: 3000,
-        panelClass: ['custom-toast', 'toast-error'],
         horizontalPosition: 'center',
         verticalPosition: 'top',
       });
@@ -562,9 +565,6 @@ export class CompareConfigDbComponent implements OnInit {
 
   getFirstTenantValue(entry: any): string {
     for (const key in entry) {
-      // if (key.startsWith(this.selectedEnv1) && entry[key]) {
-      //   return entry[key];
-      // }
       if (key.startsWith(`${this.selectedEnv1}-`) && entry[key]) {
         return entry[key].value;
       }
@@ -667,9 +667,12 @@ export class CompareConfigDbComponent implements OnInit {
     this.tenantPropertyDifferentSize = 0;
 
     this.searchQuery = ''
-    this.snackBar.open('Comparison cleared successfully!', 'Close', {
+    this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+      data: {
+        message: `Comparison Cleared Successfully !`,
+        icon: 'check-circle'
+      },
       duration: 3000,
-      panelClass: ['custom-toast', 'toast-success'],
       horizontalPosition: 'center',
       verticalPosition: 'top',
     });
@@ -678,9 +681,24 @@ export class CompareConfigDbComponent implements OnInit {
   openConfirmationDialog(newValue: string, targetEnvironment: string, oldValue: string, propertyKey: string) {
     console.log(newValue);
     if (newValue === null) {
-      this.snackBar.open("Can't assign a empty value", 'Close', {
+      this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+        data: {
+          message: `Transfer cannot proceed as one of the properties is missing a value.`,
+          icon: 'x-circle'
+        },
         duration: 3000,
-        panelClass: ['custom-toast', 'toast-error'],
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
+      return;
+    }
+    if (newValue === 'not available' || oldValue === 'not available') {
+      this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+        data: {
+          message: `Transfer cannot proceed as one of the properties is missing a key.`,
+          icon: 'x-circle'
+        },
+        duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'top',
       });
@@ -706,16 +724,22 @@ export class CompareConfigDbComponent implements OnInit {
             if (response.statusCode === 201) {
               console.log('Database updated successfully');
               this.compareEnvironments();
-              this.snackBar.open('Configuration updated successfully!', 'Close', {
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `Property Updated Successfully !`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-success'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
             } else {
-              this.snackBar.open('Update Failed! Try Again!', 'Close', {
+              this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+                data: {
+                  message: `${response.message}`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-error'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
@@ -723,9 +747,12 @@ export class CompareConfigDbComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error updating database:', err)
-            this.snackBar.open('Update Failed! Try Again!', 'Close', {
+            this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+              data: {
+                message: `Update Failed! Try Again.`,
+                icon: 'check-circle'
+              },
               duration: 3000,
-              panelClass: ['custom-toast', 'toast-error'],
               horizontalPosition: 'center',
               verticalPosition: 'top',
             });
@@ -742,18 +769,24 @@ export class CompareConfigDbComponent implements OnInit {
     const oldValue = entry[source].value;
     const newValue = entry[destination].value;
     if (newValue === null) {
-      this.snackBar.open("Can't assign a empty value", 'Close', {
+      this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+        data: {
+          message: `Transfer cannot proceed as one of the properties is missing a value.`,
+          icon: 'x-circle'
+        },
         duration: 3000,
-        panelClass: ['custom-toast', 'toast-error'],
         horizontalPosition: 'center',
         verticalPosition: 'top',
       });
       return;
     }
     if (oldValue === 'not available' || newValue === 'not available') {
-      this.snackBar.open("Missing Key cannot be transfered!", 'Close', {
+      this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+        data: {
+          message: `Transfer cannot proceed as one of the properties is missing a key.`,
+          icon: 'x-circle'
+        },
         duration: 3000,
-        panelClass: ['custom-toast', 'toast-error'],
         horizontalPosition: 'center',
         verticalPosition: 'top',
       });
@@ -785,22 +818,24 @@ export class CompareConfigDbComponent implements OnInit {
         this.propertyService.updateProperty(payload).subscribe({
           next: (response) => {
             if (response.statusCode == 201) {
-              this.snackBar.open('Configuration updated Successfully!', 'Close', {
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `Property Transfered Successfully !`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-success'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
-              console.log(response.message);
-              console.log('Property updated:');
-              // this.selectedEntry[this.selectedColumn].value = result.value.trim();
-              // this.loadPropertiesForTenants();
-              // this.clearSearch();
+              this.compareEnvironments();
             }
             else {
-              this.snackBar.open(response.message, 'Close', {
+              this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+                data: {
+                  message: `${response.message}`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-error'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
@@ -808,43 +843,18 @@ export class CompareConfigDbComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error updating property:', err);
+            this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+              data: {
+                message: `${err}`,
+                icon: 'check-circle'
+              },
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
           }
         });
       }
-
-      // if (result) {
-      //   this.compareService.editInCommonCompare(payload).subscribe({
-      //     next: (response) => {
-      //       console.log(response);
-      //       if (response.statusCode === 201) {
-      //         console.log('Database updated successfully');
-      //         this.compareEnvironments();
-      //         this.snackBar.open('Configuration updated successfully!', 'Close', {
-      //           duration: 3000,
-      //           panelClass: ['custom-toast', 'toast-success'],
-      //           horizontalPosition: 'center',
-      //           verticalPosition: 'top',
-      //         });
-      //       } else {
-      //         this.snackBar.open('Update Failed! Try Again!', 'Close', {
-      //           duration: 3000,
-      //           panelClass: ['custom-toast', 'toast-error'],
-      //           horizontalPosition: 'center',
-      //           verticalPosition: 'top',
-      //         });
-      //       }
-      //     },
-      //     error: (err) => {
-      //       console.error('Error updating database:', err)
-      //       this.snackBar.open('Update Failed! Try Again!', 'Close', {
-      //         duration: 3000,
-      //         panelClass: ['custom-toast', 'toast-error'],
-      //         horizontalPosition: 'center',
-      //         verticalPosition: 'top',
-      //       });
-      //     }
-      //   });
-      // }
     });
 
 
@@ -867,158 +877,29 @@ export class CompareConfigDbComponent implements OnInit {
     })
   }
 
-
-  editProperty(entry: any, propertyValue: string) {
-    console.log(entry);
-    const property = entry[propertyValue];
-
-    const tenant = propertyValue === 'value1' ? this.selectedTenant1 : this.selectedTenant2;
-    const environment = propertyValue === 'value1' ? this.selectedEnv1 : this.selectedEnv2;
-
-    const dialogRef = this.dialog.open(UpdateComparePropertyDialogComponent, {
-      width: '600px',
-      data: {
-        propertyKey: propertyValue === 'value1' ? entry.propertyKey1 : entry.propertyKey2,
-        propertyValue: property,
-        tenant: propertyValue === 'value1' ? this.selectedTenant1 : this.selectedTenant2,
-        environment: propertyValue === 'value1' ? this.selectedEnv1 : this.selectedEnv2,
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((updatedData) => {
-      if (updatedData) {
-        console.log("hi");
-
-        console.log(updatedData);
-        entry[propertyValue] = updatedData.propertyValue;
-        console.log('Updated entry:', entry);
-        const payload = {
-          tenant,
-          environment,
-          propertyKey: propertyValue === 'value1' ? entry.propertyKey1 : entry.propertyKey2,
-          propertyValue: updatedData.propertyValue,
-        };
-        console.log("Edit is in progress");
-
-        this.compareService.editProperty(payload).subscribe({
-          next: (response) => {
-            console.log(response);
-
-            console.log('Database updated successfully');
-            this.compareEnvironments();
-            this.snackBar.open('Configuration updated successfully!', 'Close', {
-              duration: 3000,
-              panelClass: ['custom-toast', 'toast-success'],
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-            });
-          },
-          error: (err) => {
-            console.error('Error updating database:', err)
-            this.snackBar.open('Update Failed! Try Again!', 'Close', {
-              duration: 3000,
-              panelClass: ['custom-toast', 'toast-error'],
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-            });
-          }
-        });
-      }
-    });
-
-  }
-
-  editRemainingDifferentProperty(entry: any, propertyValue: string) {
-    console.log(entry);
-    const property = entry[propertyValue];
-
-    const tenant = propertyValue === 'PropertyValue1' ? this.selectedTenant1 : this.selectedTenant2;
-    const environment = propertyValue === 'PropertyValue1' ? this.selectedEnv1 : this.selectedEnv2;
-
-    const dialogRef = this.dialog.open(UpdateComparePropertyDialogComponent, {
-      width: '600px',
-      data: {
-        propertyKey: entry.propertyKey,
-        propertyValue: property,
-        tenant: propertyValue === 'PropertyValue1' ? this.selectedTenant1 : this.selectedTenant2,
-        environment: propertyValue === 'PropertyValue1' ? this.selectedEnv1 : this.selectedEnv2,
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((updatedData) => {
-      if (updatedData) {
-        console.log("hi");
-
-        console.log(updatedData);
-        entry[propertyValue] = updatedData.propertyValue;
-        console.log('Updated entry:', entry);
-        const payload = {
-          tenant,
-          environment,
-          propertyKey: entry.propertyKey,
-          propertyValue: updatedData.propertyValue,
-        };
-        console.log("Edit is in progress");
-
-        this.compareService.editProperty(payload).subscribe({
-          next: (response) => {
-            console.log(response);
-
-            console.log('Database updated successfully');
-            this.compareEnvironments();
-            this.snackBar.open('Configuration updated successfully!', 'Close', {
-              duration: 3000,
-              panelClass: ['custom-toast', 'toast-success'],
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-            });
-          },
-          error: (err) => {
-            console.error('Error updating database:', err)
-            this.snackBar.open('Update Failed! Try Again!', 'Close', {
-              duration: 3000,
-              panelClass: ['custom-toast', 'toast-error'],
-              horizontalPosition: 'center',
-              verticalPosition: 'top',
-            });
-          }
-        });
-      }
-    });
-
-  }
-
-  // copyToClipboard(text: string): void {
-  //   navigator.clipboard.writeText(text).then(() => {
-  //     this.snackBar.open('Property Value Copied to clipoard!', 'Close', {
-  //       duration: 3000,
-  //       panelClass: ['custom-toast', 'toast-success'],
-  //       horizontalPosition: 'center',
-  //       verticalPosition: 'top',
-  //     });
-  //   }).catch(err => {
-  //     console.error('Unable to copy text: ', err);
-  //   });
-  // }
-
   handleSearchQueryChange(): void {
-
+    console.log("inside handleSearchQueryChange Method");
+    
     if (this.searchQuery.trim() === '') {
       this.resetFilteredResults();
       return;
     }
-    this.filterResults();
+    if (this.searchQuery !== this.previousQuery) {
+      this.previousQuery = this.searchQuery;
+      this.filterResults();
+    }
     this.currentPage = 1;
     this.updatePagination();
     this.loading = false;
   }
 
   private resetFilteredResults(): void {
+    console.log("inside resetFilteredResults Method");
     this.filteredTenantMatchingProperties = this.TenantBasedProperties.filter(entry => entry.issame.value === 'true');
     this.filteredTenantNonMatchingProperties = this.TenantBasedProperties.filter(entry => entry.issame.value === 'false');
     // property => property.issame.value === 'false'
-    this.filteredCommonMatchingProperties = this.CommonProperties.filter(entry => entry.isSame === true);
-    this.filteredCommonNonMaatchingProperties = this.CommonProperties.filter(entry => entry.isSame === false);
+    this.filteredCommonMatchingProperties = this.CommonProperties.filter(entry => entry.isSame.value === 'true');
+    this.filteredCommonNonMaatchingProperties = this.CommonProperties.filter(entry => entry.isSame.value === 'false');
     this.filteredPropertiesNotAssociated = this.propertiesNotAssociated;
     this.filteredPropertiesNotAssociated2 = this.propertiesNotAssociated2;
     this.currentPage = 1;
@@ -1030,7 +911,7 @@ export class CompareConfigDbComponent implements OnInit {
 
   filterResults(): void {
     const query = this.searchQuery.trim().toLowerCase();
-    console.log("Search Initiated");
+    console.log("Inside filterResults method");
 
     if (!query) {
       this.filteredTenantMatchingProperties = this.TenantBasedProperties.filter(entry => entry.issame.value === 'true');
@@ -1045,13 +926,17 @@ export class CompareConfigDbComponent implements OnInit {
       return;
     }
 
+    console.log(this.filteredCommonMatchingProperties);
 
     this.filteredCommonMatchingProperties = this.CommonProperties.filter(
-      entry => entry.isSame === true && this.matchQuery(entry, query)
+        entry => entry.isSame.value === 'true' && this.matchQuery(entry, query)
     );
 
+    console.log(this.filteredCommonMatchingProperties);
+    
+
     this.filteredCommonNonMaatchingProperties = this.CommonProperties.filter(
-      entry => entry.isSame === false && this.matchQuery(entry, query)
+      entry => entry.isSame.value === 'false' && this.matchQuery(entry, query)
     );
 
     this.filteredTenantMatchingProperties = this.TenantBasedProperties.filter(
@@ -1061,18 +946,36 @@ export class CompareConfigDbComponent implements OnInit {
       entry => entry.issame.value === 'false' && this.matchTenantQuery(entry, query)
     );
 
+    this.filteredPropertiesNotAssociated = this.propertiesNotAssociated.filter(
+      entry=> this.matchNotAssociated(entry,query)
+    );
+
+    this.filteredPropertiesNotAssociated2 = this.propertiesNotAssociated2.filter(
+      entry=>this.matchNotAssociated(entry,query)
+    );
+
     this.sizeOfCommonMatching = this.filteredCommonMatchingProperties.length;
     this.sizeOfCommonNonMatching = this.filteredCommonNonMaatchingProperties.length;
     this.sizeOfTenantMatching = this.filteredTenantMatchingProperties.length;
     this.sizeOfTenantNonMatching = this.filteredTenantNonMatchingProperties.length;
+
+    console.log(this.filteredCommonMatchingProperties);
+    
   }
 
   private matchQuery(entry: any, query: string): boolean {
     return (
-      (entry.propertyKey && entry.propertyKey.toLowerCase().includes(query)) ||
-      (entry.env1Value && entry.env1Value.toLowerCase().includes(query)) ||
-      (entry.env2Value && entry.env2Value.toLowerCase().includes(query))
+      (entry.propertyKey.key && entry.propertyKey.key.toLowerCase().includes(query)) ||
+      (entry.env1Value.value && entry.env1Value.value.toLowerCase().includes(query)) ||
+      (entry.env2Value.value && entry.env2Value.value.toLowerCase().includes(query))
     );
+  }
+
+  private matchNotAssociated(entry:any,query:string):boolean{
+    return (
+      (entry.prop_key && entry.prop_key.toLowerCase().includes(query)) ||
+      (entry.value && entry.value.toLowerCase().includes(query))
+    )
   }
 
   // private matchTenantQuery(entry: any, query: string): boolean {
@@ -1086,22 +989,29 @@ export class CompareConfigDbComponent implements OnInit {
   // }
 
   private matchTenantQuery(entry: any, query: string): boolean {
-    if (entry.propertykey.prop_key && entry.propertykey.prop_key.toLowerCase().includes(query)) {
+    // Check propertykey.prop_key for the query
+    if (
+      entry.propertykey?.prop_key &&
+      entry.propertykey.prop_key.toLowerCase().includes(query)
+    ) {
       return true;
     }
-
+  
+    // Check for keys starting with selectedEnv1 or selectedEnv2
     for (const key in entry) {
       if (
-        key.startsWith(this.selectedEnv1 || this.selectedEnv2) &&
-        entry[key] &&
+        (key.startsWith(this.selectedEnv1) || key.startsWith(this.selectedEnv2)) &&
+        entry[key]?.value &&
         entry[key].value.toLowerCase().includes(query)
       ) {
         return true;
       }
     }
-
+  
+    // If no matches found, return false
     return false;
   }
+  
 
   getActiveTabCount(): number {
     if (this.activeTab === 'tenant') {
@@ -1179,23 +1089,18 @@ export class CompareConfigDbComponent implements OnInit {
     this.activeTab = tab;
     this.currentPage = 1;
     this.updatePagination();
-    console.log(this.filteredTenantMatchingProperties);
-    console.log(this.filteredTenantNonMatchingProperties);
-    console.log(this.filteredCommonMatchingProperties);
-    console.log(this.filteredCommonNonMaatchingProperties);
-    console.log(this.filteredPropertiesNotAssociated);
-    console.log(this.filteredPropertiesNotAssociated2);
-
-
-
-
   }
 
   highlightText(text: string, query: string): any {
-    if (!query) return text;
-    const regex = new RegExp(`(${query})`, 'gi');
-    const highlighted = text.replace(regex, `<span class="highlight" style="background-color:yellow">$1</span>`);
-    return this.sanitizer.bypassSecurityTrustHtml(highlighted);
+    if (!text) return '';
+  
+    text = text.replace(/tenant_id/gi, `<span class="highlight" style="font-weight:bold; color:black">tenant_id</span>`);
+  
+    if (query) {
+      const regex = new RegExp(`(${query})`, 'gi');
+      text = text.replace(regex, `<span class="highlight" style="background-color:yellow">$1</span>`);
+    }
+    return this.sanitizer.bypassSecurityTrustHtml(text);
   }
 
   onRightClick(event: MouseEvent, entry: any, column: any): void {
@@ -1296,18 +1201,24 @@ export class CompareConfigDbComponent implements OnInit {
             if (response.statusCode === 201) {
               console.log(response);
               this.selectedEntry[this.selectedColumn.name].value = data.newValue;
-              this.snackBar.open('Updated Successfully!', 'Close', {
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `Updated Successfully !`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-success'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
             }
           },
           error: (err) => {
-            this.snackBar.open('Update Failed', 'Close', {
+            this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+              data: {
+                message: `${err}`,
+                icon: 'check-circle'
+              },
               duration: 3000,
-              panelClass: ['custom-toast', 'toast-error'],
               horizontalPosition: 'center',
               verticalPosition: 'top',
             });
@@ -1359,8 +1270,11 @@ export class CompareConfigDbComponent implements OnInit {
       tenant: tenant,
       tenantEnvId: this.selectedEntry[this.selectedColumn.name].tenant_env_id,
       value: this.selectedEntry[this.selectedColumn.name].value,
-
+      lastUpdatedBy: this.selectedEntry[this.selectedColumn.name].last_updated_by
     };
+
+    console.log(dialogConfig.data);
+    
 
     const dialogRef = this.dialog.open(EditPropertyCompareComponent, dialogConfig);
 
@@ -1380,6 +1294,7 @@ export class CompareConfigDbComponent implements OnInit {
           fieldGroup: result.fieldGroup,
           profile: env,
           propertyType: result.propertyType,
+          lastUpdatedBy:result.lastUpdatedBy,
           secret: this.selectedEntry[this.selectedColumn.name].secret,
           label: result.label,
           tenantEnvId: this.selectedEntry[this.selectedColumn.name].tenantEnvId,
@@ -1387,22 +1302,29 @@ export class CompareConfigDbComponent implements OnInit {
         this.propertyService.updateProperty(payload).subscribe({
           next: (response) => {
             if (response.statusCode == 201) {
-              this.snackBar.open('Configuration updated Successfully!', 'Close', {
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `Configuration Updated Successfully !`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-success'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
               console.log(response.message);
               console.log('Property updated:');
+              this.compareEnvironments();
               this.selectedEntry[this.selectedColumn.name].value = result.value.trim();
               // this.loadPropertiesForTenants();
               // this.clearSearch();
             }
             else {
-              this.snackBar.open(response.message, 'Close', {
+              this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+                data: {
+                  message: `${response.message}`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-error'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
@@ -1410,6 +1332,15 @@ export class CompareConfigDbComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error updating property:', err);
+            this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+              data: {
+                message: `${err}`,
+                icon: 'check-circle'
+              },
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
           }
         })
       }
@@ -1452,10 +1383,13 @@ export class CompareConfigDbComponent implements OnInit {
       propertyType: this.selectedEntry[this.selectedColumn].property_type,
       secret: this.selectedEntry[this.selectedColumn].secret,
       tenant: tenant,
-      tenantEnvId: this.selectedEntry[this.selectedColumn].tenant_env_id,
       value: this.selectedEntry[this.selectedColumn].value,
+      lastUpdatedBy: this.selectedEntry[this.selectedColumn].last_updated_by,
 
     };
+
+    console.log(dialogConfig.data);
+    
 
     const dialogRef = this.dialog.open(EditPropertyCompareComponent, dialogConfig);
 
@@ -1477,27 +1411,35 @@ export class CompareConfigDbComponent implements OnInit {
           propertyType: result.propertyType,
           secret: this.selectedEntry[this.selectedColumn].secret,
           label: result.label,
-          tenantEnvId: this.selectedEntry[this.selectedColumn].tenantEnvId,
+          lastUpdatedBy: result.lastUpdatedBy,
         };
+        console.log(payload);
         this.propertyService.updateProperty(payload).subscribe({
           next: (response) => {
             if (response.statusCode == 201) {
-              this.snackBar.open('Configuration updated Successfully!', 'Close', {
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `Configuration Updated Successfully !`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-success'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
               console.log(response.message);
               console.log('Property updated:');
               this.selectedEntry[this.selectedColumn].value = result.value.trim();
+              this.compareEnvironments();
               // this.loadPropertiesForTenants();
               // this.clearSearch();
             }
             else {
-              this.snackBar.open(response.message, 'Close', {
+              this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+                data: {
+                  message: `${response.message}`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-error'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
@@ -1505,6 +1447,15 @@ export class CompareConfigDbComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error updating property:', err);
+            this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+              data: {
+                message: `${err}`,
+                icon: 'check-circle'
+              },
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
           }
         });
       }
@@ -1548,18 +1499,24 @@ export class CompareConfigDbComponent implements OnInit {
             if (response.statusCode === 201) {
               console.log(response);
               this.selectedEntry[this.selectedColumn] = data.newValue;
-              this.snackBar.open('Updated Successfully!', 'Close', {
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `Updated Successfully !`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-success'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
             }
           },
           error: (err) => {
-            this.snackBar.open('Update Failed', 'Close', {
+            this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+              data: {
+                message: `Update Failed !`,
+                icon: 'check-circle'
+              },
               duration: 3000,
-              panelClass: ['custom-toast', 'toast-error'],
               horizontalPosition: 'center',
               verticalPosition: 'top',
             });
@@ -1585,14 +1542,26 @@ export class CompareConfigDbComponent implements OnInit {
     // console.log('Copy entry:', this.selectedEntry);
     const text = this.selectedEntry[this.selectedColumn.name].value;
     navigator.clipboard.writeText(text).then(() => {
-      this.snackBar.open('Copied to clipoard!', 'Close', {
+      this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+        data: {
+          message: `Copied to Clipboard Successfully !`,
+          icon: 'check-circle'
+        },
         duration: 3000,
-        panelClass: ['custom-toast', 'toast-success'],
         horizontalPosition: 'center',
         verticalPosition: 'top',
       });
     }).catch(err => {
       console.error('Unable to copy text: ', err);
+      this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+        data: {
+          message: `Unable to Copy ! Try Again.`,
+          icon: 'check-circle'
+        },
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
     });
     this.showContextMenu = false;
   }
@@ -1603,14 +1572,26 @@ export class CompareConfigDbComponent implements OnInit {
 
     const text = this.selectedEntry[this.selectedColumn].prop_key;
     navigator.clipboard.writeText(text).then(() => {
-      this.snackBar.open('Copied to clipoard!', 'Close', {
+      this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+        data: {
+          message: `Copied to Clipboard !`,
+          icon: 'check-circle'
+        },
         duration: 3000,
-        panelClass: ['custom-toast', 'toast-success'],
         horizontalPosition: 'center',
         verticalPosition: 'top',
       });
     }).catch(err => {
       console.error('Unable to copy text: ', err);
+      this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+        data: {
+          message: `${err}`,
+          icon: 'check-circle'
+        },
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
     });
     this.showContextMenuCopy = false;
   }
@@ -1630,14 +1611,26 @@ export class CompareConfigDbComponent implements OnInit {
     console.log(text);
 
     navigator.clipboard.writeText(text).then(() => {
-      this.snackBar.open('Copied to clipoard!', 'Close', {
+      this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+        data: {
+          message: `Copied to Clipboard !`,
+          icon: 'check-circle'
+        },
         duration: 3000,
-        panelClass: ['custom-toast', 'toast-success'],
         horizontalPosition: 'center',
         verticalPosition: 'top',
       });
     }).catch(err => {
       console.error('Unable to copy text: ', err);
+      this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+        data: {
+          message: `Unable to Copy ! Try Again.`,
+          icon: 'check-circle'
+        },
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
     });
     this.showContextMenuCopy = false;
   }
@@ -1679,7 +1672,7 @@ export class CompareConfigDbComponent implements OnInit {
       tenant: tenant,
       tenantEnvId: '',
       value: '',
-
+      lastUpdatedBy:'',
 
     };
 
@@ -1696,26 +1689,34 @@ export class CompareConfigDbComponent implements OnInit {
           application: result.application,
           fieldGroup: result.fieldGroup,
           profile: env,
-          propertyType: result.propertyType,
           secret: null,
           target: result.target,
+          lastUpdatedBy: result.lastUpdatedBy,
+          label:result.label
         };
         this.propertyService.addProperty(payload).subscribe({
           next: (response) => {
             console.log(response);
             if (response.statusCode === 200) {
               console.log("Property added successfully");
-              this.snackBar.open('Configuration added Successfully!', 'Close', {
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `Configuration Added Successfully !`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-success'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
               this.selectedEntry[this.selectedColumn.name].value = result.value.trim();
+              this.compareEnvironments();
             } else {
-              this.snackBar.open(response.message, 'Close', {
+              this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+                data: {
+                  message: `${response.message}`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-error'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
@@ -1726,6 +1727,15 @@ export class CompareConfigDbComponent implements OnInit {
             this.snackBar.open('Failed to create the configuration. Please try again.', 'Close', {
               duration: 3000,
               panelClass: ['custom-toast', 'toast-error'],
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
+            this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+              data: {
+                message: `Failed to create the configuration. Please try again.`,
+                icon: 'check-circle'
+              },
+              duration: 3000,
               horizontalPosition: 'center',
               verticalPosition: 'top',
             });
@@ -1773,7 +1783,7 @@ export class CompareConfigDbComponent implements OnInit {
       tenant: 'common',
       tenantEnvId: '',
       value: '',
-
+      lastUpdatedBy:'',
 
     };
 
@@ -1790,26 +1800,36 @@ export class CompareConfigDbComponent implements OnInit {
           application: result.application,
           fieldGroup: result.fieldGroup,
           profile: env,
-          propertyType: result.propertyType,
           secret: null,
           target: result.target,
+          lastUpdatedBy:result.lastUpdatedBy,
+          label:result.label
         };
+        console.log(payload);
+        
         this.propertyService.addProperty(payload).subscribe({
           next: (response) => {
             console.log(response);
             if (response.statusCode === 200) {
               console.log("Property added successfully");
-              this.snackBar.open('Configuration added Successfully!', 'Close', {
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `Configuration Added Successfully !`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-success'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
               this.selectedEntry[this.selectedColumn].value = result.value.trim();
+              this.compareEnvironments();
             } else {
-              this.snackBar.open(response.message, 'Close', {
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `${response.message}`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-error'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
@@ -1817,9 +1837,12 @@ export class CompareConfigDbComponent implements OnInit {
           },
           error: (err) => {
             console.log(err);
-            this.snackBar.open('Failed to create the configuration. Please try again.', 'Close', {
+            this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+              data: {
+                message: `Failed to create the configuration. Please try again.`,
+                icon: 'check-circle'
+              },
               duration: 3000,
-              panelClass: ['custom-toast', 'toast-error'],
               horizontalPosition: 'center',
               verticalPosition: 'top',
             });
@@ -1848,6 +1871,11 @@ export class CompareConfigDbComponent implements OnInit {
 
   hideOverlay1(): void {
     this.showOverlayHint1 = false;
+  }
+
+  showSidebar: boolean = false;
+  toggleInfoSidebar() {
+    this.showSidebar = !this.showSidebar;
   }
 
 }

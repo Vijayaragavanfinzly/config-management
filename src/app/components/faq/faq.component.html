@@ -35,8 +35,7 @@
 
     <div class="accordion-item">
       <h2 class="accordion-header" id="headingOne">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-          aria-expanded="true" aria-controls="collapseOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-controls="collapseOne" aria-expanded="false">
           <span class="accordion-icon"><i class="fas fa-question-circle"></i></span> What is Sync?
         </button>
       </h2>
@@ -50,14 +49,14 @@
     </div>
 
     <div class="accordion-item">
-      <h2 class="accordion-header" id="headingSix">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix"
-          aria-expanded="false" aria-controls="collapseSix">
+      <h2 class="accordion-header" id="headingTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+          aria-expanded="false" aria-controls="collapseTwo">
           <span class="accordion-icon"><i class="fas fa-question-circle"></i></span> What is the difference between
           Tenant-Based Property and Common Property?
         </button>
       </h2>
-      <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix"
+      <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
         data-bs-parent="#faqAccordion">
         <div class="accordion-body">
           Tenant-Based Properties are associated with a specific tenant, and their key usually contains a tenant's name.
@@ -67,13 +66,13 @@
     </div>
 
     <div class="accordion-item">
-      <h2 class="accordion-header" id="headingSeven">
+      <h2 class="accordion-header" id="headingThree">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-          data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+          data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
           <span class="accordion-icon"><i class="fas fa-question-circle"></i></span> What is the TENANT_ID placeholder?
         </button>
       </h2>
-      <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven"
+      <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
         data-bs-parent="#faqAccordion">
         <div class="accordion-body">
           The TENANT_ID placeholder is used to represent a tenant when listing all tenants is impractical. Instead of
@@ -82,14 +81,14 @@
       </div>
     </div>
     <div class="accordion-item">
-      <h2 class="accordion-header" id="headingEight">
+      <h2 class="accordion-header" id="headingFour">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-          data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+          data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
           <span class="accordion-icon"><i class="fas fa-question-circle"></i></span> How are Tenant-Based Properties
           identified?
         </button>
       </h2>
-      <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight"
+      <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
         data-bs-parent="#faqAccordion">
         <div class="accordion-body">
           Tenant-Based Properties are identified by the presence of a tenant name in the property key. If the key
@@ -99,14 +98,14 @@
     </div>
 
     <div class="accordion-item">
-      <h2 class="accordion-header" id="headingNine">
+      <h2 class="accordion-header" id="headingFive">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-          data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+          data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
           <span class="accordion-icon"><i class="fas fa-question-circle"></i></span> What happens if no tenant is
           specified in a property key?
         </button>
       </h2>
-      <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine"
+      <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
         data-bs-parent="#faqAccordion">
         <div class="accordion-body">
           If no tenant is specified in the property key, the property is considered a Common Property and applies to all
@@ -116,14 +115,14 @@
     </div>
 
     <div class="accordion-item">
-      <h2 class="accordion-header" id="headingTen">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen"
-          aria-expanded="false" aria-controls="collapseTen">
+      <h2 class="accordion-header" id="headingSix">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix"
+          aria-expanded="false" aria-controls="collapseSix">
           <span class="accordion-icon"><i class="fas fa-question-circle"></i></span> Why is TENANT_ID used instead of
           tenant names?
         </button>
       </h2>
-      <div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen"
+      <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix"
         data-bs-parent="#faqAccordion">
         <div class="accordion-body">
           TENANT_ID is used as a placeholder to simplify operations when there are many tenants. Instead of listing all
@@ -133,14 +132,14 @@
     </div>
 
     <div class="accordion-item">
-      <h2 class="accordion-header" id="headingEleven">
+      <h2 class="accordion-header" id="headingSeven">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-          data-bs-target="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven">
+          data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
           <span class="accordion-icon"><i class="fas fa-question-circle"></i></span> Can a property be both Tenant-Based
           and Common?
         </button>
       </h2>
-      <div id="collapseEleven" class="accordion-collapse collapse" aria-labelledby="headingEleven"
+      <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven"
         data-bs-parent="#faqAccordion">
         <div class="accordion-body">
           No, a property is either Tenant-Based or Common. Tenant-Based Properties contain tenant-specific identifiers,

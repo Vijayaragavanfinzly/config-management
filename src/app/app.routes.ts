@@ -17,6 +17,8 @@ import { FaqComponent } from './components/faq/faq.component';
 import { SyncComponent } from './components/sync/sync.component';
 import { GuideComparisonComponent } from './components/guide-comparison/guide-comparison.component';
 import { GuideSyncComponent } from './components/guide-sync/guide-sync.component';
+import { DeltaComponent } from './components/delta/delta.component';
+import { CommonEnvironmentPropertiesComponent } from './components/common-environment-properties/common-environment-properties.component';
 
 export const routes: Routes = [
     {
@@ -24,7 +26,7 @@ export const routes: Routes = [
         component:LayoutComponent,
         children:[
             {
-                path:'tenants',
+                path:'properties',
                 component:TenantsComponent
             },
             {
@@ -44,16 +46,24 @@ export const routes: Routes = [
                 component:CompareConfigDbComponent
             },
             {
+                path:'compare/findDelta',
+                component:DeltaComponent
+            },
+            {
                 path: 'environments/environment',
                 component: EnvironmentDetailsComponent
             },
             {
-                path: 'tenants/:tenant',
+                path: 'properties/:tenant',
                 component:TenantEnvironmentsComponent
             },
             {
-                path: 'tenants/:tenant/:environment',
+                path: 'properties/:tenant/:environment',
                 component:TenantEnvironmentPropertiesComponent
+            },
+            {
+                path: 'commonProperty/:tenant/:environment',
+                component:CommonEnvironmentPropertiesComponent
             },
             {
                 path:'clone',

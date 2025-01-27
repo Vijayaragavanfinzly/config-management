@@ -11,6 +11,10 @@
                     COMPARE BY ENVIRONMENT
                 </a>
             </li>
+            <div class="hint-icon ms-auto" (click)="toggleInfoSidebar()" matTooltip="Info" matTooltipShowDelay="300"
+                matTooltipPosition="above" matTooltipClass="custom-tooltip">
+                <i class="fas fa-info-circle"></i>
+            </div>
         </ol>
     </nav>
 </div>
@@ -117,7 +121,8 @@
         <div class="tab" [ngClass]="{'active': activeTab === 'notInEnv1'}" (click)="setActiveTab('notInEnv1')">
             <i class="fas fa-info-circle info-icon"
                 [matTooltip]="'These properties are inactive in ' + (selectedEnv1 | uppercase) + '. Learn more in the FAQ.'"
-                [routerLink]="['/faq']" [queryParams]="{ faqId: 'collapseEight' }" aria-label="Information about inactive properties"></i>
+                [routerLink]="['/faq']" [queryParams]="{ faqId: 'collapseEight' }"
+                aria-label="Information about inactive properties"></i>
             <span>Tenant Inactive {{selectedEnv1 | uppercase}}</span>
             <span class="badge">{{ propertiesNotAssociatedSize }}</span>
         </div>
@@ -657,14 +662,14 @@
             </thead>
             <tbody class="table-body">
                 <tr *ngFor="let entry of paginatedPropertiesNotAssociated">
-                    
-                        <td>
-                            <span [innerHTML]="highlightText(entry.prop_key || '-', searchQuery)"></span>
-                        </td>
-                        <td>
-                            <span [innerHTML]="highlightText(entry.value || '-', searchQuery)"></span>
-                        </td>
-                    
+
+                    <td>
+                        <span [innerHTML]="highlightText(entry.prop_key || '-', searchQuery)"></span>
+                    </td>
+                    <td>
+                        <span [innerHTML]="highlightText(entry.value || '-', searchQuery)"></span>
+                    </td>
+
                 </tr>
 
             </tbody>
@@ -746,12 +751,12 @@
                     <td class="" [innerHTML]="highlightText(getFirstTenantValue(entry) || '-', searchQuery)"></td>
                 </tr> -->
                 <tr *ngFor="let entry of paginatedPropertiesNotAssociated2">
-                        <td>
-                            <span [innerHTML]="highlightText(entry.prop_key || '-', searchQuery)"></span>
-                        </td>
-                        <td>
-                            <span [innerHTML]="highlightText(entry.value || '-', searchQuery)"></span>
-                        </td>
+                    <td>
+                        <span [innerHTML]="highlightText(entry.prop_key || '-', searchQuery)"></span>
+                    </td>
+                    <td>
+                        <span [innerHTML]="highlightText(entry.value || '-', searchQuery)"></span>
+                    </td>
                 </tr>
 
             </tbody>
@@ -836,5 +841,49 @@
             </div>
         </div>
         <button class="hint-button" (click)="hideOverlay1()">Got It</button>
+    </div>
+</div>
+
+
+
+
+<div class="backdrop" *ngIf="showSidebar" (click)="toggleInfoSidebar()">
+</div>
+
+
+<div class="sidebar-container" [class.open]="showSidebar">
+    <div class="sidebar-header">
+        <h4 class="sidebar-title">Page Tips & Info</h4>
+        <i class="fas fa-times close-icon" (click)="toggleInfoSidebar()"></i>
+    </div>
+    <div class="sidebar-body">
+        <div class="sidebar-tip">
+            <i class="fas fa-search tip-icon"></i>
+            <p><strong>Tip:</strong> Use the Compare by Tenant tool to categorize properties as matching or non-matching
+                by tenant. <a href="/faq?faqId=collapseTwo" class="learn-more-link" target="_blank"
+                    rel="noopener noreferrer">
+                    Learn More
+                </a>
+            </p>
+        </div>
+
+        <div class="sidebar-tip">
+            <i class="fas fa-check-circle tip-icon"></i>
+            <p><strong>Matching vs. Non-Matching Properties:</strong> Matching properties have identical values;
+                non-matching ones require action. <a href="/comparison-options" class="learn-more-link">Learn More</a>
+            </p>
+        </div>
+
+        <div class="sidebar-tip">
+            <i class="fas fa-tools tip-icon"></i>
+            <p><strong>Non-Matching Property Actions:</strong> Edit, transfer, or copy non-matching properties to align
+                with others. <a href="/property-actions" class="learn-more-link">Learn More</a></p>
+        </div>
+
+        <div class="sidebar-tip">
+            <i class="fas fa-id-badge tip-icon"></i>
+            <p><strong>Tenant Placeholder:</strong> Tenant details are displayed via a placeholder, hiding all tenant
+                data at once. <a href="/tenant-placeholder-info" class="learn-more-link">Learn More</a></p>
+        </div>
     </div>
 </div>

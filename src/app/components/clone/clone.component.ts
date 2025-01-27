@@ -116,7 +116,7 @@ export class CloneComponent {
         console.log(data);
         console.log(data.statusCode);
         
-        if (data.statusCode === 200) {
+        if (data.statusCode == 200) {
           this.snackBar.open('Cloned Successfully!', 'Close', {
             duration: 3000,
             panelClass: ['custom-toast', 'toast-success'],
@@ -124,35 +124,36 @@ export class CloneComponent {
             verticalPosition: 'top',
           });
           console.log("cloning");
-          this.exportService.exportInsertQueryForNewTenant(this.manualTenant.toLowerCase(),this.manualEnv.toLowerCase()).subscribe({
-            next: (blob) => {
-              console.log(blob);
+          this.clearSelections();
+          // this.exportService.exportInsertQueryForNewTenant(this.manualTenant.toLowerCase(),this.manualEnv.toLowerCase()).subscribe({
+          //   next: (blob) => {
+          //     console.log(blob);
               
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = `insert_properties.sql`;
-              a.click();
-              window.URL.revokeObjectURL(url);
-              this.snackBar.open('Exported Successfully!', 'Close', {
-                duration: 3000,
-                panelClass: ['custom-toast', 'toast-success'],
-                horizontalPosition: 'center',
-                verticalPosition: 'top',
-              });
-            },
-            error: (err) => {
-              console.error("Error exporting properties:", err);
-              this.snackBar.open('Export failed.', 'Close', {
-                duration: 3000,
-                panelClass: ['custom-toast', 'toast-error'],
-                horizontalPosition: 'center',
-                verticalPosition: 'top',
-              });
-            },
-            complete: () => {
-            },
-          })
+          //     const url = window.URL.createObjectURL(blob);
+          //     const a = document.createElement('a');
+          //     a.href = url;
+          //     a.download = `insert_properties.sql`;
+          //     a.click();
+          //     window.URL.revokeObjectURL(url);
+          //     this.snackBar.open('Exported Successfully!', 'Close', {
+          //       duration: 3000,
+          //       panelClass: ['custom-toast', 'toast-success'],
+          //       horizontalPosition: 'center',
+          //       verticalPosition: 'top',
+          //     });
+          //   },
+          //   error: (err) => {
+          //     console.error("Error exporting properties:", err);
+          //     this.snackBar.open('Export failed.', 'Close', {
+          //       duration: 3000,
+          //       panelClass: ['custom-toast', 'toast-error'],
+          //       horizontalPosition: 'center',
+          //       verticalPosition: 'top',
+          //     });
+          //   },
+          //   complete: () => {
+          //   },
+          // })
         } else {
           this.snackBar.open('Unexpected response from server', 'Close', {
             duration: 3000,

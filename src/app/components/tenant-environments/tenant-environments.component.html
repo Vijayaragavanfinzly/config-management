@@ -2,12 +2,12 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
       <li class="breadcrumb-item">
-        <a [routerLink]="['/tenants']" class="breadcrumb-link" matTooltip="Navigate to Tenants Page">
+        <a [routerLink]="['/properties']" class="breadcrumb-link" matTooltip="Navigate to Tenants Page">
           <i class="fas fa-link mr-2"></i> TENANTS
         </a>
       </li>
       <li class="breadcrumb-item active">
-        <a [routerLink]="['/tenants', tenant]" [routerLinkActive]="['active']" class="breadcrumb-link" matTooltip="All environments associated with the selected tenant are accessible here." matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip">
+        <a [routerLink]="['/properties', tenant]" [routerLinkActive]="['active']" class="breadcrumb-link" matTooltip="All environments associated with the selected tenant are accessible here." matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip">
           {{ tenant | uppercase }}
         </a>
       </li>
@@ -79,7 +79,7 @@
         <h4 class="tile-title">{{ environment | uppercase }}</h4>
         <p class="tile-description">Quick access to {{ environment | uppercase }} configurations.</p>
         <div class="tile-footer">
-          <button class="btn btn-primary" [routerLink]="['/tenants', tenant, environment]">Explore</button>
+          <button class="btn btn-primary" [routerLink]="['/properties', tenant, environment]">Explore</button>
         </div>
       </div>
     </div>

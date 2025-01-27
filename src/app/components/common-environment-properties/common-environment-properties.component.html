@@ -1,0 +1,198 @@
+<div class="container mt-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
+        <li class="breadcrumb-item">
+          <a [routerLink]="['/properties']" [routerLinkActive]="['active']" class="breadcrumb-link"
+            matTooltip="Navigate to Environment Page" matTooltipShowDelay="300" matTooltipPosition="above"
+            matTooltipClass="custom-tooltip">
+            {{ tenant | uppercase}}
+          </a>
+        </li>
+        <li class="breadcrumb-item active">
+          <a [routerLink]="['/commonProperty', tenant, environment]" [routerLinkActive]="['active']" class="breadcrumb-link"
+            matTooltip="All properties associated with the selected environment are accessible here."
+            matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip">
+            {{ environment | uppercase}}
+          </a>
+        </li>
+      </ol>
+    </nav>
+  </div>
+  
+  <div *ngIf="!loading && filteredProperties.length > 0" class="container mt-5 search-bar">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="drawer-container">
+        <i class="fas fa-search advanced-search-icon ms-4" (click)="toggleDrawer()" matTooltip="Advanced Search"
+          matTooltipShowDelay="300" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+          aria-label="Advanced Search" role="button"></i>
+        <div class="drawer" [class.open]="isDrawerOpen">
+          <div class="drawer-header">
+            <h2>Advanced Search</h2>
+            <button class="close-drawer-button" (click)="toggleDrawer()">&#x2715;</button>
+          </div>
+          <div class="drawer-body">
+            <form (submit)="applyFilters()">
+              <div class="form-group">
+                <label for="keyword">Keyword</label>
+                <input type="text" id="keyword" placeholder="Enter keywords" [(ngModel)]="advancedSearch.keyword"
+                  name="keyword" />
+              </div>
+              <div class="form-group">
+                <label for="application" class="form-label">Application</label>
+                <ng-select [items]="applications" bindLabel="name" [searchable]="true"
+                  [(ngModel)]="advancedSearch.application" name="application" placeholder="Select an application"
+                  class="stylish-dropdown"></ng-select>
+              </div>
+              <div class="form-group">
+                <label for="fieldGroup" class="form-label">Field Group</label>
+                <ng-select [items]="fieldGroups" bindLabel="name" [searchable]="true"
+                  [(ngModel)]="advancedSearch.fieldGroup" name="fieldGroup" placeholder="Select a Field Group"
+                  class="stylish-dropdown"></ng-select>
+              </div>
+              <div class="form-group">
+                <label for="type" class="form-label">Type</label>
+                <ng-select [items]="types" bindLabel="name" [searchable]="true" [(ngModel)]="advancedSearch.type"
+                  name="type" placeholder="Select a Type" class="stylish-dropdown"></ng-select>
+              </div>
+              <div class="form-group">
+                <label for="target" class="form-label">Target</label>
+                <ng-select [items]="targets" bindLabel="name" [searchable]="true" [(ngModel)]="advancedSearch.target"
+                  name="target" placeholder="Select a Target" class="stylish-dropdown"></ng-select>
+              </div>
+              <button type="submit" (click)="applyAdvancedSearch()" class="search-button">Search</button>
+              <button class="btn btn-outline-secondary ms-2 reset-button" (click)="resetSearch()">Reset</button>
+            </form>
+          </div>
+        </div>
+      </div>
+  
+  
+    </div>
+    <div class="drawer-backdrop" *ngIf="isDrawerOpen" (click)="toggleDrawer()"></div>
+    <div class="action-buttons d-flex align-items-center">
+      <button *ngIf="selectedIds.length == 0" class="btn btn-sm action-btn add-btn" (click)="addProperty()"
+        [disabled]="loading" aria-label="Add New Environment" role="button"
+        [matTooltip]="'Click to create new Properties / Configurations'" matTooltipShowDelay="300"
+        matTooltipPosition="above" matTooltipClass="custom-tooltip">
+        <i class="fas fa-plus"></i> Add
+      </button>
+      <button *ngIf="selectedIds.length == 0" class="btn btn-sm action-btn ms-2 add-btn export-btn"
+        (click)="exportAllData()" [disabled]="loading" aria-label="Export Properties" role="button"
+        [matTooltip]="'Click to export selected properties as SQL INSERT query'" matTooltipShowDelay="300"
+        matTooltipPosition="above" matTooltipClass="custom-tooltip">
+        <i class="fas fa-file-export"></i> Export
+      </button>
+      <button *ngIf="selectedIds.length > 0" class="btn btn-sm action-btn ms-2 add-btn export-btn delete-btn"
+        (click)="deleteSelectedProperties()" [disabled]="loading" aria-label="Export Properties" role="button"
+        [matTooltip]="'Click to export selected properties as SQL DELETE query'" matTooltipShowDelay="300"
+        matTooltipPosition="above" matTooltipClass="custom-tooltip">
+        <i class="fas fa-trash-alt"></i> Delete
+      </button>
+    </div>
+  </div>
+  
+  <div class="container mt-2">
+    <div *ngIf="loading" class="text-center my-5">
+      <app-spinner></app-spinner>
+    </div>
+    <div *ngIf="!loading && filteredProperties.length > 0" class="table-responsive">
+      <div class="table-responsive table-container">
+        <table class="table custom-table shadow-sm">
+          <thead>
+            <tr>
+              <th class="text-center" style="width: 50px;">
+                <input type="checkbox" id="select-all" (change)="handleSelectAll($event)" [checked]="isAllSelected" />
+                <label for="select-all" [matTooltip]="'Select/Deselect All For Export'" matTooltipShowDelay="300"
+                  matTooltipPosition="above" matTooltipClass="custom-tooltip"></label>
+              </th>
+              <th *ngFor="let column of columns; let i = index"
+                [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}" class="text-center">
+                {{ column.name }}
+                <div class="resize-handle" (mousedown)="onMouseDown($event, i)"></div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let property of paginatedProperties; let i = index">
+              <td class="text-center">
+                <input type="checkbox" id="property-{{ property.id }}" (change)="toggleSelection(property.id, $event)"
+                  [checked]="selectedIds.includes(property.id)" />
+                <label for="property-{{ property.id }}"></label>
+              </td>
+              <!-- {{ (currentPage - 1) * pageSize + i + 1 }}. &nbsp; -->
+              <td class="property-cell">{{ property.propKey }}</td>
+              <td>{{ property.value }}</td>
+              <!-- <td class="text-center" [matTooltip]="property.release" matTooltipShowDelay="300" matTooltipPosition="above"
+                matTooltipClass="custom-tooltip">{{property.release}}</td> -->
+              <td class="text-center">
+                <i class="fas fa-edit edit ms-3" [matTooltip]="'Edit'" matTooltipShowDelay="300"
+                  matTooltipPosition="above" matTooltipClass="custom-tooltip" (click)="editProperty(property)"></i>
+                <i class="fas fa-trash-alt delete ms-3" [matTooltip]="'Delete'" matTooltipShowDelay="300"
+                  matTooltipPosition="above" matTooltipClass="custom-tooltip" (click)="deleteProperty(property.id)"></i>
+  
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination-container d-flex justify-content-between align-items-center mt-3 mb-3">
+        <div class="total-records">
+          Total Records: <strong>{{propertySize}}</strong>
+        </div>
+  
+        <div class="pagination-controls d-flex align-items-center">
+          <span class="pagination-nav" [class.disabled]="currentPage === 1" (click)="goToPreviousPage()">
+            <i class="fas fa-angle-double-left"></i>
+          </span>
+          <ng-container *ngFor="let page of pages">
+            <span *ngIf="page !== -1" class="pagination-page" [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+              {{ page }}
+            </span>
+            <span *ngIf="page === -1" class="pagination-dots">...</span>
+          </ng-container>
+          <span class="pagination-nav" [class.disabled]="currentPage === totalPages" (click)="goToNextPage()">
+            <i class="fas fa-angle-double-right"></i>
+          </span>
+        </div>
+  
+        <!-- Items Per Page Dropdown -->
+        <div class="items-per-page">
+          <label for="pageSize" class="me-2">Items per page:</label>
+          <select id="pageSize" class="form-select d-inline-block w-auto" [(ngModel)]="pageSize"
+            (change)="updatePagination()">
+            <option [value]="10">10</option>
+            <option [value]="20">20</option>
+            <option [value]="50">50</option>
+            <option [value]="100">100</option>
+          </select>
+        </div>
+      </div>
+  
+    </div>
+  
+    <div *ngIf="!loading && properties.length === 0" class="text-center my-5">
+      <div class="no-properties-container">
+        <i class="fas fa-folder-open" style="font-size: 60px; color: #ffc107;"></i>
+        <h4 class="text-muted mt-3">No Properties Found</h4>
+        <p class="text-secondary mb-4">
+          It seems like there are no properties available for this tenant and environment. Start managing your properties
+          today!
+        </p>
+        <button class="btn btn-primary" style="border-radius: 25px; font-weight: 600; padding: 10px 20px;"
+          (click)="navigateToProperties()">
+          Add Properties
+        </button>
+      </div>
+    </div>
+  
+    <div *ngIf="!loading && advancedSearch && paginatedProperties.length === 0" class="no-results">
+      <div class="no-results-content">
+        <i class="fas fa-search fa-3x"></i>
+        <h4 class="mt-3">No Results Found</h4>
+        <p class="text-muted">
+          We couldn’t find anything matching.
+        </p>
+        <button class="btn btn-primary btn-try-again" (click)="clearSearch()">Try Again</button>
+      </div>
+    </div>

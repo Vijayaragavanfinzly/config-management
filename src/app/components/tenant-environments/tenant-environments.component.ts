@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddEnvironmentDialogComponent } from '../miscellaneous/dialogs/add-environment-dialog/add-environment-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+
 @Component({
   selector: 'app-tenant-environments',
   standalone: true,
@@ -30,11 +31,12 @@ export class TenantEnvironmentsComponent implements OnInit {
   loading: boolean = false;
 
   constructor(private route: ActivatedRoute, private tenantService: TenantService, private dialog: MatDialog, private snackBar: MatSnackBar) { }
-
+  
   ngOnInit(): void {
     this.route.params.subscribe((param) => {
       this.tenant = param['tenant'];
       if (this.tenant) {
+        console.log(this.tenant);
         this.loadEnvironmentsForTenant();
       } else {
         console.error("No tenant parameter provided in the route.");
@@ -47,8 +49,8 @@ export class TenantEnvironmentsComponent implements OnInit {
     this.tenantService.getTenantEnvironments(this.tenant).subscribe({
       next: (data: any) => {
         console.log(data);
-        this.environments = data.data.environments;
-        this.tenantName = data.data.tenantName;
+        this.environments = data.data;
+        // this.tenantName = data.data.tenantName;
         this.filteredEnvironments = this.environments.filter(env => env !== 'PENDING');
 
         console.log("Tenant Name : " + this.tenantName);

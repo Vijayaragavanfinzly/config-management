@@ -1,0 +1,23 @@
+<div class="dialog-container">
+    <div class="dialog-header">
+        <h2>Environment Sync</h2>
+    </div>
+    <div class="dialog-content">
+        <p class="dialog-message">
+            You have modified data in the environment <strong>{{ data.env }}</strong>.
+            If you sync, the modified data will be overridden. What would you like to
+            do?
+        </p>
+    </div>
+    <div class="dialog-actions mt-4">
+        <button class="btn btn-secondary cancel" (click)="closeDialog('cancel')">
+            Cancel
+        </button>
+        <button class="btn btn-info export" (click)="closeDialog('export')">
+            Export
+        </button>
+        <button class="btn btn-danger override" (click)="closeDialog('override')">
+            Sync
+        </button>
+    </div>
+</div>

@@ -22,11 +22,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class TenantsComponent implements OnInit {
 
-  tenants: Tenant[] = [];
+  tenants: any[] = [];
   searchKeyword: string = '';
-  filteredTenants: Tenant[] = [];
+  searchKeywordForEnv: string = '';
+  filteredTenants: any[] = [];
   loading: Boolean = false;
   applications: string[] = [];
+  activeTab:string = 'tenants';
+  environmentsForCommon: string[] = [];
+  filteredEnvironmentsForCommon: string[] = [];
 
   constructor(private tenantService: TenantService, private dialog: MatDialog, private router: Router, private snackBar: MatSnackBar
     ,private applicationService:ApplicationService
@@ -35,6 +39,10 @@ export class TenantsComponent implements OnInit {
   ngOnInit(): void {
     this.loadTenants();
     this.loadApplications();
+    this.activeTab = localStorage.getItem('activeTab') || 'tenants';
+    if (this.activeTab === 'common') {
+      this.loadEnvironmentsForCommon();
+    }
   }
 
   loadTenants(): void {
@@ -43,8 +51,12 @@ export class TenantsComponent implements OnInit {
       next: (data: any) => {
         if (data) {
           console.log("Fetched tenants successfully:", data);
-          this.tenants = data.data;
+          this.tenants = data.data.sort((a: any, b: any) => {
+            return a.localeCompare(b);
+          });
           this.filteredTenants = [...this.tenants];
+          console.log(this.filteredTenants);
+          
         }
       },
       error: (err) => {
@@ -76,21 +88,59 @@ export class TenantsComponent implements OnInit {
     })
   }
 
+  loadEnvironmentsForCommon(): void {
+    this.loading = true;
+    this.tenantService.getTenantEnvironments('common').subscribe({
+      next: (data: any) => {
+        console.log(data);
+        this.environmentsForCommon = data.data.sort((a: any, b: any) => {
+          return a.localeCompare(b);
+        });
+        console.log(this.environmentsForCommon);
+        this.filteredEnvironmentsForCommon = [...this.environmentsForCommon];
+        
+      },
+      error: (err) => {
+        this.loading = false;
+        this.snackBar.open('Error fetching environments. Please try again.', 'Close', {
+          duration: 3000,
+          panelClass: ['custom-toast', 'toast-error'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+        console.error("Error fetching environments for tenant:", err);
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  }
+
   filterTenants(): void {
     if (this.searchKeyword.trim()) {
       this.filteredTenants = this.tenants.filter(
         tenant =>
-          tenant.tenantName.toLowerCase().includes(this.searchKeyword.toLowerCase()) ||
-          tenant.tenant.toLowerCase().includes(this.searchKeyword.toLowerCase())
+          tenant.toLowerCase().includes(this.searchKeyword.toLowerCase())
       );
     } else {
       this.filteredTenants = [...this.tenants]
     }
   }
 
+  filterEnvironments():void{
+    if(this.searchKeywordForEnv.trim()){
+      this.filteredEnvironmentsForCommon = this.environmentsForCommon.filter(
+        env =>
+          env.toLowerCase().includes(this.searchKeywordForEnv.toLowerCase())
+      )
+    }
+  }
+
   clearSearch(): void {
     this.searchKeyword = '';
+    this.searchKeywordForEnv = '';
     this.loadTenants();
+    this.loadEnvironmentsForCommon();
   }
 
 
@@ -148,5 +198,15 @@ export class TenantsComponent implements OnInit {
       }
     });
   }
+
+  setActiveTab(tab: string) {
+    this.clearSearch();
+    this.activeTab = tab;
+    localStorage.setItem('activeTab', tab);
+    if (this.activeTab === 'common') {
+      this.loadEnvironmentsForCommon();
+    }
+  }
+  
   
 }

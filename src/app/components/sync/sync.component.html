@@ -3,34 +3,42 @@
     <ol class="breadcrumb custom-breadcrumb p-3 rounded">
       <li class="breadcrumb-item active">
         <a [routerLink]="['/sync']" class="breadcrumb-link active" [routerLinkActive]="['active']">
-          <i class="fas fa-link mr-2"></i> Sync
+         SYNC
         </a>
       </li>
+      <div class="hint-icon ms-auto" (click)="toggleInfoSidebar()" matTooltip="Info" matTooltipShowDelay="300"
+        matTooltipPosition="above" matTooltipClass="custom-tooltip">
+        <i class="fas fa-info-circle"></i>
+      </div>
     </ol>
+
   </nav>
 </div>
 
-<!-- Sync All Environments Button -->
+<div *ngIf="loading" class="text-center my-5 spinner">
+  <app-spinner></app-spinner>
+</div>
+
 <div class="container environment-container d-flex justify-content-end align-items-center">
-  <button class="sync-all-button" (click)="callSyncApi()"  [matTooltip]="'Fetch All config server data & dump it in Configuration DB'" matTooltipShowDelay="300" matTooltipPosition="above">
-    <i class="fas fa-sync me-2"></i>
+  <button class="sync-all-button" (click)="callSyncApi()"
+    [matTooltip]="'Fetch All config server data & dump it in Configuration DB'" matTooltipShowDelay="300"
+    matTooltipPosition="above" [disabled]="isLoading">
+    <i *ngIf="!isLoading" class="fas fa-sync me-2"></i>
+    <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
     Sync All Environments
   </button>
 </div>
-<!-- <div class="container environment-container d-flex justify-content-end align-items-center mt-3">
-  
-</div> -->
 
-<!-- Environment Cards Container -->
 <div class="container environment-container">
   <div class="environment-card" *ngFor="let data of syncData">
     <div class="card-header">
       <h3>{{ data.environmentName | uppercase }}</h3>
       <div>
-        <i class="fas fa-download sync-icon me-2" (click)="exportSingleUpdateQuery(data.environmentName)" [matTooltip]="'Click to Export '" matTooltipShowDelay="300" matTooltipPosition="above"></i>
-        <i class="fas fa-sync sync-icon" (click)="syncEnvironment(data.environmentName)" [matTooltip]="'Click to Sync Environment'" matTooltipShowDelay="300" matTooltipPosition="above"></i>
+        <i class="fas fa-download sync-icon me-2" (click)="exportSingleUpdateQuery(data.environmentName)"
+          [matTooltip]="'Click to Export '" matTooltipShowDelay="300" matTooltipPosition="above"></i>
+        <i class="fas fa-sync sync-icon" (click)="syncEnvironment(data.environmentName)"
+          [matTooltip]="'Click to Sync Environment'" matTooltipShowDelay="300" matTooltipPosition="above"></i>
       </div>
-      
     </div>
     <div class="card-body">
       <div class="sync-info">
@@ -43,17 +51,36 @@
   </div>
 </div>
 
-<!-- Overlay Hint -->
-<div class="hint-overlay" *ngIf="showOverlayHint">
-  <div class="hint-container">
-    <div class="hint-content">
-      <div class="hint-icon">💡</div>
-      <div class="hint-text">
-        <strong>Info:</strong> Sync ensures your data is up-to-date by fetching the latest changes!
-      </div>
-    </div>
-    <button class="hint-button" (click)="hideOverlay()">Learn More</button>
-  </div>
+<div class="backdrop" *ngIf="showSidebar" (click)="toggleInfoSidebar()">
 </div>
 
 
+<div class="sidebar-container" [class.open]="showSidebar">
+  <div class="sidebar-header">
+    <h4 class="sidebar-title">Page Tips & Info</h4>
+    <i class="fas fa-times close-icon" (click)="toggleInfoSidebar()"></i>
+  </div>
+  <div class="sidebar-body">
+    <div class="sidebar-tip">
+      <i class="fas fa-lightbulb tip-icon"></i>
+      <p><strong>Tip:</strong> Keep your data synced to avoid outdated information. <a href="/faq/sync-guide"
+          class="learn-more-link" target="_blank" rel="noopener noreferrer">How Sync Works ?</a></p>
+    </div>
+
+    <div class="sidebar-tip">
+      <i class="fas fa-sync-alt tip-icon"></i>
+      <p><strong>Sync Options:</strong> Sync all environments at once or individually.</p>
+    </div>
+
+    <div class="sidebar-tip">
+      <i class="fas fa-clock tip-icon"></i>
+      <p><strong>Last Synced:</strong> Check the timestamp for the most recent updates.</p>
+    </div>
+
+    <div class="sidebar-tip">
+      <i class="fas fa-file-export tip-icon"></i>
+      <p><strong>Export Operations:</strong> Export INSERT, DELETE, or UPDATE queries for environments with recent
+        changes.</p>
+    </div>
+  </div>
+</div>

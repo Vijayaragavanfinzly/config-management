@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { SyncDialogComponent } from '../miscellaneous/dialogs/sync-dialog/sync-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,11 +7,16 @@ import { CompareService } from '../../services/compare-service/compare.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ExportService } from '../../services/export-service/export.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SuccessSnackbarComponent } from '../miscellaneous/snackbar/success-snackbar/success-snackbar.component';
+import { ErrorSnackbarComponent } from '../miscellaneous/snackbar/error-snackbar/error-snackbar.component';
+import { SpinnerComponent } from "../miscellaneous/spinner/spinner.component";
+import { SyncDialogExportComponent } from '../miscellaneous/dialogs/sync-dialog-export/sync-dialog-export.component';
+import { SyncSnackbarComponent } from '../miscellaneous/snackbar/sync-snackbar/sync-snackbar.component';
 
 @Component({
   selector: 'app-sync',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatTooltipModule],
+  imports: [CommonModule, RouterModule, MatTooltipModule, SpinnerComponent],
   templateUrl: './sync.component.html',
   styleUrl: './sync.component.css'
 })
@@ -23,8 +28,11 @@ export class SyncComponent implements OnInit {
   showOverlayHint: boolean = true;
   lastSyncTime: string = '';
   showHint: boolean = false;
+  loading:boolean = false;
+  showSidebar = false;
+  isLoading:boolean = false;
 
-  constructor(private dialog: MatDialog, private compareService: CompareService, private snackBar: MatSnackBar, private exportService: ExportService,private router: Router) { }
+  constructor(private dialog: MatDialog, private compareService: CompareService, private snackBar: MatSnackBar, private exportService: ExportService, private router: Router) { }
 
   ngOnInit(): void {
 
@@ -93,14 +101,29 @@ export class SyncComponent implements OnInit {
   }
 
   callSyncApi(): void {
+    this.isLoading = true;
+    const inProgressSnackbar = this.snackBar.openFromComponent(SyncSnackbarComponent, {
+      data:{
+        message:'Sync in progress...',
+        icon:'circle-notch'
+      },
+      duration: 0,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+    });
     this.compareService.sync().subscribe({
       next: (data) => {
         console.log(data);
+        inProgressSnackbar.dismiss();
+        this.isLoading = false;
 
         if (data) {
-          this.snackBar.open('Sync Successful', 'Close', {
+          this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+            data: {
+              message: `Sync Successful!`,
+              icon: 'check-circle'
+            },
             duration: 3000,
-            panelClass: ['custom-toast', 'toast-success'],
             horizontalPosition: 'center',
             verticalPosition: 'top',
           });
@@ -108,110 +131,196 @@ export class SyncComponent implements OnInit {
         this.getAllSyncDetails();
       },
       error: (err) => {
-        this.snackBar.open('Sync process failed', 'Close', {
+        inProgressSnackbar.dismiss();
+        this.isLoading = false;
+        this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+          data: {
+            message: `Sync process failed`,
+            icon: 'check-circle'
+          },
           duration: 3000,
-          panelClass: ['custom-toast', 'toast-error'],
           horizontalPosition: 'center',
           verticalPosition: 'top',
         });
       }
     })
-    // this.http.post('/save/sync', {}).subscribe({
-    //   next: () => alert('Sync successful!'),
-    //   error: err => alert('Sync failed: ' + err.message)
-    // });
   }
   syncEnvironment(env: string) {
-    const dialogRef = this.dialog.open(SyncDialogComponent, {
-      width: '600px',
-    });
-    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed) {
-        this.compareService.syncEnvironment(env).subscribe({
-          next: (res) => {
-            console.log(res);
-            if (res.statusCode == 200) {
-              this.snackBar.open(`Sync Done Successfull! for ${env}`, 'Close', {
+
+    this.exportService.isAnyDataModifiedForEnv(env).subscribe({
+      next:(res)=>{
+        if(res.statusCode == 200 && res.message == 'success'){
+          const dialogRef = this.dialog.open(SyncDialogExportComponent,{
+            width:'600px',
+            data: { env },
+          });
+          dialogRef.afterClosed().subscribe((action) => {
+            if (action === 'export') {
+              console.log('User chose to export data.');
+              this.exportService.exportSpecifiedEnv(env).subscribe({
+                next: (blob) => {
+                  console.log(blob);
+          
+                  const url = window.URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `${env}_updated_properties.sql`;
+                  a.click();
+                  window.URL.revokeObjectURL(url);
+                  this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                    data: {
+                      message: `Export Successful`,
+                      icon: 'check-circle'
+                    },
+                    duration: 3000,
+                    horizontalPosition: 'center',
+                    verticalPosition: 'top',
+                  });
+                },
+                error: (err) => {
+                  console.error("Error exporting properties:", err);
+                  this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+                    data: {
+                      message: `Export Failed`,
+                      icon: 'check-circle'
+                    },
+                    duration: 3000,
+                    horizontalPosition: 'center',
+                    verticalPosition: 'top',
+                  });
+                },
+                complete: () => {
+                },
+              })
+            } else if (action === 'override') {
+              console.log('User chose to override and sync.');
+              this.loading = true;
+              this.compareService.syncEnvironment(env).subscribe({
+                next: (res) => {
+                  console.log(res);
+                  if (res.statusCode == 200) {
+                    this.loading = false;
+                    this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                      data: {
+                        message: `Sync Done Successfully for ${env}!`,
+                        icon: 'check-circle'
+                      },
+                      duration: 3000,
+                      horizontalPosition: 'center',
+                      verticalPosition: 'top',
+                    });
+      
+                    this.getAllSyncDetails();
+                  }
+                },
+                error: (err) => {
+                  console.log(err);
+                  this.loading = false;
+                }
+              })
+            } else {
+              console.log('User canceled the action.');
+            }
+          });
+        }
+        else{
+          const dialogRef = this.dialog.open(SyncDialogComponent, {
+            width: '600px',
+          });
+          dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+            if (confirmed) {
+              this.loading = true;
+              this.compareService.syncEnvironment(env).subscribe({
+                next: (res) => {
+                  console.log(res);
+                  if (res.statusCode == 200) {
+                    this.loading = false;
+                    this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                      data: {
+                        message: `Sync Done Successfully for ${env}!`,
+                        icon: 'check-circle'
+                      },
+                      duration: 3000,
+                      horizontalPosition: 'center',
+                      verticalPosition: 'top',
+                    });
+      
+                    this.getAllSyncDetails();
+                  }
+                },
+                error: (err) => {
+                  console.log(err);
+                  this.loading = false;
+                }
+              })
+            }
+          });
+        }
+      },
+      error:(err)=>{
+
+      }
+    });   
+
+    
+
+  }
+
+
+  exportSingleUpdateQuery(env: string) {
+    this.exportService.isAnyDataModifiedForEnv(env).subscribe({
+      next:(res)=>{
+        console.log(res);
+        if(res.statusCode == 200 && res.message == 'success'){
+          this.exportService.exportSpecifiedEnv(env).subscribe({
+            next: (blob) => {
+              console.log(blob);
+      
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `${env}_updated_properties.sql`;
+              a.click();
+              window.URL.revokeObjectURL(url);
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `Export Successful`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-success'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
-              this.getAllSyncDetails();
-            }
-          },
-          error: (err) => {
-            console.log(err);
-
-          }
-        })
+            },
+            error: (err) => {
+              console.error("Error exporting properties:", err);
+              this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+                data: {
+                  message: `Export Failed`,
+                  icon: 'check-circle'
+                },
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'top',
+              });
+            },
+            complete: () => {
+            },
+          })
+        }
+        else{
+          this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+            data: {
+              message: `You cannot export because no edit, delete, or add operations have been performed.`,
+              icon: 'check-circle'
+            },
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          });
+        }
       }
-    });
-
-  }
-
-  exportUpdateQuery() {
-    this.exportService.exportUpdateQueryForAll().subscribe({
-      next: (blob) => {
-        console.log(blob);
-
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `update_query_properties.sql`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-        this.snackBar.open('Exported Successfully!', 'Close', {
-          duration: 3000,
-          panelClass: ['custom-toast', 'toast-success'],
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
-      },
-      error: (err) => {
-        console.error("Error exporting properties:", err);
-        this.snackBar.open('Export failed.', 'Close', {
-          duration: 3000,
-          panelClass: ['custom-toast', 'toast-error'],
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
-      },
-      complete: () => {
-      },
     })
-  }
-
-  exportSingleUpdateQuery(env: string) {
-    this.exportService.exportSingleUpdateQuery(env).subscribe({
-      next: (blob) => {
-        console.log(blob);
-
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `update_query_properties.sql`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-        this.snackBar.open('Exported Successfully!', 'Close', {
-          duration: 3000,
-          panelClass: ['custom-toast', 'toast-success'],
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
-      },
-      error: (err) => {
-        console.error("Error exporting properties:", err);
-        this.snackBar.open('Export failed.', 'Close', {
-          duration: 3000,
-          panelClass: ['custom-toast', 'toast-error'],
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
-      },
-      complete: () => {
-      },
-    });
   }
 
   showOverlay(): void {
@@ -223,4 +332,7 @@ export class SyncComponent implements OnInit {
     this.showOverlayHint = false;
   }
 
+  toggleInfoSidebar() {
+    this.showSidebar = !this.showSidebar;
+  }
 }
