@@ -334,34 +334,42 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   }
 
   deleteSelectedProperties() {
-    this.propertyService.deleteMulitpleProperty(this.selectedIds).subscribe({
-      next: (response) => {
-        console.log(response);
-        this.snackBar.openFromComponent(SuccessSnackbarComponent, {
-          data: {
-            message: `Deleted Successfully !`,
-            icon: 'check-circle'
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '600px',
+    });
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.propertyService.deleteMulitpleProperty(this.selectedIds).subscribe({
+          next: (response) => {
+            console.log(response);
+            this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+              data: {
+                message: `Deleted Successfully !`,
+                icon: 'check-circle'
+              },
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
+            this.loadPropertiesForTenants();
+            this.selectedIds = []
           },
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
-        this.loadPropertiesForTenants();
-        this.selectedIds = []
-      },
-      error: (err) => {
-        console.log(err);
-        this.snackBar.openFromComponent(ErrorSnackbarComponent, {
-          data: {
-            message: `Error Occured in Delete`,
-            icon: 'check-circle'
-          },
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
+          error: (err) => {
+            console.log(err);
+            this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+              data: {
+                message: `Error Occured in Delete`,
+                icon: 'check-circle'
+              },
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
+          }
+        })
       }
-    })
+    });
+   
   }
 
   exportAllData() {
@@ -562,6 +570,8 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
         const payload = {
           id: property.id,
           isEdit: true,
+          isAdd:property.isAdd,
+          isDelete:property.isDelete,
           configId: property.configId,
           env: this.environment,
           tenant: this.tenant,

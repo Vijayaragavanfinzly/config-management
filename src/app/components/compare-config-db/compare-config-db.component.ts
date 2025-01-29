@@ -802,6 +802,8 @@ export class CompareConfigDbComponent implements OnInit {
         const payload = {
           id: entry[destination].id,
           isEdit: true,
+          isAdd: entry[destination].isAdd,
+          isDelete:entry[destination].isDelete,
           configId: entry[destination].configId,
           env: entry[destination].env,
           tenant: entry[destination].tenant,
@@ -1025,7 +1027,7 @@ export class CompareConfigDbComponent implements OnInit {
 
   clearSearch() {
     this.searchQuery = '';
-    this.filterResults();
+    this.handleSearchQueryChange();
   }
 
 
@@ -1088,6 +1090,7 @@ export class CompareConfigDbComponent implements OnInit {
   setActiveTab(tab: string) {
     this.activeTab = tab;
     this.currentPage = 1;
+    this.handleSearchQueryChange();
     this.updatePagination();
   }
 
@@ -1285,6 +1288,8 @@ export class CompareConfigDbComponent implements OnInit {
         const payload = {
           id: this.selectedEntry[this.selectedColumn.name].id,
           isEdit: true,
+          isAdd: this.selectedEntry[this.selectedColumn.name].isAdd,
+          isDelete: this.selectedEntry[this.selectedColumn.name].isDelete,
           configId: this.selectedEntry[this.selectedColumn.name].configId,
           env: env,
           tenant: tenant,
@@ -1400,6 +1405,8 @@ export class CompareConfigDbComponent implements OnInit {
         const payload = {
           id: this.selectedEntry[this.selectedColumn].id,
           isEdit: true,
+          isAdd: this.selectedEntry[this.selectedColumn].isAdd,
+          isDelete: this.selectedEntry[this.selectedColumn].isDeletes,
           configId: this.selectedEntry[this.selectedColumn].configId,
           env: env,
           tenant: tenant,

@@ -11,12 +11,13 @@ import { SpinnerComponent } from '../miscellaneous/spinner/spinner.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApplicationService } from '../../services/application-service/application.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ParamStoreServiceService } from '../../services/param-store-service/param-store-service.service';
 
 
 @Component({
   selector: 'app-tenants',
   standalone: true,
-  imports: [RouterModule, CommonModule, SpinnerComponent, FormsModule, MatDialogModule, MatButtonModule,MatTooltipModule],
+  imports: [RouterModule, CommonModule, SpinnerComponent, FormsModule, MatDialogModule, MatButtonModule, MatTooltipModule],
   templateUrl: './tenants.component.html',
   styleUrl: './tenants.component.css'
 })
@@ -25,24 +26,27 @@ export class TenantsComponent implements OnInit {
   tenants: any[] = [];
   searchKeyword: string = '';
   searchKeywordForEnv: string = '';
+  searchKeywordForAws: string = '';
   filteredTenants: any[] = [];
   loading: Boolean = false;
   applications: string[] = [];
-  activeTab:string = 'tenants';
+  activeTab: string = 'tenants';
   environmentsForCommon: string[] = [];
   filteredEnvironmentsForCommon: string[] = [];
+  awsTenants: string[] = [];
+  filteredAwsTenants:string[] = [];
 
   constructor(private tenantService: TenantService, private dialog: MatDialog, private router: Router, private snackBar: MatSnackBar
-    ,private applicationService:ApplicationService
+    , private applicationService: ApplicationService, private paramstoreService: ParamStoreServiceService
   ) { }
 
   ngOnInit(): void {
     this.loadTenants();
     this.loadApplications();
     this.activeTab = localStorage.getItem('activeTab') || 'tenants';
-    if (this.activeTab === 'common') {
-      this.loadEnvironmentsForCommon();
-    }
+    this.loadEnvironmentsForCommon();
+    this.loadTenantsForAws();
+
   }
 
   loadTenants(): void {
@@ -56,7 +60,7 @@ export class TenantsComponent implements OnInit {
           });
           this.filteredTenants = [...this.tenants];
           console.log(this.filteredTenants);
-          
+
         }
       },
       error: (err) => {
@@ -69,20 +73,39 @@ export class TenantsComponent implements OnInit {
     });
   }
 
-  loadApplications():void{
-    this.applicationService.getAllApplications().subscribe({
-      next:(data:any)=>{
+  loadTenantsForAws(): void {
+    this.paramstoreService.getAllTenants().subscribe({
+      next: (data: any) => {
         console.log(data);
-        
-        if(data.statusCode == '200'){
+        this.awsTenants = data.data.sort((a: any, b: any) => {
+          return a.localeCompare(b);
+        });
+        this.filteredAwsTenants = [...this.awsTenants];
+        console.log(this.awsTenants);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+      complete: () => {
+        console.log('Loading Tenants process completed!');
+      }
+    })
+  }
+
+  loadApplications(): void {
+    this.applicationService.getAllApplications().subscribe({
+      next: (data: any) => {
+        console.log(data);
+
+        if (data.statusCode == '200') {
           this.applications = data.data;
           console.log(this.applications);
         }
       },
-      error:(err)=>{
+      error: (err) => {
         console.error("Failed to fetch applications:", err);
       },
-      complete:()=>{
+      complete: () => {
         console.log("Application loading process completed.");
       }
     })
@@ -98,7 +121,7 @@ export class TenantsComponent implements OnInit {
         });
         console.log(this.environmentsForCommon);
         this.filteredEnvironmentsForCommon = [...this.environmentsForCommon];
-        
+
       },
       error: (err) => {
         this.loading = false;
@@ -127,12 +150,27 @@ export class TenantsComponent implements OnInit {
     }
   }
 
-  filterEnvironments():void{
-    if(this.searchKeywordForEnv.trim()){
+  filterParamStoreTenants(): void {
+    if(this.searchKeywordForAws.trim()){
+      this.filteredAwsTenants = this.awsTenants.filter(
+        tenant =>
+          tenant.toLowerCase().includes(this.searchKeywordForAws.toLowerCase())
+      );
+    }
+    else{
+      this.filteredAwsTenants = [...this.awsTenants]
+    }
+  }
+
+  filterEnvironments(): void {
+    if (this.searchKeywordForEnv.trim()) {
       this.filteredEnvironmentsForCommon = this.environmentsForCommon.filter(
         env =>
           env.toLowerCase().includes(this.searchKeywordForEnv.toLowerCase())
       )
+    }
+    else{
+      this.filteredEnvironmentsForCommon = [...this.environmentsForCommon];
     }
   }
 
@@ -152,20 +190,20 @@ export class TenantsComponent implements OnInit {
         tenant_name: '',
       }
     });
-  
+
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log(result);
-  
+
         const payload = {
           environment: 'PENDING',
           tenantName: result.tenant_name,
           tenant: result.tenant.toLowerCase(),
         };
-  
+
         this.tenantService.addNewTenant(payload).subscribe({
           next: (data: any) => {
-            
+
             if (data && data.statusCode === 201) {
               console.log("Tenant Environment added successfully!");
               this.snackBar.open('Tenant & Environment Added Successfully!', 'Close', {
@@ -174,7 +212,7 @@ export class TenantsComponent implements OnInit {
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
-              this.loadTenants();  
+              this.loadTenants();
             } else {
               this.snackBar.open(data.message, 'Close', {
                 duration: 3000,
@@ -182,7 +220,7 @@ export class TenantsComponent implements OnInit {
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
-              
+
             }
           },
           error: (error) => {
@@ -200,6 +238,9 @@ export class TenantsComponent implements OnInit {
   }
 
   setActiveTab(tab: string) {
+    if (tab === this.activeTab) {
+      return;
+    }
     this.clearSearch();
     this.activeTab = tab;
     localStorage.setItem('activeTab', tab);
@@ -207,6 +248,6 @@ export class TenantsComponent implements OnInit {
       this.loadEnvironmentsForCommon();
     }
   }
-  
-  
+
+
 }

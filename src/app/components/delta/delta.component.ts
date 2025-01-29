@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
@@ -11,11 +11,16 @@ import { MatDialog } from '@angular/material/dialog';
 import { PropertyService } from '../../services/property-service/property.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { ErrorSnackbarComponent } from '../miscellaneous/snackbar/error-snackbar/error-snackbar.component';
+import { SuccessSnackbarComponent } from '../miscellaneous/snackbar/success-snackbar/success-snackbar.component';
 
 @Component({
   selector: 'app-delta',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterModule, MatTabsModule, NgSelectComponent, MatTooltipModule],
+  imports: [FormsModule, CommonModule, RouterModule, MatTabsModule, NgSelectComponent, MatTooltipModule, MatFormFieldModule, MatSelectModule, NgxMatSelectSearchModule, ReactiveFormsModule],
   templateUrl: './delta.component.html',
   styleUrl: './delta.component.css'
 })
@@ -51,7 +56,7 @@ export class DeltaComponent implements OnInit {
   currentPage: number = 1;
   pageSize: number = 10;
   totalPages: number = 0;
-  pages: number[] = []
+  pages: number[] = [];
 
 
   activeTab: string = 'tenant';
@@ -62,6 +67,8 @@ export class DeltaComponent implements OnInit {
   showFilterDropdown: boolean = false;
 
   hintVisible: boolean = false;
+
+  searchInput = new FormControl('');
 
 
 
@@ -136,6 +143,7 @@ export class DeltaComponent implements OnInit {
   private removeListeners: Function[] = [];
 
   flag: boolean = false;
+  flag2: boolean = false;
 
   private readonly MIN_COLUMN_WIDTH = 100;
 
@@ -199,9 +207,12 @@ export class DeltaComponent implements OnInit {
     if (this.selectedTenant1 && this.selectedTenant2 && this.selectedEnv1 && this.selectedEnv2) {
       console.log('Comparing environments:', this.selectedEnv1, this.selectedEnv2);
       if (this.selectedTenant1 === this.selectedTenant2 && this.selectedEnv1 === this.selectedEnv2) {
-        this.snackBar.open('Both Tenant & Environment cannot be same', 'Close', {
+        this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+          data: {
+            message: `Both Tenant & Environment cannot be same !`,
+            icon: 'check-circle'
+          },
           duration: 3000,
-          panelClass: ['custom-toast', 'toast-error'],
           horizontalPosition: 'center',
           verticalPosition: 'top',
         });
@@ -224,9 +235,12 @@ export class DeltaComponent implements OnInit {
           else {
             console.log(data);
             console.log(data.message);
-            this.snackBar.open(data.message, 'Close', {
+            this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+              data: {
+                message: `${data.message} !`,
+                icon: 'check-circle'
+              },
               duration: 3000,
-              panelClass: ['custom-toast', 'toast-error'],
               horizontalPosition: 'center',
               verticalPosition: 'top',
             });
@@ -237,9 +251,12 @@ export class DeltaComponent implements OnInit {
         error: (err) => console.error('Error comparing environments:', err),
       });
     } else {
-      this.snackBar.open('Please select an environment for both tenants.', 'Close', {
+      this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+        data: {
+          message: `Please fill all the required fields !`,
+          icon: 'check-circle'
+        },
         duration: 3000,
-        panelClass: ['custom-toast', 'toast-error'],
         horizontalPosition: 'center',
         verticalPosition: 'top',
       });
@@ -265,7 +282,7 @@ export class DeltaComponent implements OnInit {
 
     console.log(`Start Index: ${startIndex}`);
     console.log(`End Index: ${endIndex}`);
-    return this.filteredProperties.slice(startIndex,endIndex);
+    return this.filteredProperties.slice(startIndex, endIndex);
   }
 
 
@@ -312,6 +329,7 @@ export class DeltaComponent implements OnInit {
   }
 
   clearSelections(): void {
+    this.searchQuery = '';
     this.selectedTenant1 = '';
     this.selectedTenant2 = '';
     this.selectedEnv1 = '';
@@ -321,10 +339,14 @@ export class DeltaComponent implements OnInit {
     this.properties = [];
     this.filteredProperties = [];
     this.paginatedProperties = [];
-    this.searchQuery = ''
-    this.snackBar.open('Comparison cleared successfully!', 'Close', {
+    this.flag2 = false;
+    // this.handleSearchQueryChange();
+    this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+      data: {
+        message: `Comparison Cleared Successfully !`,
+        icon: 'check-circle'
+      },
       duration: 3000,
-      panelClass: ['custom-toast', 'toast-success'],
       horizontalPosition: 'center',
       verticalPosition: 'top',
     });

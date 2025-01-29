@@ -15,26 +15,57 @@
   <div class="compare-container">
     <div class="compare-cards">
       <div class="tenant-card">
-        <label for="tenant1">Build Your Tenant</label>
-        <input type="text" id="tenant1" [(ngModel)]="manualTenant" placeholder="Enter Tenant" required>
-        <input type="text" id="env1" [(ngModel)]="manualEnv" placeholder="Enter Environment" required>
+
+
+        <mat-form-field appearance="outline" class="search-select">
+          <mat-label>Tenant</mat-label>
+          <input matInput [(ngModel)]="manualTenant" name="tenant" placeholder="Enter Tenant" required />
+          <mat-error *ngIf="!manualTenant">
+            Tenant is required.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="search-select">
+          <mat-label>Environment</mat-label>
+          <input matInput [(ngModel)]="manualEnv" name="environment" placeholder="Enter Environment" required />
+          <mat-error *ngIf="!manualEnv">
+            Environment is required.
+          </mat-error>
+        </mat-form-field>
       </div>
 
       <div class="tenant-card">
-        <label for="tenant2">Master Tenant</label>
-        <select id="tenant2" [(ngModel)]="selectedTenant" (change)="loadEnvironmentsForTenant('tenant2')" required>
-          <option value="" disabled selected>Select Tenant</option>
-          <option *ngFor="let tenant of tenants" [value]="tenant.tenant">
-            {{ tenant.tenant | uppercase}}
-          </option>
-        </select>
-        <select id="env2" [(ngModel)]="selectedEnv" [disabled]="!selectedTenant" required>
-          <option value="" disabled selected>Select Environment</option>
-          <option *ngFor="let env of tenant2Environments" [value]="env">
-            {{ env | uppercase }}
-          </option>
-        </select>
+        <mat-form-field appearance="outline" class="search-select">
+          <mat-label>Select Tenant 2</mat-label>
+          <mat-select [(ngModel)]="selectedTenant" (selectionChange)="loadEnvironmentsForTenant('tenant2')" required>
+            <mat-option>
+              <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
+                noEntriesFoundLabel="No options found">
+              </ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let tenant of tenants" [value]="tenant">
+              {{ tenant | uppercase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="search-select">
+          <mat-label>Select Environment</mat-label>
+          <mat-select [(ngModel)]="selectedEnv" [disabled]="!selectedTenant" required>
+            <mat-option>
+              <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
+                noEntriesFoundLabel="No options found">
+              </ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let environment of tenant2Environments" [value]="environment">
+              {{ environment | uppercase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
+
+
+
       <div class="action-buttons">
         <button class="btn-primary" id="compareButton" (click)="cloneProperties()">
           <i class="fas fa-bolt"></i> Clone
@@ -48,7 +79,7 @@
     <div *ngIf="!loading && clonedProperties.length > 0" class="table-responsive">
 
       <div class="table-responsive table-container">
-  
+
         <table class="table custom-table shadow-sm">
           <thead>
             <tr>
@@ -57,7 +88,7 @@
                 {{ column.name }}
                 <div class="resize-handle" (mousedown)="onMouseDown($event, i)"></div>
               </th>
-  
+
             </tr>
           </thead>
           <tbody>
@@ -69,11 +100,7 @@
         </table>
       </div>
     </div>
-  
+
   </div>
 
 </div>
-
-
-
-  

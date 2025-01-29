@@ -28,9 +28,9 @@ export class SyncComponent implements OnInit {
   showOverlayHint: boolean = true;
   lastSyncTime: string = '';
   showHint: boolean = false;
-  loading:boolean = false;
+  loading: boolean = false;
   showSidebar = false;
-  isLoading:boolean = false;
+  isLoading: boolean = false;
 
   constructor(private dialog: MatDialog, private compareService: CompareService, private snackBar: MatSnackBar, private exportService: ExportService, private router: Router) { }
 
@@ -101,57 +101,64 @@ export class SyncComponent implements OnInit {
   }
 
   callSyncApi(): void {
-    this.isLoading = true;
-    const inProgressSnackbar = this.snackBar.openFromComponent(SyncSnackbarComponent, {
-      data:{
-        message:'Sync in progress...',
-        icon:'circle-notch'
-      },
-      duration: 0,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
+    const dialogRef = this.dialog.open(SyncDialogComponent, {
+      width: '600px',
     });
-    this.compareService.sync().subscribe({
-      next: (data) => {
-        console.log(data);
-        inProgressSnackbar.dismiss();
-        this.isLoading = false;
-
-        if (data) {
-          this.snackBar.openFromComponent(SuccessSnackbarComponent, {
-            data: {
-              message: `Sync Successful!`,
-              icon: 'check-circle'
-            },
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          });
-        }
-        this.getAllSyncDetails();
-      },
-      error: (err) => {
-        inProgressSnackbar.dismiss();
-        this.isLoading = false;
-        this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.isLoading = true;
+        const inProgressSnackbar = this.snackBar.openFromComponent(SyncSnackbarComponent, {
           data: {
-            message: `Sync process failed`,
-            icon: 'check-circle'
+            message: 'Sync in progress...',
+            icon: 'spinner'
           },
-          duration: 3000,
+          duration: 0,
           horizontalPosition: 'center',
           verticalPosition: 'top',
         });
+        this.compareService.sync().subscribe({
+          next: (data) => {
+            console.log(data);
+            inProgressSnackbar.dismiss();
+            this.isLoading = false;
+
+            if (data) {
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `Sync Successful!`,
+                  icon: 'check-circle'
+                },
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'top',
+              });
+            }
+            this.getAllSyncDetails();
+          },
+          error: (err) => {
+            inProgressSnackbar.dismiss();
+            this.isLoading = false;
+            this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+              data: {
+                message: `Sync process failed`,
+                icon: 'check-circle'
+              },
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
+          }
+        })
       }
-    })
+    });
   }
   syncEnvironment(env: string) {
 
     this.exportService.isAnyDataModifiedForEnv(env).subscribe({
-      next:(res)=>{
-        if(res.statusCode == 200 && res.message == 'success'){
-          const dialogRef = this.dialog.open(SyncDialogExportComponent,{
-            width:'600px',
+      next: (res) => {
+        if (res.statusCode == 200 && res.message == 'success') {
+          const dialogRef = this.dialog.open(SyncDialogExportComponent, {
+            width: '600px',
             data: { env },
           });
           dialogRef.afterClosed().subscribe((action) => {
@@ -160,7 +167,7 @@ export class SyncComponent implements OnInit {
               this.exportService.exportSpecifiedEnv(env).subscribe({
                 next: (blob) => {
                   console.log(blob);
-          
+
                   const url = window.URL.createObjectURL(blob);
                   const a = document.createElement('a');
                   a.href = url;
@@ -209,7 +216,7 @@ export class SyncComponent implements OnInit {
                       horizontalPosition: 'center',
                       verticalPosition: 'top',
                     });
-      
+
                     this.getAllSyncDetails();
                   }
                 },
@@ -223,7 +230,7 @@ export class SyncComponent implements OnInit {
             }
           });
         }
-        else{
+        else {
           const dialogRef = this.dialog.open(SyncDialogComponent, {
             width: '600px',
           });
@@ -244,7 +251,7 @@ export class SyncComponent implements OnInit {
                       horizontalPosition: 'center',
                       verticalPosition: 'top',
                     });
-      
+
                     this.getAllSyncDetails();
                   }
                 },
@@ -257,25 +264,25 @@ export class SyncComponent implements OnInit {
           });
         }
       },
-      error:(err)=>{
+      error: (err) => {
 
       }
-    });   
+    });
 
-    
+
 
   }
 
 
   exportSingleUpdateQuery(env: string) {
     this.exportService.isAnyDataModifiedForEnv(env).subscribe({
-      next:(res)=>{
+      next: (res) => {
         console.log(res);
-        if(res.statusCode == 200 && res.message == 'success'){
+        if (res.statusCode == 200 && res.message == 'success') {
           this.exportService.exportSpecifiedEnv(env).subscribe({
             next: (blob) => {
               console.log(blob);
-      
+
               const url = window.URL.createObjectURL(blob);
               const a = document.createElement('a');
               a.href = url;
@@ -308,7 +315,7 @@ export class SyncComponent implements OnInit {
             },
           })
         }
-        else{
+        else {
           this.snackBar.openFromComponent(ErrorSnackbarComponent, {
             data: {
               message: `You cannot export because no edit, delete, or add operations have been performed.`,

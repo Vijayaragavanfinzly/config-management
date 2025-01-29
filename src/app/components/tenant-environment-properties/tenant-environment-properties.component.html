@@ -84,7 +84,7 @@
     </button>
     <button *ngIf="selectedIds.length == 0" class="btn btn-sm action-btn ms-2 add-btn export-btn"
       (click)="exportAllData()" [disabled]="loading" aria-label="Export Properties" role="button"
-      [matTooltip]="'Click to export selected properties as SQL INSERT query'" matTooltipShowDelay="300"
+      [matTooltip]="'Click to export SQL query'" matTooltipShowDelay="300"
       matTooltipPosition="above" matTooltipClass="custom-tooltip">
       <i class="fas fa-file-export"></i> Export
     </button>

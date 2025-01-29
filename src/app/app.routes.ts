@@ -8,8 +8,6 @@ import { TenantEnvironmentPropertiesComponent } from './components/tenant-enviro
 import { CompareComponent } from './components/compare/compare.component';
 import { CloneComponent } from './components/clone/clone.component';
 import { CompareByTenantComponent } from './components/compare-by-tenant/compare-by-tenant.component';
-import { CompareByEnvironmentComponent } from './components/compare-by-environment/compare-by-environment.component';
-import { SettingsComponent } from './components/settings/settings.component';
 import { CompareOnlyEnvComponent } from './components/compare-only-env/compare-only-env.component';
 import { CompareLiveConfigComponent } from './components/compare-live-config/compare-live-config.component';
 import { CompareConfigDbComponent } from './components/compare-config-db/compare-config-db.component';
@@ -19,12 +17,20 @@ import { GuideComparisonComponent } from './components/guide-comparison/guide-co
 import { GuideSyncComponent } from './components/guide-sync/guide-sync.component';
 import { DeltaComponent } from './components/delta/delta.component';
 import { CommonEnvironmentPropertiesComponent } from './components/common-environment-properties/common-environment-properties.component';
+import { ParamStoreEnvironmentsComponent } from './components/param-store-environments/param-store-environments.component';
+import { ParamStoreTenantEnvironmentPropertiesComponent } from './components/param-store-tenant-environment-properties/param-store-tenant-environment-properties.component';
+import { CredentialsForAddingEnvironmentComponent } from './components/credentials-for-adding-environment/credentials-for-adding-environment.component';
 
 export const routes: Routes = [
     {
         path:'',
         component:LayoutComponent,
         children:[
+            {
+                path: '',
+                redirectTo: 'sync',
+                pathMatch: 'full'
+            },
             {
                 path:'properties',
                 component:TenantsComponent
@@ -66,12 +72,16 @@ export const routes: Routes = [
                 component:CommonEnvironmentPropertiesComponent
             },
             {
-                path:'clone',
-                component:CloneComponent
+                path:'param-store/:tenant',
+                component:ParamStoreEnvironmentsComponent
             },
             {
-                path:'settings',
-                component:SettingsComponent
+                path:'param-store/:tenant/:environment',
+                component:ParamStoreTenantEnvironmentPropertiesComponent
+            },
+            {
+                path:'clone',
+                component:CloneComponent
             },
             {
                 path:'compare-environments',
@@ -96,6 +106,10 @@ export const routes: Routes = [
             {
                 path:'faq/sync-guide',
                 component:GuideSyncComponent
+            },
+            {
+                path:'credentials',
+                component:CredentialsForAddingEnvironmentComponent
             }
         ]
     }

@@ -49,7 +49,9 @@ export class TenantEnvironmentsComponent implements OnInit {
     this.tenantService.getTenantEnvironments(this.tenant).subscribe({
       next: (data: any) => {
         console.log(data);
-        this.environments = data.data;
+        this.environments = data.data.sort((a: any, b: any) => {
+          return a.localeCompare(b);
+        });
         // this.tenantName = data.data.tenantName;
         this.filteredEnvironments = this.environments.filter(env => env !== 'PENDING');
 

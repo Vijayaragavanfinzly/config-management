@@ -50,7 +50,7 @@
         </li>
         <li class="nav-item">
           <a routerLink="/properties" routerLinkActive="active" class="nav-link">
-            <i class="fas fa-user-friends"></i>
+            <i class="fas fa-tools"></i>
             <span *ngIf="!isSidebarCollapsed">Property</span>
             <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">Property</small>
           </a>
@@ -79,6 +79,14 @@
           </a>
         </li> -->
 
+
+        <li class="nav-item">
+          <a routerLink="/credentials" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-shield-alt"></i>
+            <span *ngIf="!isSidebarCollapsed">&nbsp;Credential</span>
+            <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">Credential</small>
+          </a>
+        </li>
         
 
         <li class="nav-item">
@@ -88,6 +96,8 @@
             <small *ngIf="isSidebarCollapsed" class="collapsed-text me-1">FAQ</small>
           </a>
         </li>
+
+        
 
       </ul>
       

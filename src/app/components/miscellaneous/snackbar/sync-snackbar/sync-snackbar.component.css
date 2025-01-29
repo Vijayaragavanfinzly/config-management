@@ -30,7 +30,7 @@
   .snack-bar-content span {
     margin-right: 50px;
   }
-  .fa-circle-notch {
+  .fa-spinner {
     animation: spin 1.5s cubic-bezier(0.25, 1, 0.5, 1) infinite;
   }
   

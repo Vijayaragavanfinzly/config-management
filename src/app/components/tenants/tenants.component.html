@@ -3,7 +3,7 @@
     <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
       <li class="breadcrumb-item" [routerLinkActive]="['active']">
         <a [routerLink]="['/properties']" class="breadcrumb-link">
-          <i class="fas fa-link mr-2"></i> {{activeTab | uppercase}}
+          {{activeTab | uppercase}}
         </a>
       </li>
     </ol>
@@ -17,6 +17,8 @@
       (input)="filterTenants()" placeholder=" Search by Tenant ..." />
     <input *ngIf="activeTab === 'common'" type="text" class="form-control search-input"
       [(ngModel)]="searchKeywordForEnv" (input)="filterEnvironments()" placeholder=" Search by Environment ..." />
+    <input *ngIf="activeTab === 'parameter store'" type="text" class="form-control search-input"
+      [(ngModel)]="searchKeywordForAws" (input)="filterParamStoreTenants()" placeholder=" Search ..." />
   </div>
   <div class="dropdown ms-3">
     <button class="btn btn-outline-secondary dropdown-toggle custom-dropdown" type="button" id="dropdownMenuButton"
@@ -30,17 +32,6 @@
     </ul>
   </div>
 </div>
-
-
-<div *ngIf="!loading && searchKeyword && filteredTenants.length === 0" class="no-results">
-  <div class="no-results-content">
-    <i class="fas fa-search fa-3x"></i>
-    <h4 class="mt-3">No Results Found</h4>
-    <p class="text-muted">We couldn’t find anything matching "<span class="highlight">{{ searchKeyword }}</span>".</p>
-    <button class="btn btn-primary btn-try-again" (click)="clearSearch()">Try Again</button>
-  </div>
-</div>
-
 
 <div class="container mt-5 tiles pb-4" *ngIf="activeTab === 'tenants'">
   <div *ngIf="loading" class="text-center my-5">
@@ -70,7 +61,7 @@
     <app-spinner></app-spinner>
   </div>
   <div class="tile-container">
-    <div *ngFor="let environment of environmentsForCommon" class="tile-card">
+    <div *ngFor="let environment of filteredEnvironmentsForCommon" class="tile-card">
       <div class="tile-header"></div>
       <div class="tile-body">
         <h4 class="tile-title">{{ environment | uppercase }}</h4>
@@ -79,8 +70,32 @@
           <strong>{{ environment | uppercase }}</strong>.
         </p>
         <div class="tile-footer">
-          <button class="btn btn-primary"  [routerLink]="['/commonProperty', 'common', environment]">
+          <button class="btn btn-primary" [routerLink]="['/commonProperty', 'common', environment]">
             Explore Environment
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container mt-5 tiles pb-4" *ngIf="activeTab === 'parameter store'">
+  <div *ngIf="loading" class="text-center my-5">
+    <app-spinner></app-spinner>
+  </div>
+  <div class="tile-container">
+    <div *ngFor="let tenant of filteredAwsTenants" class="tile-card">
+      <div class="tile-header"></div>
+      <div class="tile-body">
+        <h4 class="tile-title">{{ tenant | uppercase }}</h4>
+        <p class="tile-description">
+          Explore the available Environments under
+          <strong>{{ tenant | uppercase }}</strong>.
+        </p>
+        <div class="tile-footer">
+          <button class="btn btn-primary" [routerLink]="['/param-store',tenant]">
+            Explore Tenant
           </button>
         </div>
       </div>
@@ -91,7 +106,8 @@
 
 
 
-<div *ngIf="!loading && tenants.length === 0" class="empty-state">
+
+<!-- <div *ngIf="!loading && tenants.length === 0" class="empty-state">
   <div class="empty-state-content">
     <i class="fas fa-folder-open fa-4x text-muted" style="color: #ffc107;"></i>
     <h4 class="mt-3">No Tenants Found</h4>
@@ -101,4 +117,32 @@
     </button>
   </div>
 
+</div> -->
+
+<div *ngIf="!loading && searchKeyword && filteredTenants.length === 0 && activeTab === 'tenants'" class="no-results">
+  <div class="no-results-content">
+    <i class="fas fa-search fa-3x"></i>
+    <h4 class="mt-3">No Results Found</h4>
+    <p class="text-muted">We couldn’t find anything matching "<span class="highlight">{{ searchKeyword }}</span>".</p>
+    <button class="btn btn-primary btn-try-again" (click)="clearSearch()">Try Again</button>
+  </div>
+</div>
+
+<div *ngIf="!loading && searchKeywordForEnv && filteredEnvironmentsForCommon.length === 0 && activeTab === 'common'" class="no-results">
+  <div class="no-results-content">
+    <i class="fas fa-search fa-3x"></i>
+    <h4 class="mt-3">No Results Found</h4>
+    <p class="text-muted">We couldn’t find anything matching "<span class="highlight">{{ searchKeyword }}</span>".</p>
+    <button class="btn btn-primary btn-try-again" (click)="clearSearch()">Try Again</button>
+  </div>
+</div>
+
+
+<div *ngIf="!loading && searchKeywordForAws && filteredAwsTenants.length === 0 && activeTab === 'parameter store'" class="no-results">
+  <div class="no-results-content">
+    <i class="fas fa-search fa-3x"></i>
+    <h4 class="mt-3">No Results Found</h4>
+    <p class="text-muted">We couldn’t find anything matching "<span class="highlight">{{ searchKeyword }}</span>".</p>
+    <button class="btn btn-primary btn-try-again" (click)="clearSearch()">Try Again</button>
+  </div>
 </div>

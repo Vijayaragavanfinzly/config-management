@@ -1,35 +1,36 @@
+import { Component, HostListener, OnInit, Renderer2 } from '@angular/core';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { SpinnerComponent } from '../miscellaneous/spinner/spinner.component';
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, Renderer2 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgSelectComponent } from '@ng-select/ng-select';
-import { SpinnerComponent } from '../miscellaneous/spinner/spinner.component';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { ConfirmationDialogComponent } from '../miscellaneous/dialogs/confirmation-dialog/confirmation-dialog.component';
-import { ErrorSnackbarComponent } from '../miscellaneous/snackbar/error-snackbar/error-snackbar.component';
-import { SuccessSnackbarComponent } from '../miscellaneous/snackbar/success-snackbar/success-snackbar.component';
-import { PropertyDialogComponent } from '../miscellaneous/dialogs/edit-property-dialog/edit-property-dialog.component';
-import { AddPropertyDialogComponent } from '../miscellaneous/dialogs/add-property-dialog/add-property-dialog.component';
-import { ExportConfirmationComponent } from '../miscellaneous/dialogs/export-confirmation/export-confirmation.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { PropertyService } from '../../services/property-service/property.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ExportService } from '../../services/export-service/export.service';
 import { ApplicationService } from '../../services/application-service/application.service';
-import { Property } from '../../model/property.interface';
+import { ExportConfirmationComponent } from '../miscellaneous/dialogs/export-confirmation/export-confirmation.component';
+import { SuccessSnackbarComponent } from '../miscellaneous/snackbar/success-snackbar/success-snackbar.component';
+import { ErrorSnackbarComponent } from '../miscellaneous/snackbar/error-snackbar/error-snackbar.component';
+import { AddPropertyDialogComponent } from '../miscellaneous/dialogs/add-property-dialog/add-property-dialog.component';
+import { PropertyDialogComponent } from '../miscellaneous/dialogs/edit-property-dialog/edit-property-dialog.component';
+import { ConfirmationDialogComponent } from '../miscellaneous/dialogs/confirmation-dialog/confirmation-dialog.component';
+import { ParamStoreServiceService } from '../../services/param-store-service/param-store-service.service';
 
 @Component({
-  selector: 'app-common-environment-properties',
+  selector: 'app-param-store-tenant-environment-properties',
   standalone: true,
-  imports: [RouterModule, SpinnerComponent, CommonModule, MatDialogModule, MatButtonModule, FormsModule, MatSidenavModule, MatIconModule, MatInputModule, MatSelectModule, NgSelectComponent, MatTooltipModule],  templateUrl: './common-environment-properties.component.html',
-  styleUrl: './common-environment-properties.component.css'
+  imports: [RouterModule, SpinnerComponent, CommonModule, MatDialogModule, MatButtonModule, FormsModule, MatSidenavModule, MatIconModule, MatInputModule, MatSelectModule, NgSelectComponent, MatTooltipModule],
+  templateUrl: './param-store-tenant-environment-properties.component.html',
+  styleUrl: './param-store-tenant-environment-properties.component.css'
 })
-export class CommonEnvironmentPropertiesComponent {
+export class ParamStoreTenantEnvironmentPropertiesComponent implements OnInit{
   
     tenant: string = '';
     environment: string = '';
@@ -52,7 +53,7 @@ export class CommonEnvironmentPropertiesComponent {
       { name: 'Property Key', field: 'propertyKey', width: 300 },
       { name: 'Property Value', field: 'PropertyValue', width: 300 },
       // {name: 'Release Version', field:'releaseVersion', width:150},
-      { name: 'Actions', field: 'actions', width: 150 },
+      // { name: 'Actions', field: 'actions', width: 150 },
     ];
   
     private startX: number = 0;
@@ -82,7 +83,7 @@ export class CommonEnvironmentPropertiesComponent {
   
   
     constructor(private route: ActivatedRoute,
-      private dialog: MatDialog, private propertyService: PropertyService, private snackBar: MatSnackBar, private renderer: Renderer2, private exportService: ExportService, private applicationService: ApplicationService
+      private dialog: MatDialog, private propertyService: PropertyService, private snackBar: MatSnackBar, private renderer: Renderer2, private exportService: ExportService, private applicationService: ApplicationService, private paramStoreService:ParamStoreServiceService
     ) { }
   
     ngOnInit(): void {
@@ -106,7 +107,7 @@ export class CommonEnvironmentPropertiesComponent {
   
     loadPropertiesForTenants() {
       this.loading = true;
-      this.propertyService.getTenantProperties(this.tenant, this.environment).subscribe({
+      this.paramStoreService.getPropertiesForTenantAndEnvironment(this.tenant, this.environment).subscribe({
         next: (data: any) => {
           console.log(data);
   
@@ -155,7 +156,7 @@ export class CommonEnvironmentPropertiesComponent {
       if (this.searchKeyword.trim()) {
         this.filteredProperties = this.properties.filter(property => {
           const key = property.propertyKey || "";
-          const value = property.propertyValue || "";
+          const value = property.value || "";
           return (
             key.toLowerCase().includes(this.searchKeyword.toLowerCase()) ||
             value.toLowerCase().includes(this.searchKeyword.toLowerCase())
@@ -560,8 +561,6 @@ export class CommonEnvironmentPropertiesComponent {
           const payload = {
             id: property.id,
             isEdit: true,
-            isAdd: property.isAdd,
-            isDelete: property.isDelete,
             configId: property.configId,
             env: this.environment,
             tenant: this.tenant,
@@ -789,5 +788,4 @@ export class CommonEnvironmentPropertiesComponent {
     applyFilters() {
       console.log('Applied Filters:', this.advancedSearch);
     }
-  
 }

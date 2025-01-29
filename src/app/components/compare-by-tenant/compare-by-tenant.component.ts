@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, Renderer2 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { TenantService } from '../../services/tenant-service/tenant.service';
@@ -20,10 +20,13 @@ import { SuccessSnackbarComponent } from '../miscellaneous/snackbar/success-snac
 import { ErrorSnackbarComponent } from '../miscellaneous/snackbar/error-snackbar/error-snackbar.component';
 import { AddPropertyDialogComponent } from '../miscellaneous/dialogs/add-property-dialog/add-property-dialog.component';
 import { AddPropertyCompareComponent } from '../miscellaneous/dialogs/add-property-compare/add-property-compare.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 @Component({
   selector: 'app-compare-by-tenant',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterModule, MatTabsModule, NgSelectComponent, MatTooltipModule],
+  imports: [FormsModule, CommonModule, RouterModule, MatTabsModule, MatTooltipModule,MatFormFieldModule,MatSelectModule,NgxMatSelectSearchModule,ReactiveFormsModule],
   templateUrl: './compare-by-tenant.component.html',
   styleUrl: './compare-by-tenant.component.css'
 })
@@ -90,6 +93,7 @@ export class CompareByTenantComponent {
   showFilterDropdown: boolean = false;
   hintVisible: boolean = false;
   applications: string[] = [];
+  searchInput = new FormControl('');
   filters = {
     matching: true,
     nonMatching: true,
@@ -152,6 +156,7 @@ export class CompareByTenantComponent {
   selectFilter(option: string) {
     this.selectedFilter = option;
     this.showDropdown = false;
+    this.handleSearchQueryChange();
     this.updatePagination();
     this.currentPage = 1;
   }
@@ -163,7 +168,9 @@ export class CompareByTenantComponent {
   loadAllTenants(): void {
     this.tenantService.getAllTenants().subscribe({
       next: (data) => {
-        this.tenants = data.data;
+        this.tenants = data.data.sort((a: any, b: any) => {
+          return a.localeCompare(b);
+        });
         console.log(this.tenants);
         this.tenantNames = this.tenants.map((tenant) => tenant.toUpperCase());
       },
@@ -214,6 +221,7 @@ export class CompareByTenantComponent {
     });
   }
   compareEnvironments(): void {
+    this.searchQuery = ''
     if (this.selectedTenant1 && this.selectedTenant2 && this.selectedEnv1 && this.selectedEnv2) {
       console.log('Comparing environments:', this.selectedEnv1, this.selectedEnv2);
       if (this.selectedTenant1 === this.selectedTenant2 && this.selectedEnv1 === this.selectedEnv2) {
@@ -250,9 +258,12 @@ export class CompareByTenantComponent {
           else {
             console.log(data);
             console.log(data.message);
-            this.snackBar.open(data.message, 'Close', {
+            this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+              data: {
+                message: `${data.message}`,
+                icon: 'x-circle'
+              },
               duration: 3000,
-              panelClass: ['custom-toast', 'toast-error'],
               horizontalPosition: 'center',
               verticalPosition: 'top',
             });
@@ -261,12 +272,6 @@ export class CompareByTenantComponent {
         error: (err) => console.error('Error comparing environments:', err),
       });
     } else {
-      this.snackBar.open('Please select an environment for both tenants.', 'Close', {
-        duration: 3000,
-        panelClass: ['custom-toast', 'toast-error'],
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-      });
       this.snackBar.openFromComponent(ErrorSnackbarComponent, {
         data: {
           message: `Please select all the field.`,
@@ -782,9 +787,12 @@ export class CompareByTenantComponent {
             if (response.statusCode === 201) {
               console.log(response);
               this.selectedEntry[this.selectedColumn.name] = data.newValue;
-              this.snackBar.open('Updated Successfully!', 'Close', {
+              this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                data: {
+                  message: `Updated Successfully !`,
+                  icon: 'check-circle'
+                },
                 duration: 3000,
-                panelClass: ['custom-toast', 'toast-success'],
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
               });
@@ -792,9 +800,12 @@ export class CompareByTenantComponent {
             }
           },
           error: (err) => {
-            this.snackBar.open('Update Failed', 'Close', {
+            this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+              data: {
+                message: `Update Failed !`,
+                icon: 'check-circle'
+              },
               duration: 3000,
-              panelClass: ['custom-toast', 'toast-error'],
               horizontalPosition: 'center',
               verticalPosition: 'top',
             });
@@ -951,7 +962,7 @@ export class CompareByTenantComponent {
 
   clearSearch() {
     this.searchQuery = '';
-    this.filterResults();
+    this.handleSearchQueryChange();
   }
 
 
