@@ -17,38 +17,45 @@
 </div>
 <div class="">
     <div class="compare-container">
-      <div class="compare-cards">
+      <!-- <div class="compare-cards">
 
         <div class="tenant-card">
-          <mat-form-field appearance="outline" class="search-select">
-            <mat-label>Select Tenant 1</mat-label>
-            <mat-select [(ngModel)]="selectedTenant1" (selectionChange)="loadEnvironmentsForTenant('tenant1')" panelClass="custom-select-panel" required>
-              <mat-option>
-                <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
-                    noEntriesFoundLabel="No options found"></ngx-mat-select-search>
-              </mat-option>
-              <mat-option *ngFor="let tenant of tenantNames" [value]="tenant">
-                {{ tenant | uppercase }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-      
-          <mat-form-field appearance="outline" class="search-select">
-            <mat-label>Select Environment</mat-label>
-            <mat-select [(ngModel)]="selectedEnv1" [disabled]="!selectedTenant1" required>
-              <mat-option>
-                <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
-                    noEntriesFoundLabel="No options found"></ngx-mat-select-search>
-              </mat-option>
-              <mat-option *ngFor="let environment of tenant1Environments" [value]="environment">
-                {{ environment | uppercase }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+          <label class="tenant-label">Latest Release</label>
+          
+          <div class="select-container">
+            <mat-form-field appearance="outline" class="search-select">
+              <mat-label>Select Tenant 1</mat-label>
+              <mat-select [(ngModel)]="selectedTenant1" (selectionChange)="loadEnvironmentsForTenant('tenant1')" 
+                          panelClass="custom-select-panel" required>
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
+                      noEntriesFoundLabel="No options found"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let tenant of tenantNames" [value]="tenant">
+                  {{ tenant | uppercase }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline" class="search-select">
+              <mat-label>Select Environment</mat-label>
+              <mat-select [(ngModel)]="selectedEnv1" [disabled]="!selectedTenant1" required>
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
+                      noEntriesFoundLabel="No options found"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let environment of tenant1Environments" [value]="environment">
+                  {{ environment | uppercase }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
         </div>
+        
       
-        <!-- Second Tenant Selection -->
         <div class="tenant-card">
+          <label class="tenant-label">Old Release</label>
+          <div class="select-container">
           <mat-form-field appearance="outline" class="search-select">
             <mat-label>Select Tenant 2</mat-label>
             <mat-select [(ngModel)]="selectedTenant2" (selectionChange)="loadEnvironmentsForTenant('tenant2')" required>
@@ -75,40 +82,89 @@
             </mat-select>
           </mat-form-field>
         </div>
-        
-        <!-- <div class="tenant-card">
-          <label for="tenant1">Tenant 1</label>
-          <ng-select id="tenant1" [items]="tenantNames" bindLabel="tenant" [(ngModel)]="selectedTenant1"
-            (change)="loadEnvironmentsForTenant('tenant1')" [searchable]="true" placeholder="Select Tenant 1"
-            class="custom-ng-select"></ng-select>
-          <ng-select id="env1" [items]="tenant1Environments" [(ngModel)]="selectedEnv1" [disabled]="!selectedTenant1"
-            placeholder="Select Environment" [searchable]="true" class="custom-ng-select"></ng-select>
         </div>
-        <div class="tenant-card">
-          <label for="tenant2">Tenant 2</label>
-          <ng-select id="tenant2" [items]="tenantNames" bindLabel="tenant" [(ngModel)]="selectedTenant2"
-            (change)="loadEnvironmentsForTenant('tenant2')" [searchable]="true" placeholder="Select Tenant 2"
-            class="custom-ng-select"></ng-select>
-          <ng-select id="env2" [items]="tenant2Environments" [(ngModel)]="selectedEnv2" [disabled]="!selectedTenant2"
-            placeholder="Select Environment" [searchable]="true" class="custom-ng-select"></ng-select>
-        </div> -->
-  
+
         <div class="action-buttons">
           <button class="btn-primary" id="compareButton"
             matTooltip="Find delta between the selected tenants" matTooltipPosition="above" (click)="findDelta()">
-            <i class="fas fa-bolt"></i> Compare
+            <i class="fas fa-bolt"></i> Delta
           </button>
           <button class="btn-secondary" id="clearButton" matTooltip="Clear All selections"
             matTooltipPosition="below" (click)="clearSelections()">
             <i class="fas fa-eraser"></i> Clear
           </button>
-          <!-- <button class="btn-error" id="clearButton" matTooltip="Clear All selections"
-            matTooltipPosition="below">
-            <i class="fas fa-eraser"></i> Export
-          </button> -->
+          
         </div>
-      </div>
+      </div> -->
 
+      <div class="compare-cards">
+
+        <div class="tenant-card">
+          <label class="tenant-label">Tenant Selection</label>
+      
+          <div class="select-container">
+            <!-- Tenant Selection -->
+            <mat-form-field appearance="outline" class="search-select">
+              <mat-label>Select Tenant</mat-label>
+              <mat-select [(ngModel)]="selectedTenant1" (selectionChange)="loadEnvironmentsForTenant('tenant1')" required>
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
+                      noEntriesFoundLabel="No options found"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let tenant of tenantNames" [value]="tenant">
+                  {{ tenant | uppercase }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+      
+            <!-- Environment 1 Selection -->
+            <mat-form-field appearance="outline" class="search-select">
+              <mat-label>Latest Release Environment</mat-label>
+              <mat-select [(ngModel)]="selectedEnv1" [disabled]="!selectedTenant1" required>
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
+                      noEntriesFoundLabel="No options found"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let environment of tenant1Environments" [value]="environment">
+                  {{ environment | uppercase }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            
+      
+            <!-- Environment 2 Selection -->
+            <mat-form-field appearance="outline" class="search-select">
+              <mat-label>Old Release Environment</mat-label>
+              <mat-select [(ngModel)]="selectedEnv2" [disabled]="!selectedTenant1" required>
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
+                      noEntriesFoundLabel="No options found"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let environment of tenant1Environments" [value]="environment">
+                  {{ environment | uppercase }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      
+        <div class="action-buttons">
+          <button class="btn-primary" id="compareButton"
+            matTooltip="Find delta between the selected environments" matTooltipPosition="above" (click)="findDelta()">
+            <i class="fas fa-bolt"></i> DELTA
+          </button>
+          <button class="btn-error" id="clearButton" matTooltip="Clear All selections"
+            matTooltipPosition="below" (click)="exportDelta()">
+            <i class="fas fa-download"></i> EXPORT
+          </button>
+          <button class="btn-secondary" id="clearButton" matTooltip="Clear All selections"
+            matTooltipPosition="below" (click)="clearSelections()">
+            <i class="fas fa-eraser"></i> CLEAR
+          </button>
+        </div>
+      
+      </div>
+      
       <div *ngIf="!loading && (properties.length > 0)"
         class="mt-5 mb-3 search-bar">
         <div class="form-control search-input-container">
@@ -222,3 +278,8 @@
     <button class="btn btn-primary btn-try-again" (click)="clearSearch()">Try Again</button>
   </div>
 </div>
+
+<!-- <button class="btn-error" id="clearButton" matTooltip="Clear All selections"
+            matTooltipPosition="below">
+            <i class="fas fa-eraser"></i> Export
+          </button> -->

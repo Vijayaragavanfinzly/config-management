@@ -1,4 +1,4 @@
-<div class="container mt-3">
+<div class=" mt-3">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb custom-breadcrumb p-3 rounded shadow-sm">
       <li class="breadcrumb-item active">
@@ -10,97 +10,97 @@
   </nav>
 </div>
 
-<div class="container">
+<div class="">
 
   <div class="compare-container">
     <div class="compare-cards">
       <div class="tenant-card">
+        <label class="tenant-label">Build Your Tenant</label>
+        <div class="select-container">
+          <mat-form-field appearance="outline" class="search-select">
+            <mat-label>Enter Tenant</mat-label>
+            <input matInput [(ngModel)]="manualTenant" name="tenant" placeholder="Enter Tenant" required />
+            <mat-error *ngIf="!manualTenant">
+              Tenant is required.
+            </mat-error>
+          </mat-form-field>
 
-
-        <mat-form-field appearance="outline" class="search-select">
-          <mat-label>Tenant</mat-label>
-          <input matInput [(ngModel)]="manualTenant" name="tenant" placeholder="Enter Tenant" required />
-          <mat-error *ngIf="!manualTenant">
-            Tenant is required.
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="search-select">
-          <mat-label>Environment</mat-label>
-          <input matInput [(ngModel)]="manualEnv" name="environment" placeholder="Enter Environment" required />
-          <mat-error *ngIf="!manualEnv">
-            Environment is required.
-          </mat-error>
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="search-select">
+            <mat-label>Enter Environment</mat-label>
+            <input matInput [(ngModel)]="manualEnv" name="environment" placeholder="Enter Environment" required />
+            <mat-error *ngIf="!manualEnv">
+              Environment is required.
+            </mat-error>
+          </mat-form-field>
+        </div>
       </div>
 
       <div class="tenant-card">
-        <mat-form-field appearance="outline" class="search-select">
-          <mat-label>Select Tenant 2</mat-label>
-          <mat-select [(ngModel)]="selectedTenant" (selectionChange)="loadEnvironmentsForTenant('tenant2')" required>
-            <mat-option>
-              <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
-                noEntriesFoundLabel="No options found">
-              </ngx-mat-select-search>
-            </mat-option>
-            <mat-option *ngFor="let tenant of tenants" [value]="tenant">
-              {{ tenant | uppercase }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <label class="tenant-label">Source Tenant</label>
+        <div class="select-container">
+          <mat-form-field appearance="outline" class="search-select">
+            <mat-label>Source Tenant</mat-label>
+            <mat-select [(ngModel)]="selectedTenant" (selectionChange)="loadEnvironmentsForTenant('tenant2')" required>
+              <mat-option>
+                <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
+                  noEntriesFoundLabel="No options found">
+                </ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let tenant of tenants" [value]="tenant">
+                {{ tenant | uppercase }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
-        <mat-form-field appearance="outline" class="search-select">
-          <mat-label>Select Environment</mat-label>
-          <mat-select [(ngModel)]="selectedEnv" [disabled]="!selectedTenant" required>
-            <mat-option>
-              <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
-                noEntriesFoundLabel="No options found">
-              </ngx-mat-select-search>
-            </mat-option>
-            <mat-option *ngFor="let environment of tenant2Environments" [value]="environment">
-              {{ environment | uppercase }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="search-select">
+            <mat-label>Source Environment</mat-label>
+            <mat-select [(ngModel)]="selectedEnv" [disabled]="!selectedTenant" required>
+              <mat-option>
+                <ngx-mat-select-search [formControl]="searchInput" placeholderLabel="Search..."
+                  noEntriesFoundLabel="No options found">
+                </ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let environment of tenant2Environments" [value]="environment">
+                {{ environment | uppercase }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
-
-
-
-      <div class="action-buttons">
-        <button class="btn-primary" id="compareButton" (click)="cloneProperties()">
-          <i class="fas fa-bolt"></i> Clone
-        </button>
-        <button class="btn-secondary" id="clearButton" (click)="clearSelections()">
-          <i class="fas fa-eraser"></i> Clear
-        </button>
-      </div>
+    
+    <div class="action-buttons">
+      <button class="btn-primary" id="compareButton" (click)="cloneProperties()">
+        <i class="fas fa-bolt"></i> Clone
+      </button>
+      <button class="btn-secondary" id="clearButton" (click)="clearSelections()">
+        <i class="fas fa-eraser"></i> Clear
+      </button>
     </div>
+  </div>
 
-    <div *ngIf="!loading && clonedProperties.length > 0" class="table-responsive">
+  <div *ngIf="!loading && clonedProperties.length > 0" class="table-responsive">
 
-      <div class="table-responsive table-container">
+    <div class="table-responsive table-container">
 
-        <table class="table custom-table shadow-sm">
-          <thead>
-            <tr>
-              <th *ngFor="let column of columns; let i = index"
-                [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}" class="text-center">
-                {{ column.name }}
-                <div class="resize-handle" (mousedown)="onMouseDown($event, i)"></div>
-              </th>
+      <table class="table custom-table shadow-sm">
+        <thead>
+          <tr>
+            <th *ngFor="let column of columns; let i = index"
+              [ngStyle]="{'width': column.width + 'px', 'max-width': column.width + 'px'}" class="text-center">
+              {{ column.name }}
+              <div class="resize-handle" (mousedown)="onMouseDown($event, i)"></div>
+            </th>
 
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let property of clonedProperties; let i = index">
-              <td class="property-cell">{{ i+1 }}. &nbsp;{{ property.propertyKey }}</td>
-              <td>{{ property.propertyValue }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let property of clonedProperties; let i = index">
+            <td class="property-cell">{{ i+1 }}. &nbsp;{{ property.propertyKey }}</td>
+            <td>{{ property.propertyValue }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
   </div>
 
 </div>

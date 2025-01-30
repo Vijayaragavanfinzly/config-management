@@ -82,5 +82,22 @@
       <p><strong>Export Operations:</strong> Export INSERT, DELETE, or UPDATE queries for environments with recent
         changes.</p>
     </div>
+
+    <!-- New Sidebar Tip for Syncing with VPN -->
+    <div class="sidebar-tip">
+      <i class="fas fa-lock tip-icon"></i>
+      <p><strong>Sync Tip:</strong> While syncing, make sure your VPN is on. Syncing will only work correctly when connected through the VPN.</p>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="syncData.length === 0" class="empty-state-container">
+  <div class="empty-state-content">
+    <i class="fas fa-exclamation-circle empty-icon"></i>
+    <h3 class="empty-title">No Data Synced</h3>
+    <p class="empty-description">
+      Your configurations are currently unsynced. Click the Sync All Environments to synchronize the latest data.
+    </p>
   </div>
 </div>

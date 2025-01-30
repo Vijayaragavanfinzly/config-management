@@ -38,12 +38,16 @@
   
   .form-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
   }
   
   .input-field {
     width: 100%;
+  }
+
+  .full-width {
+    grid-column: span 3;
   }
   
   .mat-form-field {
@@ -163,10 +167,10 @@
   .ng-select.stylish-dropdown .ng-arrow-wrapper {
     color: #007bff;
   }
-  
+/*   
   .full-width {
     width: 100%;
-  }
+  } */
   
   .stylish-input mat-form-field {
     background-color: #ffffff;

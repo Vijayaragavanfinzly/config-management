@@ -44,4 +44,8 @@ export class ExportService {
   exportSpecifiedEnv(environment:string):Observable<any>{
     return this.http.get(`${this.baseUrl}/generate/${environment}`,{responseType:'blob'});
   }
+
+  exportDelta(tenant1:string,env1:string,tenant2:string,env2:string){
+    return this.http.get(`${this.baseUrl}/export/delta/${tenant1}/${env1}/${tenant2}/${env2}`,{responseType:'blob'});
+  }
 }

@@ -11,6 +11,8 @@ import { CredentialServiceService } from '../../services/credential-service/cred
 import { SuccessSnackbarComponent } from '../miscellaneous/snackbar/success-snackbar/success-snackbar.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CredentialsEditComponent } from '../miscellaneous/dialogs/credentials-edit/credentials-edit.component';
+import { ConfirmationDialogComponent } from '../miscellaneous/dialogs/confirmation-dialog/confirmation-dialog.component';
+import { ErrorSnackbarComponent } from '../miscellaneous/snackbar/error-snackbar/error-snackbar.component';
 
 @Component({
   selector: 'app-credentials-for-adding-environment',
@@ -36,14 +38,14 @@ export class CredentialsForAddingEnvironmentComponent implements OnInit {
     this.getAllCredentials();
   }
 
-  getAllCredentials():void{
+  getAllCredentials(): void {
     this.credentialService.getAllCredentials().subscribe({
-      next:(response)=>{
+      next: (response) => {
         console.log(response);
         this.allCredentials = response.data;
         console.log(this.allCredentials);
       },
-      error:(err)=>{
+      error: (err) => {
         console.log(err);
       }
     })
@@ -80,7 +82,7 @@ export class CredentialsForAddingEnvironmentComponent implements OnInit {
         this.credentialService.StoreCredential(payload).subscribe({
           next: (respone) => {
             console.log(respone);
-            if(respone.statusCode === 200){
+            if (respone.statusCode === 200) {
               this.snackBar.openFromComponent(SuccessSnackbarComponent, {
                 data: {
                   message: `Credential Added Successfully !`,
@@ -98,7 +100,7 @@ export class CredentialsForAddingEnvironmentComponent implements OnInit {
     });
   }
 
-  openEditDialog(data:any):void{
+  openEditDialog(data: any): void {
     console.log(data);
 
     const dialogConfig = new MatDialogConfig();
@@ -116,7 +118,7 @@ export class CredentialsForAddingEnvironmentComponent implements OnInit {
     };
 
     console.log(dialogConfig.data);
-    
+
 
     const dialogRef = this.dialog.open(CredentialsEditComponent, dialogConfig);
 
@@ -124,7 +126,7 @@ export class CredentialsForAddingEnvironmentComponent implements OnInit {
       console.log(result);
       if (result) {
         const payload = {
-          id:data.id,
+          id: data.id,
           env: result.environment,
           username: result.username,
           password: result.password,
@@ -132,13 +134,13 @@ export class CredentialsForAddingEnvironmentComponent implements OnInit {
         };
         console.log(payload);
 
-        this.credentialService.StoreCredential(payload).subscribe({
+        this.credentialService.updateCredential(payload).subscribe({
           next: (respone) => {
             console.log(respone);
-            if(respone.statusCode === 200){
+            if (respone.statusCode === 201) {
               this.snackBar.openFromComponent(SuccessSnackbarComponent, {
                 data: {
-                  message: `Credential Added Successfully !`,
+                  message: `Credential Edited Successfully !`,
                   icon: 'check-circle'
                 },
                 duration: 3000,
@@ -151,12 +153,61 @@ export class CredentialsForAddingEnvironmentComponent implements OnInit {
         })
       }
     });
+  }
 
-    
+  openDeleteDialog(id: string): void {
+    console.log(id);
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '600px',
+    });
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        console.log(id);
+        
+          this.credentialService.deleteCredential(id).subscribe({
+            next:(response)=>{
+              console.log(response);
+              if(response.statusCode === 200){
+                console.log("Successfully deleted");
+                this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                  data: {
+                    message: `Credential Deleted Successfully !`,
+                    icon: 'check-circle'
+                  },
+                  duration: 3000,
+                  horizontalPosition: 'center',
+                  verticalPosition: 'top',
+                });
+                this.getAllCredentials();
+              }
+            },
+            error:(err)=>{
+              console.log(err);
+              this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+                data: {
+                  message: `${err.message}`,
+                  icon: 'check-circle'
+                },
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'top',
+              });
+            }
+          })
+      }
+    });
+
   }
 
 
   maskPassword(password: string): string {
     return '*'.repeat(password.length);
+  }
+
+  showSidebar:boolean = false;
+
+  toggleInfoSidebar() {
+    this.showSidebar = !this.showSidebar;
   }
 }

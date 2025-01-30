@@ -523,7 +523,7 @@ export class CompareByTenantComponent {
               console.log(result);
               const payload = {
                 id: res.data.id,
-                isEdit: res.data.isEdit,
+                isEdit: true,
                 isAdd: res.data.isAdd,
                 isDelete: res.data.isDelete,
                 configId: res.data.configId,

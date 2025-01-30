@@ -437,8 +437,7 @@ export class TenantEnvironmentPropertiesComponent implements OnInit {
   addProperty() {
     const dialogConfig = new MatDialogConfig();
 
-    // Set custom dialog properties
-    dialogConfig.minWidth = '800px'; // Customize the width of the dialog
+    dialogConfig.minWidth = '800px';
     dialogConfig.minHeight = '400px';
     dialogConfig.maxHeight = '580px';
     dialogConfig.maxWidth = '900px';

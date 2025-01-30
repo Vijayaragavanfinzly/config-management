@@ -60,10 +60,13 @@ h1 {
   min-width: 200px;
   /* width: 500px; */
 }
+
 .tenant-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
   padding: 15px;
   border-radius: 10px;
   background: var(--gray-color);
@@ -71,16 +74,30 @@ h1 {
   flex: 1;
   min-width: 200px;
   gap: 10px;
+  width: 100%;
   /* Adds spacing between elements */
 }
 
+.tenant-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 5px;
+  font-family: 'Roboto', sans-serif;
+}
 .tenant-card {
   overflow: visible;
   width: 100%;
 }
 
 .tenant-card label {
-  display: none;
+  /* display: none; */
+}
+
+.select-container {
+  display: flex;
+  gap: 15px;
+  width: 100%;
 }
 
 .tenant-card ng-select {
@@ -123,6 +140,11 @@ h1 {
   background-color: #e9ecef;
   color: #aaa;
   cursor: not-allowed;
+}
+
+.search-select {
+  flex: 1;
+  width: 100%;
 }
 
 .search-select {
@@ -183,264 +205,276 @@ h1 {
 
 
 .table .custom-table {
-width: 100%;
-border-collapse: collapse;
-font-size: 16px;
-background-color: #f9f9f9;
-margin-bottom:0;
-border-radius: 8px;
-box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-overflow-x: auto; 
-display: block; 
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  margin-bottom: 0;
+  border-radius: 8px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+  display: block;
 }
 
 .table.custom-table thead {
-background-color: #343a40;
-color: #fff;
-text-transform: uppercase;
-font-weight: bold;
+  background-color: #343a40;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
 .table .custom-table th,
 .table .custom-table td {
-padding: 12px 15px;
-text-align: left;
-border-bottom: 1px solid #e0e0e0;
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .table .custom-table tbody tr {
-transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .table .custom-table tbody tr:hover td {
-background-color: #f2f2f2 !important;
+  background-color: #f2f2f2 !important;
 }
 
 .table .custom-table tbody tr:last-child td {
-border-bottom: none;
+  border-bottom: none;
 }
 
 .table .custom-table .btn {
-padding: 5px 10px;
-font-size: 14px;
-font-weight: 600;
-border-radius: 5px;
-transition: background-color 0.3s ease, transform 0.2s ease;
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .custom-table td,
 .custom-table th {
-white-space: nowrap; 
-overflow: hidden;    
-text-overflow: ellipsis; 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .custom-table tbody tr td {
-padding-top: 15px;
+  padding-top: 15px;
 }
 
 .custom-table td {
-overflow: hidden;
-white-space: nowrap;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .custom-table thead tr th {
-text-align: center;
+  text-align: center;
 }
 
 .table-responsive {
-overflow-x: auto;
--webkit-overflow-scrolling: touch;
-max-width: 100%;
-display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  display: block;
 }
 
 .table-container {
-max-height: 60vh; 
-overflow: auto;
-overflow-x: auto;
-border: 1px solid #ddd; 
-margin: 0;
-padding-bottom: 0;
-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-scroll-behavior: smooth;
+  max-height: 60vh;
+  overflow: auto;
+  overflow-x: auto;
+  border: 1px solid #ddd;
+  margin: 0;
+  padding-bottom: 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  scroll-behavior: smooth;
 }
 
 .custom-table {
-width: 100%; 
-border-collapse: collapse;
-table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
 }
+
 .custom-table tbody td {
-padding: 10px;
-border-bottom: 1px solid #ddd;
-text-align: left;
-word-wrap: break-word;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  word-wrap: break-word;
 }
 
 .custom-table thead th {
-position: sticky; 
-top: -2px; 
-background-color: var(--primary-color); 
-z-index: 2;
-text-align: left; 
-padding: 10px; 
-color: white;
-border-bottom: 2px solid #ddd;
-background-clip: padding-box;
-overflow: hidden;
-}
-.custom-table tbody td {
-padding: 10px;
-border-bottom: 1px solid #ddd;
-text-align: left;
-word-wrap: break-word;
-opacity: 1;
-}
-.custom-table tbody tr:hover td{
-background-color: var(--background-light)
-}
-table.custom-table tbody tr:nth-child(even) td {
-background-color: #f9f9f9; /* Light beige for even rows */
+  position: sticky;
+  top: -2px;
+  background-color: var(--primary-color);
+  z-index: 2;
+  text-align: left;
+  padding: 10px;
+  color: white;
+  border-bottom: 2px solid #ddd;
+  background-clip: padding-box;
+  overflow: hidden;
 }
 
-table.custom-table tbody tr:nth-child(odd) td{
-background-color: #FFFFFF; /* White for odd rows */
+.custom-table tbody td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  word-wrap: break-word;
+  opacity: 1;
+}
+
+.custom-table tbody tr:hover td {
+  background-color: var(--background-light)
+}
+
+table.custom-table tbody tr:nth-child(even) td {
+  background-color: #f9f9f9;
+  /* Light beige for even rows */
+}
+
+table.custom-table tbody tr:nth-child(odd) td {
+  background-color: #FFFFFF;
+  /* White for odd rows */
 }
 
 .table-container::-webkit-scrollbar {
-width: 10px; 
-height: 10px;
+  width: 10px;
+  height: 10px;
 }
 
 .table-container::-webkit-scrollbar-thumb {
-background: #888;
-border-radius: 10px;
-transition: background 0.3s;
-border: 2px solid #fff;
+  background: #888;
+  border-radius: 10px;
+  transition: background 0.3s;
+  border: 2px solid #fff;
 }
 
 .table-container::-webkit-scrollbar-thumb:hover {
-background-color: #555;
+  background-color: #555;
 }
 
 .table-container::-webkit-scrollbar:horizontal {
-height: 8px;
+  height: 8px;
 }
 
 .table-container::-webkit-scrollbar-thumb:horizontal {
-background-color: #666; /* Color for horizontal scrollbar */
+  background-color: #666;
+  /* Color for horizontal scrollbar */
 }
+
 .table-body tr {
-transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease;
 }
+
 .table-body tr:hover {
-background-color: #f9f9f9; /* Slightly highlight rows on hover */
+  background-color: #f9f9f9;
+  /* Slightly highlight rows on hover */
 }
+
 .table-container::-webkit-scrollbar-track {
-background-color: #f1f1f1; 
-border-radius: 10px;
+  background-color: #f1f1f1;
+  border-radius: 10px;
 }
 
 .table-container:focus::-webkit-scrollbar-thumb {
-background-color: #ccc;
+  background-color: #ccc;
 }
 
 /* Updated table  */
 .custom-table th,
 .custom-table td {
-width: 150px;
-max-width: 150px;
-min-width: 100px;
-text-align: center;
-overflow: hidden;
-white-space: nowrap;
-text-overflow: ellipsis;
+  width: 150px;
+  max-width: 150px;
+  min-width: 100px;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .custom-table th {
-/* resize: horizontal; */
+  /* resize: horizontal; */
 }
 
 
 .custom-table th.resizable {
-position: relative;
+  position: relative;
 }
 
 .custom-table th.resizable::after {
-content: '';
-position: absolute;
-top: 0;
-right: 0;
-width: 5px;
-height: 100%;
-cursor: col-resize;
-background-color: transparent;
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5px;
+  height: 100%;
+  cursor: col-resize;
+  background-color: transparent;
 }
 
 .resizer {
-background-color: rgba(0, 0, 0, 0.2);
-cursor: col-resize;
-height: 100%;
-width: 5px;
-position: absolute;
-right: 0;
-top: 0;
-z-index: 1;
+  background-color: rgba(0, 0, 0, 0.2);
+  cursor: col-resize;
+  height: 100%;
+  width: 5px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1;
 }
 
 .grip {
-background-color: #000;
-width: 5px;
-height: 100%;
-cursor: col-resize;
+  background-color: #000;
+  width: 5px;
+  height: 100%;
+  cursor: col-resize;
 }
 
 .custom-table th,
 .custom-table td {
-text-align: center;
-overflow: hidden;
-white-space: nowrap;
-text-overflow: ellipsis;
-position: relative;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: relative;
 }
 
 .resize-handle {
-cursor: e-resize;
-position: absolute;
-right: 0;
-top: 0;
-width: 5px;
-height: 100%;
-background: transparent;
-z-index: 1;
-/* background-color: #ddd; */
+  cursor: e-resize;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  background: transparent;
+  z-index: 1;
+  /* background-color: #ddd; */
 }
 
 .resize-handle:hover {
-background: #ddd; /* Visible on hover for feedback */
+  background: #ddd;
+  /* Visible on hover for feedback */
 }
 
 .custom-table th,
 .custom-table td {
-transition: width 0.2s ease-in-out;
+  transition: width 0.2s ease-in-out;
 }
 
 
 .custom-table th {
-background-color: #f8f9fa;
-color: #495057;
-text-transform: uppercase;
-font-size: 0.85rem;
+  background-color: #f8f9fa;
+  color: #495057;
+  text-transform: uppercase;
+  font-size: 0.85rem;
 }
 
 .custom-table th,
 .custom-table td {
-text-align: center;
-padding: 0.75rem;
-border: 1px solid #dee2e6;
+  text-align: center;
+  padding: 0.75rem;
+  border: 1px solid #dee2e6;
 }
 
 .custom-table tbody tr:hover {
-background-color: rgba(0, 123, 255, 0.1);
+  background-color: rgba(0, 123, 255, 0.1);
 }

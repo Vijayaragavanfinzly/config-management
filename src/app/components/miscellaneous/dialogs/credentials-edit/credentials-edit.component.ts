@@ -36,14 +36,14 @@ export class CredentialsEditComponent implements OnInit{
         @Inject(MAT_DIALOG_DATA) public data: { environment?:string;username?:string;password?:string;url?:string;
          }
       ) {
-        console.log(data);
-        console.log(data.environment, data.username, data.password, data.url);
+        // console.log(data);
+        console.log(typeof data.environment);
 
         this.propertyForm = this.fb.group({
-          environment: [{ value: data.environment}, Validators.required],
-          username:[{value:data.username},Validators.required],
-          password:[{value:data.password},Validators.required],
-          url:[{value:data.url},Validators.required]
+          environment: [ data.environment, Validators.required],
+          username:[data.username,Validators.required],
+          password:[data.password,Validators.required],
+          url:[data.url,Validators.required]
         });
       }
     

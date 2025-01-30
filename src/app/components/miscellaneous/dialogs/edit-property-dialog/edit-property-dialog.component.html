@@ -8,17 +8,11 @@
       <mat-form-field appearance="outline" class="input-field">
         <mat-label>Environment</mat-label>
         <input matInput formControlName="env" placeholder="Eg. DEV" [disabled]="true" />
-        <mat-error *ngIf="propertyForm.get('env')?.hasError('required')">
-          Environment is required.
-        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="input-field">
         <mat-label>Tenant</mat-label>
         <input matInput formControlName="tenant" [disabled]="true" />
-        <mat-error *ngIf="propertyForm.get('tenant')?.hasError('required')">
-          Tenant is required.
-        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="input-field">
@@ -32,9 +26,6 @@
             {{ app }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="propertyForm.get('application')?.hasError('required')">
-          Application is required.
-        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="input-field">
@@ -48,42 +39,29 @@
             {{ field }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="propertyForm.get('fieldGroup')?.hasError('required')">
-          Field Group is required.
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="input-field">
-        <mat-label>Property Key</mat-label>
-        <input matInput formControlName="propKey" />
-        <mat-error *ngIf="propertyForm.get('propKey')?.hasError('required')">
-          Property Key is required.
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="input-field">
-        <mat-label>Value</mat-label>
-        <input matInput formControlName="value" />
-        <mat-error *ngIf="propertyForm.get('value')?.hasError('required')">
-          Value is required.
-        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="input-field">
         <mat-label>Release</mat-label>
         <input matInput formControlName="lastUpdatedBy" />
-        <mat-error *ngIf="propertyForm.get('lastUpdatedBy')?.hasError('required')">
-          Release is required.
-        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="input-field">
         <mat-label>Label</mat-label>
         <input matInput formControlName="label" />
-        <mat-error *ngIf="propertyForm.get('label')?.hasError('required')">
-          Label is required.
-        </mat-error>
       </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field full-width">
+        <mat-label>Property Key</mat-label>
+        <input matInput formControlName="propKey" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="input-field full-width">
+        <mat-label>Property Value</mat-label>
+        <input matInput formControlName="value" />
+      </mat-form-field>
+
+
     </form>
   </div>
   <div class="dialog-actions mt-4">

@@ -105,7 +105,7 @@
   
   .card:nth-child(odd) {
     background: 
-    linear-gradient(135deg, #32CD32, #228B22),
+    linear-gradient(135deg, #ea7405, #c69937),
     url('https://www.transparenttextures.com/patterns/connected.png');
   background-size: cover;
   background-blend-mode: overlay;

@@ -93,6 +93,8 @@ label {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
   padding: 15px;
   border-radius: 10px;
   background: var(--gray-color);
@@ -100,8 +102,18 @@ label {
   flex: 1;
   min-width: 200px;
   gap: 10px;
+  width: 100%;
   /* Adds spacing between elements */
 }
+
+.tenant-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 5px;
+  font-family: 'Roboto', sans-serif;
+}
+
 
 .tenant-card {
   overflow: visible;
@@ -109,55 +121,42 @@ label {
 }
 
 .tenant-card label {
-  display: none;
+  /* display: none; */
+}
+.tenant-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 15px;
+  border-radius: 10px;
+  background: var(--gray-color);
+  transition: transform 0.2s ease-in-out;
+  width: 100%;
 }
 
-.tenant-card ng-select {
-  width: calc(33% - 10px);
-  flex-grow: 1;
-  padding: 10px 14px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  color: #333;
-  background-color: #f9f9f9;
-  background-position: calc(100% - 18px) center, calc(100% - 15px) center;
-  background-size: 10px 10px, 10px 10px;
-  background-repeat: no-repeat;
-  position: relative;
-  transition: all 0.3s ease;
-  font-family: 'Poppins', sans-serif;
-  appearance: none;
-  cursor: pointer;
+.tenant-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #444;
+  /* margin-bottom: 8px; */
+  font-family: 'Roboto', sans-serif;
 }
 
-.tenant-card ng-select:hover {
-  border-color: var(--primary-color);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.select-container {
+  display: flex;
+  gap: 15px;
+  width: 100%;
 }
 
-.ng-select {
-  border: none !important;
-  box-shadow: none !important;
-}
-
-.tenant-card ng-select:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  background-color: #fff;
-  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.2);
-}
-
-.tenant-card ng-select:disabled {
-  background-color: #e9ecef;
-  color: #aaa;
-  cursor: not-allowed;
+.search-select {
+  flex: 1;
+  width: 100%;
 }
 
 .search-select {
   width: 100%;
   /* Full width of the container */
-  margin-top: 20px;
+  /* margin-top: 20px; */
   /* Space between select fields */
 }
 
@@ -207,12 +206,12 @@ label {
 }
 
 .btn-error{
-  background-color: palevioletred;
-  color: #333;
+  background-color: #333;
+  color: white;
 }
 
 .btn-error:hover{
-  background-color: rgb(224, 147, 173);
+  background-color: #333;
   transform: translateY(-2px);
 }
 
@@ -1479,3 +1478,4 @@ p {
     opacity: 1;
   }
 }
+

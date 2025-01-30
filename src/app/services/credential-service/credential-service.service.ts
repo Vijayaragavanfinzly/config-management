@@ -21,4 +21,8 @@ export class CredentialServiceService {
   updateCredential(payload:any):Observable<any>{
     return this.http.put(`${this.baseUrl}/credential`,payload);
   }
+
+  deleteCredential(id:string):Observable<any>{
+    return this.http.delete(`${this.baseUrl}/credential/${id}`);
+  }
 }

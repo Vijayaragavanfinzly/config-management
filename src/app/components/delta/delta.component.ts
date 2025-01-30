@@ -16,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { ErrorSnackbarComponent } from '../miscellaneous/snackbar/error-snackbar/error-snackbar.component';
 import { SuccessSnackbarComponent } from '../miscellaneous/snackbar/success-snackbar/success-snackbar.component';
+import { ExportService } from '../../services/export-service/export.service';
 
 @Component({
   selector: 'app-delta',
@@ -162,7 +163,7 @@ export class DeltaComponent implements OnInit {
   }
 
 
-  constructor(private tenantService: TenantService, private compareService: CompareService, private dialog: MatDialog, private propertyService: PropertyService, private snackBar: MatSnackBar, private renderer: Renderer2, private sanitizer: DomSanitizer) { }
+  constructor(private tenantService: TenantService, private compareService: CompareService, private dialog: MatDialog, private propertyService: PropertyService, private snackBar: MatSnackBar, private renderer: Renderer2, private sanitizer: DomSanitizer,private exportService:ExportService) { }
 
   ngOnInit(): void {
     this.loadAllTenants();
@@ -171,7 +172,9 @@ export class DeltaComponent implements OnInit {
   loadAllTenants(): void {
     this.tenantService.getAllTenants().subscribe({
       next: (data) => {
-        this.tenants = data.data;
+        this.tenants = data.data.sort((a: any, b: any) => {
+          return a.localeCompare(b);
+        });
         console.log(this.tenants);
         this.tenantNames = this.tenants.map((tenant) => tenant.toUpperCase());
       },
@@ -181,11 +184,13 @@ export class DeltaComponent implements OnInit {
 
   loadEnvironmentsForTenant(tenantKey: string): void {
     this.loading = true;
-    const selectedTenant = tenantKey === 'tenant1' ? this.selectedTenant1.toLowerCase() : this.selectedTenant2.toLowerCase();
+    const selectedTenant = tenantKey === 'tenant1' ? this.selectedTenant1.toLowerCase() : this.selectedTenant1.toLowerCase();
 
     this.tenantService.getTenantEnvironments(selectedTenant).subscribe({
       next: (data) => {
-        const environments = data.data;
+        const environments = data.data.sort((a: any, b: any) => {
+          return a.localeCompare(b);
+        });
         const filteredEnvironments = environments
           .filter((env: string) => env.toUpperCase() !== 'PENDING')
           .map((env: string) => env.toUpperCase());
@@ -204,9 +209,9 @@ export class DeltaComponent implements OnInit {
   }
 
   findDelta() {
-    if (this.selectedTenant1 && this.selectedTenant2 && this.selectedEnv1 && this.selectedEnv2) {
+    if (this.selectedTenant1  && this.selectedEnv1 && this.selectedEnv2) {
       console.log('Comparing environments:', this.selectedEnv1, this.selectedEnv2);
-      if (this.selectedTenant1 === this.selectedTenant2 && this.selectedEnv1 === this.selectedEnv2) {
+      if (this.selectedTenant1 === this.selectedTenant1 && this.selectedEnv1 === this.selectedEnv2) {
         this.snackBar.openFromComponent(ErrorSnackbarComponent, {
           data: {
             message: `Both Tenant & Environment cannot be same !`,
@@ -218,7 +223,7 @@ export class DeltaComponent implements OnInit {
         });
         return;
       }
-      this.compareService.getDelta(this.selectedTenant1.toLowerCase(), this.selectedEnv1.toLowerCase(), this.selectedTenant2.toLowerCase(), this.selectedEnv2.toLowerCase()).subscribe({
+      this.compareService.getDelta(this.selectedTenant1.toLowerCase(), this.selectedEnv1.toLowerCase(), this.selectedTenant1.toLowerCase(), this.selectedEnv2.toLowerCase()).subscribe({
         next: (data) => {
           console.log(data);
           this.flag = true;
@@ -331,7 +336,7 @@ export class DeltaComponent implements OnInit {
   clearSelections(): void {
     this.searchQuery = '';
     this.selectedTenant1 = '';
-    this.selectedTenant2 = '';
+    this.selectedTenant1 = '';
     this.selectedEnv1 = '';
     this.selectedEnv2 = '';
     this.tenant1Environments = [];
@@ -350,6 +355,53 @@ export class DeltaComponent implements OnInit {
       horizontalPosition: 'center',
       verticalPosition: 'top',
     });
+  }
+
+  exportDelta():void{
+    if(this.selectedTenant1 === '' || this.selectedEnv1 === '' || this.selectedEnv2 === ''){
+      this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+        data: {
+          message: `Fill All the required fields !`,
+          icon: 'check-circle'
+        },
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
+    }
+    this.exportService.exportDelta(this.selectedTenant1,this.selectedEnv1,this.selectedTenant1,this.selectedEnv2).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${this.selectedTenant1}_${this.selectedEnv2}_properties.sql`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+          data: {
+            message: `Exported Successfully !`,
+            icon: 'check-circle'
+          },
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      },
+      error: (err) => {
+        console.error("Error exporting properties:", err);
+        this.snackBar.openFromComponent(ErrorSnackbarComponent, {
+          data: {
+            message: `Export Failed`,
+            icon: 'check-circle'
+          },
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      },
+      complete: () => {
+      },
+    })
   }
 
 

@@ -802,8 +802,8 @@ export class CompareConfigDbComponent implements OnInit {
         const payload = {
           id: entry[destination].id,
           isEdit: true,
-          isAdd: entry[destination].isAdd,
-          isDelete:entry[destination].isDelete,
+          isAdd: entry[destination].is_add,
+          isDelete:entry[destination].is_delete,
           configId: entry[destination].configId,
           env: entry[destination].env,
           tenant: entry[destination].tenant,
@@ -1288,8 +1288,8 @@ export class CompareConfigDbComponent implements OnInit {
         const payload = {
           id: this.selectedEntry[this.selectedColumn.name].id,
           isEdit: true,
-          isAdd: this.selectedEntry[this.selectedColumn.name].isAdd,
-          isDelete: this.selectedEntry[this.selectedColumn.name].isDelete,
+          isAdd: this.selectedEntry[this.selectedColumn.name].is_add,
+          isDelete: this.selectedEntry[this.selectedColumn.name].is_delete,
           configId: this.selectedEntry[this.selectedColumn.name].configId,
           env: env,
           tenant: tenant,
@@ -1405,8 +1405,8 @@ export class CompareConfigDbComponent implements OnInit {
         const payload = {
           id: this.selectedEntry[this.selectedColumn].id,
           isEdit: true,
-          isAdd: this.selectedEntry[this.selectedColumn].isAdd,
-          isDelete: this.selectedEntry[this.selectedColumn].isDeletes,
+          isAdd: this.selectedEntry[this.selectedColumn].is_add,
+          isDelete: this.selectedEntry[this.selectedColumn].is_delete,
           configId: this.selectedEntry[this.selectedColumn].configId,
           env: env,
           tenant: tenant,
